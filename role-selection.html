@@ -169,56 +169,74 @@
         </div>
       </div>
 
-      <!-- CARD 2: ENTERPRISE PORTAL -->
-      <div class="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-400/80 transition-all duration-300 flex flex-col justify-between overflow-hidden group relative">
+      <!-- CARD 2: ENTERPRISE PORTAL (LOCKED - COMING SOON) -->
+      <div class="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative opacity-95 group">
         
-        <!-- Clean Cinematic Image Area (NO DUMPED WORDS OR PILLS) -->
+        <!-- Clean Cinematic Image Area with Locked Overlay -->
         <div class="relative h-44 lg:h-48 w-full overflow-hidden shrink-0 border-b border-slate-200/60 bg-slate-950">
-          <img alt="Enterprise Experience" class="w-full h-full object-cover object-center ken-burns-enterprise will-change-transform" src="img_4356_executive_boardroom.png"/>
+          <img alt="Enterprise Experience" class="w-full h-full object-cover object-center grayscale-[25%] ken-burns-enterprise will-change-transform opacity-80" src="img_4356_executive_boardroom.png"/>
           <div class="scanline-hud scanline-hud-enterprise"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
+          
+          <!-- Sleek Floating Lock & Coming Soon Badge on Image -->
+          <div class="absolute top-3.5 right-3.5 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-md border border-amber-500/30 shadow-lg text-amber-300 text-[11px] font-bold tracking-wide">
+            <span class="material-symbols-outlined text-xs text-amber-400">lock</span>
+            <span>Coming Soon</span>
+          </div>
+
+          <!-- Centered Subtle Lock Icon Badge over Image -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-12 h-12 rounded-2xl bg-slate-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-slate-300 shadow-xl">
+              <span class="material-symbols-outlined text-2xl text-amber-400">lock</span>
+            </div>
+          </div>
         </div>
 
         <!-- Card Body Content -->
         <div class="p-5 lg:p-6 flex-1 flex flex-col justify-between gap-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <h2 class="text-xl font-bold text-slate-900 tracking-tight">
-                Enterprise Portal
-              </h2>
-              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                For Companies
+              <div class="flex items-center gap-2">
+                <h2 class="text-xl font-bold text-slate-900 tracking-tight">
+                  Enterprise Portal
+                </h2>
+                <span class="material-symbols-outlined text-amber-500 text-lg" title="Locked">lock</span>
+              </div>
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/80 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span>Coming Soon</span>
               </span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed mb-3">
               Deploy autonomous technical screening pipelines, calibrate candidate talent with standard rubrics, and save 300+ engineering hours.
             </p>
             
-            <div class="space-y-2 text-xs text-slate-700">
+            <div class="space-y-2 text-xs text-slate-600">
               <div class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span class="material-symbols-outlined text-emerald-600/70 text-sm shrink-0">check_circle</span>
                 <span>Autonomous technical &amp; architectural candidate screening</span>
               </div>
               <div class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span class="material-symbols-outlined text-emerald-600/70 text-sm shrink-0">check_circle</span>
                 <span>Standardized multi-dimensional candidate evaluation packets</span>
               </div>
               <div class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span class="material-symbols-outlined text-emerald-600/70 text-sm shrink-0">check_circle</span>
                 <span>Seamless Greenhouse, Lever &amp; Ashby ATS integration</span>
               </div>
             </div>
           </div>
 
           <div class="space-y-2 pt-3 border-t border-slate-100">
-            <a href="company-signup.html" class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
-              <span>Continue as Organization</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
+            <button disabled class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-100 text-slate-400 border border-slate-200/90 font-semibold text-xs tracking-wide cursor-not-allowed flex items-center justify-center gap-2 shadow-none select-none transition-none">
+              <span class="material-symbols-outlined text-sm text-slate-400">lock</span>
+              <span>Enterprise Access • Coming Soon</span>
+            </button>
             <div class="text-center">
-              <a href="company-login.html" class="text-[11px] text-slate-500 hover:text-slate-950 font-medium transition-colors">
-                Already registered? <span class="font-bold text-slate-900 underline">Sign in</span>
-              </a>
+              <span class="text-[11px] text-slate-400 font-medium inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px] text-slate-400">schedule</span>
+                <span>Enterprise invitations open Q4 2026</span>
+              </span>
             </div>
           </div>
 
