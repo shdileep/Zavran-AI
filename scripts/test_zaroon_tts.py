@@ -104,16 +104,7 @@ async def test_zaroon_tts_synthesis_and_caching(benchmark: bool = False):
 
     sample_phrase = "Good answer. Let's go deeper into vector database indexing."
 
-    if not provider.api_key or not provider.voice_id:
-        print("[WARN] SMALLEST_API_KEY or ZAROON_VOICE_ID not set in .env.")
-        print("Testing graceful unconfigured error handling...")
-        res = await provider.synthesize_speech(sample_phrase)
-        assert res["status"] == "error"
-        assert "temporarily unavailable" in res["error"]
-        print("[PASS] Graceful fallback without crashing confirmed.")
-        return
-
-    print(f"Synthesizing test phrase: '{sample_phrase}'...")
+    print(f"Synthesizing test phrase: '{sample_phrase}' using {val.get('active_provider')}...")
     t0 = time.perf_counter()
     res1 = await provider.synthesize_speech(sample_phrase)
     lat1 = (time.perf_counter() - t0) * 1000

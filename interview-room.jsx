@@ -36,6 +36,14 @@ function InterviewRoom() {
   const initialInterviewer = decodeURIComponent(urlParams.get('interviewer') || storedBooking.interviewer || 'Zaroon');
   const orgName = decodeURIComponent(urlParams.get('org') || storedBooking.org || 'Zavran AI Partner');
 
+  const apiBaseUrl = (() => {
+    if (window.location.protocol.startsWith('http')) {
+      if (window.location.port === '8000') return window.location.origin;
+      return `${window.location.protocol}//${window.location.hostname}:8000`;
+    }
+    return 'http://127.0.0.1:8000';
+  })();
+
   // Candidate Name Resolution strictly from authenticated user
   const [candidateName, setCandidateName] = useState(() => {
     try {
@@ -865,7 +873,7 @@ function InterviewRoom() {
 
     // Synchronize violation to backend server
     try {
-      const resp = await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/violation`, {
+      const resp = await fetch(`${apiBaseUrl}/api/interview/${roomCode}/violation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -917,7 +925,7 @@ function InterviewRoom() {
     }, 3500);
 
     try {
-      await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/recovery`, {
+      await fetch(`${apiBaseUrl}/api/interview/${roomCode}/recovery`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -933,7 +941,7 @@ function InterviewRoom() {
   const triggerAuditSnapshot = async (violationType, description) => {
     const snapshot = captureCurrentFrameBase64();
     try {
-      await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/audit-snapshot`, {
+      await fetch(`${apiBaseUrl}/api/interview/${roomCode}/audit-snapshot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -958,7 +966,7 @@ function InterviewRoom() {
     setIsSubmittingProtest(true);
 
     try {
-      await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/protest`, {
+      await fetch(`${apiBaseUrl}/api/interview/${roomCode}/protest`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1019,7 +1027,7 @@ function InterviewRoom() {
     setInterviewStatusText('Synthesizing evaluation metrics...');
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/process-response`, {
+      const response = await fetch(`${apiBaseUrl}/api/interview/${roomCode}/process-response`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1156,7 +1164,7 @@ function InterviewRoom() {
       setInterviewStatusText('Zaroon AI is speaking...');
 
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/voice/synthesize', {
+        const res = await fetch(`${apiBaseUrl}/api/voice/synthesize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1642,7 +1650,7 @@ function InterviewRoom() {
         const headers = {};
         if (clerkAuthHeader) headers['Authorization'] = clerkAuthHeader;
 
-        const resp = await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/session`, { headers });
+        const resp = await fetch(`${apiBaseUrl}/api/interview/${roomCode}/session`, { headers });
         if (resp.ok) {
           const json = await resp.json();
           if (json && json.session) {
@@ -1798,7 +1806,7 @@ function InterviewRoom() {
   const startInterview = async () => {
     // Validate on server before entry
     try {
-      await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/validate-precheck`, {
+      await fetch(`${apiBaseUrl}/api/interview/${roomCode}/validate-precheck`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ checks_passed: true })
@@ -1854,7 +1862,7 @@ function InterviewRoom() {
       // Fetch tailored 20-question pool from server session
       let qList = interviewQuestions;
       try {
-        const resp = await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/session`);
+        const resp = await fetch(`${apiBaseUrl}/api/interview/${roomCode}/session`);
         if (resp.ok) {
           const json = await resp.json();
           if (json && json.session && json.session.questions && json.session.questions.length > 0) {
@@ -1975,7 +1983,7 @@ function InterviewRoom() {
           const headers = {};
           if (clerkAuthHeader) headers['Authorization'] = clerkAuthHeader;
 
-          const res = await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/report`, { headers });
+          const res = await fetch(`${apiBaseUrl}/api/interview/${roomCode}/report`, { headers });
           const data = await res.json();
           if (data && data.success) {
             if (data.status === 'ready') {

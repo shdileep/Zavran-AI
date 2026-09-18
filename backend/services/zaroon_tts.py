@@ -87,16 +87,20 @@ class ZaroonTTSProvider:
         """
         Validates voice engine configuration and compatibility.
         """
-        is_configured = bool(self.api_key and self.voice_id)
+        has_smallest = bool(self.api_key and self.voice_id)
+        has_sarvam = bool(getattr(settings, "SARVAM_API_KEY", ""))
+        is_configured = has_smallest or has_sarvam
+        active_provider = "Smallest AI (Waves Lightning)" if has_smallest else ("Sarvam AI (Bulbul v3)" if has_sarvam else "Browser Speech Fallback")
         return {
             "valid": is_configured,
+            "active_provider": active_provider,
             "persona": self.persona,
-            "model": self.model,
+            "model": self.model if has_smallest else getattr(settings, "ZAROON_SARVAM_MODEL", "bulbul:v3"),
             "speed": self.speed,
             "sample_rate": self.sample_rate,
-            "voice_configured": bool(self.voice_id),
+            "voice_configured": bool(self.voice_id or has_sarvam),
             "voice_hash": self._get_voice_hash(),
-            "api_key_configured": bool(self.api_key),
+            "api_key_configured": is_configured,
         }
 
     def health_check(self) -> Dict[str, Any]:
@@ -107,18 +111,21 @@ class ZaroonTTSProvider:
         status = "healthy" if val["valid"] else "degraded"
         return {
             "status": status,
-            "provider": "Smallest AI (Waves Lightning)",
+            "provider": val.get("active_provider", "Neural Voice Engine"),
             "persona": self.persona,
-            "model": self.model,
+            "model": val.get("model", self.model),
             "speed": self.speed,
             "cached_entries": len(self._cache),
             "voice_id_configured": bool(self.voice_id),
         }
 
-    async def _execute_tts_request(self, text: str) -> bytes:
+    async def _execute_smallest_tts(self, text: str) -> bytes:
         """
         Executes HTTP request to Smallest AI Waves TTS with retry and exponential backoff.
         """
+        if not self.api_key or not self.voice_id:
+            raise ValueError("Smallest AI not fully configured")
+
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
@@ -143,11 +150,10 @@ class ZaroonTTSProvider:
             for endpoint in endpoints:
                 try:
                     req = urllib.request.Request(endpoint, data=data, headers=headers, method="POST")
-                    # Use asyncio run_in_executor to avoid blocking the event loop
                     loop = asyncio.get_running_loop()
                     
                     def _fetch():
-                        with urllib.request.urlopen(req, timeout=15) as resp:
+                        with urllib.request.urlopen(req, timeout=12) as resp:
                             return resp.headers.get("Content-Type", ""), resp.read()
 
                     content_type, body_bytes = await loop.run_in_executor(None, _fetch)
@@ -170,19 +176,83 @@ class ZaroonTTSProvider:
                         if len(body_bytes) > 44:
                             return body_bytes
 
-                except urllib.error.HTTPError as e:
-                    err_body = e.read().decode("utf-8", errors="ignore")
-                    logger.warning(f"Smallest AI HTTP {e.code} on attempt {attempt+1} at {endpoint}: {err_body}")
-                    last_exception = Exception(f"HTTP {e.code}: {err_body}")
                 except Exception as e:
-                    logger.warning(f"Smallest AI connection error on attempt {attempt+1} at {endpoint}: {str(e)}")
                     last_exception = e
 
-            # Exponential backoff between attempts
             if attempt == 0:
-                await asyncio.sleep(0.3)
+                await asyncio.sleep(0.2)
 
         raise last_exception or Exception("Failed to synthesize audio from Smallest AI Waves.")
+
+    async def _execute_sarvam_tts(self, text: str) -> bytes:
+        """
+        Executes high-fidelity neural speech synthesis via Sarvam AI (Bulbul v3).
+        Produces authoritative, crystal-clear technical recruiter delivery for Zaroon AI.
+        """
+        sarvam_key = getattr(settings, "SARVAM_API_KEY", "")
+        if not sarvam_key:
+            raise ValueError("Sarvam API key not configured")
+
+        speaker = getattr(settings, "ZAROON_SARVAM_SPEAKER", "rohan")
+        model = getattr(settings, "ZAROON_SARVAM_MODEL", "bulbul:v3")
+
+        payload = {
+            "inputs": [text],
+            "target_language_code": "en-IN",
+            "speaker": speaker,
+            "model": model,
+            "pitch": 0,
+            "pace": float(self.speed if self.speed != 1.0 else 1.02),
+            "loudness": 1.5,
+            "enable_preprocessing": True
+        }
+
+        data = json.dumps(payload).encode("utf-8")
+        headers = {
+            "api-subscription-key": sarvam_key,
+            "Content-Type": "application/json",
+            "User-Agent": "ZavranAI-ZaroonEngine/2.0",
+        }
+
+        req = urllib.request.Request(
+            "https://api.sarvam.ai/text-to-speech",
+            data=data,
+            headers=headers,
+            method="POST"
+        )
+
+        loop = asyncio.get_running_loop()
+        def _fetch_sarvam():
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return resp.read()
+
+        resp_bytes = await loop.run_in_executor(None, _fetch_sarvam)
+        res_json = json.loads(resp_bytes.decode("utf-8"))
+        audios = res_json.get("audios", [])
+        if not audios or not audios[0]:
+            raise ValueError("Sarvam TTS returned empty audio list")
+
+        return base64.b64decode(audios[0])
+
+    async def _execute_tts_request(self, text: str) -> bytes:
+        """
+        Multi-tier voice execution:
+        1. Smallest AI Waves (if API key + Voice ID configured)
+        2. Sarvam AI Neural Voice Engine (authoritative Zaroon timbre)
+        """
+        # Tier 1: Smallest AI
+        if self.api_key and self.voice_id:
+            try:
+                return await self._execute_smallest_tts(text)
+            except Exception as e:
+                logger.warning(f"Smallest AI synthesis attempt failed: {str(e)}, falling back to Sarvam AI engine")
+
+        # Tier 2: Sarvam AI
+        try:
+            return await self._execute_sarvam_tts(text)
+        except Exception as e:
+            logger.error(f"Sarvam AI synthesis attempt failed: {str(e)}")
+            raise e
 
     async def synthesize_speech(
         self,
@@ -192,7 +262,7 @@ class ZaroonTTSProvider:
     ) -> Dict[str, Any]:
         """
         Synthesizes text into high-fidelity Zaroon speech audio.
-        Strictly enforces server-side voice ID and model.
+        Strictly enforces server-side voice identity and model.
         """
         start_time = time.perf_counter()
 
@@ -206,27 +276,6 @@ class ZaroonTTSProvider:
 
         # Format text for natural technical interviewer prosody
         spoken_text = zaroon_speech_formatter.format_for_speech(text) if preformat else text
-
-        # Configuration check
-        if not self.api_key:
-            logger.error("Smallest AI API key (SMALLEST_API_KEY) is not configured.")
-            return {
-                "status": "error",
-                "error": "Zaroon voice temporarily unavailable. Please wait a moment.",
-                "technical_error": "Missing SMALLEST_API_KEY",
-                "persona": self.persona,
-                "audio_base64": None,
-            }
-
-        if not self.voice_id:
-            logger.error("Zaroon Voice ID (ZAROON_VOICE_ID) is not configured.")
-            return {
-                "status": "error",
-                "error": "Zaroon voice temporarily unavailable. Please wait a moment.",
-                "technical_error": "Missing ZAROON_VOICE_ID. Please configure ZAROON_VOICE_ID in settings.",
-                "persona": self.persona,
-                "audio_base64": None,
-            }
 
         # Check Cache for static phrases
         cache_key = self._compute_cache_key(spoken_text)
@@ -265,14 +314,16 @@ class ZaroonTTSProvider:
             latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
             duration_sec = val.get("duration_seconds", round(len(normalized_audio) / 48000.0, 2))
 
-            # Store in cache if phrase is static or short common phrase
-            if spoken_text in self.CACHEABLE_STATIC_PHRASES or len(spoken_text) < 30:
-                if len(self._cache) < self._max_cache_entries:
-                    self._cache[cache_key] = {
-                        "audio_base64": base64_audio,
-                        "audio_bytes": len(normalized_audio),
-                        "duration_seconds": duration_sec,
-                    }
+            # Store in cache (FIFO / LRU bound)
+            if len(self._cache) >= self._max_cache_entries:
+                # Evict oldest entry
+                oldest_key = next(iter(self._cache))
+                del self._cache[oldest_key]
+            self._cache[cache_key] = {
+                "audio_base64": base64_audio,
+                "audio_bytes": len(normalized_audio),
+                "duration_seconds": duration_sec,
+            }
 
             logger.info(
                 f"[ZaroonTTS] Generated speech in {latency_ms}ms | Voice: {self._get_voice_hash()} | "

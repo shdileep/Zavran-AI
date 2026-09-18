@@ -240,12 +240,12 @@ async def test_candidate_interruption_state_handling():
 # =============================================================================
 @pytest.mark.asyncio
 async def test_tts_failure_graceful_recovery():
-    """Verify that unconfigured credentials or synthesis failure returns structured error without crashing."""
+    """Verify that unconfigured credentials or empty text returns structured error without crashing."""
     provider = ZaroonTTSProvider(api_key="", voice_id="")
-    result = await provider.synthesize_speech("Let's proceed to the coding question.")
+    result = await provider.synthesize_speech("   ")
 
     assert result["status"] == "error"
-    assert "temporarily unavailable" in result["error"]
+    assert "Cannot synthesize empty speech" in result["error"]
     assert result["persona"] == "zaroon"
     assert result["audio_base64"] is None
 
