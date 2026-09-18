@@ -312,7 +312,7 @@
     if (googleBtn) {
       googleBtn.addEventListener('click', async () => {
         statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-slate-100 text-slate-800 border border-slate-200 block';
-        statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Connecting to Google...</span>';
+        statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Redirecting directly to Google...</span>';
 
         try {
           const clerk = await getClerkInstance();
@@ -320,24 +320,47 @@
             throw new Error("Clerk authentication service is currently loading. Please check your internet connection and try again.");
           }
 
-          if (clerk.authenticateWithRedirect) {
+          const redirectUrl = window.location.origin + '/candidate-portal.html';
+          const redirectUrlComplete = window.location.origin + '/candidate-portal.html#profile';
+
+          // 1. Direct SignIn OAuth redirect to Google (no popup/modal)
+          if (clerk.client && clerk.client.signIn && typeof clerk.client.signIn.authenticateWithRedirect === 'function') {
+            try {
+              await clerk.client.signIn.authenticateWithRedirect({
+                strategy: 'oauth_google',
+                redirectUrl: redirectUrl,
+                redirectUrlComplete: redirectUrlComplete
+              });
+              return;
+            } catch (signInErr) {
+              console.warn("Direct signIn OAuth redirect error, trying signUp OAuth redirect:", signInErr);
+              if (clerk.client && clerk.client.signUp && typeof clerk.client.signUp.authenticateWithRedirect === 'function') {
+                await clerk.client.signUp.authenticateWithRedirect({
+                  strategy: 'oauth_google',
+                  redirectUrl: redirectUrl,
+                  redirectUrlComplete: redirectUrlComplete
+                });
+                return;
+              }
+            }
+          }
+
+          // 2. Direct SignUp OAuth redirect fallback
+          if (clerk.client && clerk.client.signUp && typeof clerk.client.signUp.authenticateWithRedirect === 'function') {
+            await clerk.client.signUp.authenticateWithRedirect({
+              strategy: 'oauth_google',
+              redirectUrl: redirectUrl,
+              redirectUrlComplete: redirectUrlComplete
+            });
+            return;
+          }
+
+          // 3. Top-level direct authenticateWithRedirect fallback
+          if (typeof clerk.authenticateWithRedirect === 'function') {
             await clerk.authenticateWithRedirect({
               strategy: 'oauth_google',
-              redirectUrl: window.location.origin + '/candidate-portal.html',
-              redirectUrlComplete: window.location.origin + '/candidate-portal.html#profile'
-            });
-            return;
-          } else if (clerk.openSignIn) {
-            clerk.openSignIn({
-              afterSignInUrl: window.location.origin + '/candidate-portal.html#profile',
-              afterSignUpUrl: window.location.origin + '/candidate-portal.html#profile'
-            });
-            return;
-          } else if (clerk.client && clerk.client.signIn) {
-            await clerk.client.signIn.authenticateWithRedirect({
-              strategy: 'oauth_google',
-              redirectUrl: window.location.origin + '/candidate-portal.html',
-              redirectUrlComplete: window.location.origin + '/candidate-portal.html#profile'
+              redirectUrl: redirectUrl,
+              redirectUrlComplete: redirectUrlComplete
             });
             return;
           }

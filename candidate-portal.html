@@ -4032,8 +4032,22 @@ function toggleHeaderProfileMenu(event) {
 
     // Auto-render & restore active tab on page load/refresh
     document.addEventListener('DOMContentLoaded', async () => {
-      // 1. Check if auth user exists
-      const storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user') || 'null');
+      // 1. Check if auth user exists in localStorage
+      let storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user') || 'null');
+      
+      // If returning from Google OAuth / Clerk redirect without existing localStorage auth
+      if (!storedAuth || !storedAuth.id) {
+        try {
+          const clerk = await getClerkInstance(3500);
+          if (clerk && clerk.user) {
+            await syncUserFromClerk(clerk.user);
+            storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user') || 'null');
+          }
+        } catch (e) {
+          console.warn("Clerk initial OAuth check:", e);
+        }
+      }
+
       if (storedAuth && storedAuth.id) {
         authUser = storedAuth;
         renderCandidateHeader();
@@ -4052,20 +4066,20 @@ function toggleHeaderProfileMenu(event) {
       checkScheduledMeetingsAlert();
       setInterval(checkScheduledMeetingsAlert, 5000);
 
-      // 2. Initialize Clerk SDK in background and synchronize live user credentials ONLY if session matches
+      // 2. Initialize Clerk SDK in background and synchronize live user credentials
       try {
         const clerk = await getClerkInstance();
         if (clerk) {
           if (typeof clerk.addListener === 'function') {
             clerk.addListener(({ user }) => {
-              if (user && storedAuth && storedAuth.authProvider === 'clerk' && (storedAuth.id === user.id || storedAuth.email === (user.primaryEmailAddress && user.primaryEmailAddress.emailAddress))) {
+              if (user && (!storedAuth || storedAuth.authProvider === 'clerk')) {
                 syncUserFromClerk(user);
               } else if (!user && storedAuth && storedAuth.authProvider === 'clerk') {
                 window.location.replace('candidate-login.html');
               }
             });
           }
-          if (clerk.user && storedAuth && storedAuth.authProvider === 'clerk' && (storedAuth.id === clerk.user.id || storedAuth.email === (clerk.user.primaryEmailAddress && clerk.user.primaryEmailAddress.emailAddress))) {
+          if (clerk.user) {
             await syncUserFromClerk(clerk.user);
           }
         }
