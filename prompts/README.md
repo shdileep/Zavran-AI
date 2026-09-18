@@ -11,6 +11,7 @@ This directory contains the authoritative system prompts, schemas, and orchestra
 - **[next_question_moving_logic.md](file:///d:/Zevaran/prompts/next_question_moving_logic.md)**: Controlled interview state machine and 5-tier question selection priority engine.
 - **[adaptive_orchestrator.md](file:///d:/Zevaran/prompts/adaptive_orchestrator.md)**: Real-time recruiter persona and pool selection rules for dynamic 30-minute adaptive interview progression.
 - **[post_interview_evaluation_report.md](file:///d:/Zevaran/prompts/post_interview_evaluation_report.md)**: Comprehensive post-interview synthesis prompt producing topic scorecards, JD coverage matrices, and resume verification audits.
+- **[main_interview_room_violation_detection.md](file:///d:/Zevaran/prompts/main_interview_room_violation_detection.md)**: Automated proctoring, visual screenshot evidence with highlighted target boxes, dynamic notification bell counter, and 15-violation termination screen specifications.
 
 ---
 

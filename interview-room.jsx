@@ -218,6 +218,8 @@ function InterviewRoom() {
   const previousFrameDataRef = useRef(null);
   const lastSnapshotTimeRef = useRef(0);
   const noFaceDurationRef = useRef(0);
+  const faceDetectorRef = useRef(null);
+  const latestFaceDetectionsRef = useRef(null);
 
   // Voice Echo & Recording Refs
   const mediaRecorderRef = useRef(null);
@@ -327,6 +329,11 @@ function InterviewRoom() {
         const nextState = !isMicActive;
         audioTracks.forEach(t => { t.enabled = nextState; });
         setIsMicActive(nextState);
+        if (stage === 'interview' && !nextState && !isTerminated) {
+          triggerViolation('mic_muted', 'Microphone Muted', 'Your microphone was muted while voice audio is required for this assessment.');
+        } else if (stage === 'interview' && nextState) {
+          triggerRecovery('mic_muted', 'Microphone Audio Restored', 'Microphone audio feed has been unmuted.');
+        }
       }
     }
   };
@@ -338,6 +345,11 @@ function InterviewRoom() {
         const nextState = !isCamActive;
         videoTracks.forEach(t => { t.enabled = nextState; });
         setIsCamActive(nextState);
+        if (stage === 'interview' && !nextState && !isTerminated) {
+          triggerViolation('camera_off', 'Camera Turned Off', 'Your camera video feed was disabled during the live assessment.');
+        } else if (stage === 'interview' && nextState) {
+          triggerRecovery('camera_off', 'Camera Restored', 'Camera stream is now active and unobstructed.');
+        }
       }
     }
   };
@@ -692,7 +704,7 @@ function InterviewRoom() {
   const consecutiveFailuresRef = useRef({});
   const activeViolationsRef = useRef(new Set());
   const consecutivePassesRef = useRef({});
-  const lastViolationTimeRef = useRef(0);
+  const lastViolationPerTypeRef = useRef({});
   const warningCountRef = useRef(0);
 
   const captureCurrentFrameBase64 = () => {
@@ -710,36 +722,61 @@ function InterviewRoom() {
     }
   };
 
-  const triggerViolation = async (violationType, title, whatHappened, evidenceBase64 = null, confidence = 1.0) => {
+  const triggerViolation = async (violationType, title, whatHappened, evidenceBase64 = null, confidence = 1.0, customTargetBox = null) => {
     if (stage !== 'interview' || isTerminated) return;
 
     const now = Date.now();
-    // Anti-spam debounce: same continuous incident within 2.5s is not double-counted
-    if (now - lastViolationTimeRef.current < 2500) return;
-    lastViolationTimeRef.current = now;
+    // Anti-spam debounce per violation type: same violation type within 1.5s is not double-counted
+    const lastForType = lastViolationPerTypeRef.current[violationType] || 0;
+    if (now - lastForType < 1500) return;
+    lastViolationPerTypeRef.current[violationType] = now;
 
     const snapshot = evidenceBase64 || captureCurrentFrameBase64();
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    let targetBox = { top: '22%', left: '25%', width: '50%', height: '52%' };
+    let targetBox = customTargetBox || { top: '20%', left: '25%', width: '50%', height: '52%' };
     let targetLabel = 'PROCTORING ALERT';
     let detectionType = 'COMPUTER VISION DETECTION';
 
     if (violationType.includes('camera')) {
-      targetBox = { top: '15%', left: '15%', width: '70%', height: '70%' };
-      targetLabel = 'CAMERA OCCLUSION';
+      targetBox = customTargetBox || { top: '15%', left: '15%', width: '70%', height: '70%' };
+      targetLabel = 'CAMERA OFF / COVERED';
       detectionType = 'OPTICAL SENSOR AUDIT';
     } else if (violationType.includes('face') || violationType.includes('frame')) {
-      targetBox = { top: '20%', left: '28%', width: '44%', height: '56%' };
-      targetLabel = 'FACE LOSS / OUT OF FRAME';
+      targetBox = customTargetBox || { top: '20%', left: '28%', width: '44%', height: '56%' };
+      targetLabel = 'FACE NOT VISIBLE';
       detectionType = 'FACIAL GEOMETRY TRACKING';
-    } else if (violationType.includes('tab') || violationType.includes('fullscreen')) {
-      targetBox = { top: '10%', left: '10%', width: '80%', height: '80%' };
-      targetLabel = 'ENVIRONMENT VIOLATION';
+    } else if (violationType.includes('mic') || violationType.includes('audio')) {
+      targetBox = customTargetBox || { top: '55%', left: '25%', width: '50%', height: '35%' };
+      targetLabel = 'MICROPHONE MUTED';
+      detectionType = 'AUDIO FREQUENCY AUDIT';
+    } else if (violationType.includes('lighting') || violationType.includes('glare')) {
+      targetBox = customTargetBox || { top: '10%', left: '10%', width: '80%', height: '80%' };
+      targetLabel = 'POOR LIGHTING CONDITIONS';
+      detectionType = 'LUMINANCE SENSOR AUDIT';
+    } else if (violationType.includes('object') || violationType.includes('phone')) {
+      targetBox = customTargetBox || { top: '22%', left: '12%', width: '38%', height: '52%' };
+      targetLabel = 'UNAUTHORIZED OBJECT DETECTED';
+      detectionType = 'OBJECT TELEMETRY SCAN';
+    } else if (violationType.includes('fullscreen')) {
+      targetBox = customTargetBox || { top: '10%', left: '10%', width: '80%', height: '80%' };
+      targetLabel = 'FULLSCREEN EXITED';
       detectionType = 'DESKTOP WINDOW INTEGRITY';
+    } else if (violationType.includes('copy') || violationType.includes('paste') || violationType.includes('clipboard')) {
+      targetBox = customTargetBox || { top: '12%', left: '12%', width: '76%', height: '76%' };
+      targetLabel = 'RESTRICTED CLIPBOARD ACTION';
+      detectionType = 'BROWSER INTEGRITY SHIELD';
+    } else if (violationType.includes('screenshot') || violationType.includes('capture')) {
+      targetBox = customTargetBox || { top: '12%', left: '12%', width: '76%', height: '76%' };
+      targetLabel = 'SCREEN CAPTURE ATTEMPT';
+      detectionType = 'SECURITY HOOK MONITOR';
+    } else if (violationType.includes('tab') || violationType.includes('blur') || violationType.includes('switch') || violationType.includes('action')) {
+      targetBox = customTargetBox || { top: '15%', left: '15%', width: '70%', height: '70%' };
+      targetLabel = 'RESTRICTED BROWSER ACTION';
+      detectionType = 'ENVIRONMENT INTEGRITY';
     } else if (violationType.includes('multiple')) {
-      targetBox = { top: '25%', left: '30%', width: '40%', height: '50%' };
-      targetLabel = 'SECONDARY PERSON';
+      targetBox = customTargetBox || { top: '22%', left: '20%', width: '60%', height: '56%' };
+      targetLabel = 'SECONDARY PERSON DETECTED';
       detectionType = 'MULTI-SUBJECT TELEMETRY';
     }
 
@@ -767,7 +804,46 @@ function InterviewRoom() {
 
     setViolationLogs(prev => [...prev, newViolation]);
 
-    // Show Live HUD toast alert with action to protest
+    // Check 15-Violation Termination Limit immediately
+    if (nextWarningNum >= 15) {
+      setIsTerminated(true);
+      setTerminationReason('We noticed multiple violations during your interview. The maximum allowed violation limit has been reached.');
+      setStage('terminated');
+      if (currentAudioRef.current) {
+        try { currentAudioRef.current.pause(); } catch (e) {}
+        currentAudioRef.current = null;
+      }
+      if (synthRef.current) synthRef.current.cancel();
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+      try {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(e => console.warn(e));
+        }
+      } catch (e) {}
+    }
+
+    // Audible Proctoring Security Alert Tone
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        const audioCtx = new AudioCtx();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(330, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      }
+    } catch (e) {}
+
+    // Show Live HUD toast alert for active condition
     if (liveViolationTimerRef.current) clearTimeout(liveViolationTimerRef.current);
     setActiveLiveViolation({
       open: true,
@@ -785,7 +861,7 @@ function InterviewRoom() {
 
     liveViolationTimerRef.current = setTimeout(() => {
       setActiveLiveViolation(prev => ({ ...prev, open: false }));
-    }, 8000);
+    }, 7000);
 
     // Synchronize violation to backend server
     try {
@@ -804,7 +880,7 @@ function InterviewRoom() {
         const data = await resp.json();
         if (data?.result?.action === 'terminate' || nextWarningNum >= 15) {
           setIsTerminated(true);
-          setTerminationReason(data?.result?.message || 'Exceeded maximum allowed proctoring warnings (15/15).');
+          setTerminationReason('We noticed multiple violations during your interview. The maximum allowed violation limit has been reached.');
           setStage('terminated');
         }
       }
@@ -812,7 +888,7 @@ function InterviewRoom() {
       console.warn('Backend violation record note:', err);
       if (nextWarningNum >= 15) {
         setIsTerminated(true);
-        setTerminationReason('Exceeded maximum allowed proctoring warnings (15/15).');
+        setTerminationReason('We noticed multiple violations during your interview. The maximum allowed violation limit has been reached.');
         setStage('terminated');
       }
     }
@@ -823,6 +899,14 @@ function InterviewRoom() {
     if (activeViolationsRef.current.has(recoveredType)) {
       activeViolationsRef.current.delete(recoveredType);
     }
+    // Dynamic Active Warning Disappears Automatically once the condition is resolved
+    setActiveLiveViolation(prev => {
+      if (prev.open && prev.violationType === recoveredType) {
+        return { ...prev, open: false };
+      }
+      return prev;
+    });
+
     setRecoveryNotice({
       open: true,
       title: title || 'Condition Restored',
@@ -830,7 +914,7 @@ function InterviewRoom() {
     });
     setTimeout(() => {
       setRecoveryNotice(prev => ({ ...prev, open: false }));
-    }, 4500);
+    }, 3500);
 
     try {
       await fetch(`http://127.0.0.1:8000/api/interview/${roomCode}/recovery`, {
@@ -1189,7 +1273,7 @@ function InterviewRoom() {
         setPermissionMetric({ status: 'pending', label: 'Grant camera & mic permissions' });
       }
 
-      // 7. Computer Vision Spatial & Posture Diagnostics
+      // 7. Computer Vision Spatial, Face Presence & Multi-Zone Object Diagnostics
       const targetVideo = stage === 'interview' ? liveVideoRef.current : videoRef.current;
       if (targetVideo && canvasRef.current && isCamLive) {
         try {
@@ -1197,8 +1281,8 @@ function InterviewRoom() {
           const canvas = canvasRef.current;
 
           if (video.videoWidth > 0 && video.videoHeight > 0) {
-            const w = 120;
-            const h = 90;
+            const w = 160;
+            const h = 120;
             canvas.width = w;
             canvas.height = h;
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -1208,36 +1292,29 @@ function InterviewRoom() {
             let totalBrightness = 0;
             let centerSkinPixels = 0;
             let totalCenterPixels = 0;
+            let centerLums = [];
 
-            let leftShoulderPixels = 0;
-            let totalLeftShoulderPixels = 0;
-            let rightShoulderPixels = 0;
-            let totalRightShoulderPixels = 0;
-
-            let oralZoneSkinPixels = 0;
-            let totalOralZonePixels = 0;
-
-            let handZoneObjects = 0;
-            let totalHandZonePixels = 0;
+            let leftZoneObjects = 0;
+            let totalLeftZonePixels = 0;
+            let rightZoneObjects = 0;
+            let totalRightZonePixels = 0;
+            let chestZoneObjects = 0;
+            let totalChestZonePixels = 0;
 
             let motionDelta = 0;
             const prevFrame = previousFrameDataRef.current;
 
-            const cxMin = Math.floor(w * 0.28);
-            const cxMax = Math.floor(w * 0.72);
+            const cxMin = Math.floor(w * 0.25);
+            const cxMax = Math.floor(w * 0.75);
             const cyMin = Math.floor(h * 0.12);
-            const cyMax = Math.floor(h * 0.65);
+            const cyMax = Math.floor(h * 0.68);
 
-            const shoulderYMin = Math.floor(h * 0.65);
-            const leftShoulderXMax = Math.floor(w * 0.38);
-            const rightShoulderXMin = Math.floor(w * 0.62);
-
-            const oralYMin = Math.floor(h * 0.45);
-            const oralYMax = Math.floor(h * 0.65);
-
-            let topEdgeHeadPixels = 0;
-            let topEdgeTotal = 0;
-            let bottomEdgeFacePixels = 0;
+            const leftZoneXMax = Math.floor(w * 0.42);
+            const rightZoneXMin = Math.floor(w * 0.58);
+            const upperDeviceYMin = Math.floor(h * 0.10);
+            const upperDeviceYMax = Math.floor(h * 0.80);
+            const chestYMin = Math.floor(h * 0.52);
+            const chestYMax = Math.floor(h * 0.95);
 
             for (let y = 0; y < h; y++) {
               for (let x = 0; x < w; x++) {
@@ -1256,46 +1333,43 @@ function InterviewRoom() {
 
                 const yCbCr_cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
                 const yCbCr_cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
-                const isSkin = (yCbCr_cr >= 133 && yCbCr_cr <= 173 && yCbCr_cb >= 77 && yCbCr_cb <= 127) ||
-                               (r > 60 && g > 40 && b > 20 && r > g && r > b && (r - g) >= 8);
 
-                const isTorsoMatter = isSkin || (lum < 165 && (Math.abs(r - g) > 5 || Math.abs(g - b) > 5 || r > 25));
+                // Strict Skin Chromaticity (Rejects beige/wood room backgrounds)
+                const isTrueSkin = (yCbCr_cr >= 133 && yCbCr_cr <= 178 && yCbCr_cb >= 80 && yCbCr_cb <= 135) &&
+                                   (r > 55 && g > 35 && b > 20 && r > g && (r - g) >= 10 && (r - b) >= 15);
 
+                // Handheld Device / Smartphone Signature:
+                // Solid light/white/pastel/dark phone casing, metallic bezel, camera module, or glowing screen
+                const isDevicePixel = !isTrueSkin && (
+                  (lum > 185 && Math.abs(r - g) < 18 && Math.abs(g - b) < 18) || // Light/white/lavender phone casing or display
+                  (lum < 40 && Math.abs(r - g) < 10 && Math.abs(g - b) < 10) ||   // Dark metallic/plastic phone chassis
+                  (lum > 225) ||                                                   // Screen illumination
+                  (Math.abs(r - b) > 35 && lum > 60 && lum < 210)                  // Colored protective phone cover
+                );
+
+                // 1. Center Region: Face Presence & Luminance Texture
                 if (x >= cxMin && x <= cxMax && y >= cyMin && y <= cyMax) {
                   totalCenterPixels++;
-                  if (isSkin) centerSkinPixels++;
+                  centerLums.push(lum);
+                  if (isTrueSkin) centerSkinPixels++;
                 }
 
-                if (x >= cxMin && x <= cxMax && y >= oralYMin && y <= oralYMax) {
-                  totalOralZonePixels++;
-                  if (isSkin || (r > 80 && g < 75)) oralZoneSkinPixels++;
+                // 2. Left Zone: Hand raising phone to left ear/head/camera (Image 2 pattern)
+                if (x <= leftZoneXMax && y >= upperDeviceYMin && y <= upperDeviceYMax) {
+                  totalLeftZonePixels++;
+                  if (isDevicePixel) leftZoneObjects++;
                 }
 
-                if (y <= Math.floor(h * 0.08)) {
-                  topEdgeTotal++;
-                  if (isSkin || lum < 70) topEdgeHeadPixels++;
+                // 3. Right Zone: Hand raising phone to right ear/head/camera
+                if (x >= rightZoneXMin && y >= upperDeviceYMin && y <= upperDeviceYMax) {
+                  totalRightZonePixels++;
+                  if (isDevicePixel) rightZoneObjects++;
                 }
 
-                if (y >= Math.floor(h * 0.75) && x >= cxMin && x <= cxMax) {
-                  if (isSkin) bottomEdgeFacePixels++;
-                }
-
-                if (y >= shoulderYMin && x <= leftShoulderXMax) {
-                  totalLeftShoulderPixels++;
-                  if (isTorsoMatter) leftShoulderPixels++;
-                }
-
-                if (y >= shoulderYMin && x >= rightShoulderXMin) {
-                  totalRightShoulderPixels++;
-                  if (isTorsoMatter) rightShoulderPixels++;
-                }
-
-                if (y >= Math.floor(h * 0.55) && y <= Math.floor(h * 0.88) && x > leftShoulderXMax && x < rightShoulderXMin) {
-                  totalHandZonePixels++;
-                  // Detect dark rectangular phone silhouettes or foreign device reflections
-                  if ((lum < 50 && Math.abs(r - g) < 10 && Math.abs(g - b) < 10) || (lum > 220 && Math.abs(r - b) < 15)) {
-                    handZoneObjects++;
-                  }
+                // 4. Chest / Desk Zone: Phone held in front of chest or desk
+                if (x >= cxMin && x <= cxMax && y >= chestYMin && y <= chestYMax) {
+                  totalChestZonePixels++;
+                  if (isDevicePixel) chestZoneObjects++;
                 }
               }
             }
@@ -1303,32 +1377,55 @@ function InterviewRoom() {
             previousFrameDataRef.current = new Uint8Array(imgData);
 
             const avgLuminance = totalBrightness / (w * h);
-            const estLux = Math.max(10, Math.round(avgLuminance * 1.1));
+            const estLux = Math.max(10, Math.round(avgLuminance * 1.15));
             const centerSkinRatio = centerSkinPixels / Math.max(1, totalCenterPixels);
-            const leftShoulderRatio = leftShoulderPixels / Math.max(1, totalLeftShoulderPixels);
-            const rightShoulderRatio = rightShoulderPixels / Math.max(1, totalRightShoulderPixels);
-            const topEdgeRatio = topEdgeHeadPixels / Math.max(1, topEdgeTotal);
-            const oralRatio = oralZoneSkinPixels / Math.max(1, totalOralZonePixels);
-            const handRatio = handZoneObjects / Math.max(1, totalHandZonePixels);
+            
+            // Calculate standard deviation of center luminance (face vs blank wall)
+            let centerVariance = 0;
+            if (centerLums.length > 0) {
+              const centerMean = centerLums.reduce((a, b) => a + b, 0) / centerLums.length;
+              const varianceSum = centerLums.reduce((a, b) => a + Math.pow(b - centerMean, 2), 0);
+              centerVariance = Math.sqrt(varianceSum / centerLums.length);
+            }
+
+            const leftObjectRatio = leftZoneObjects / Math.max(1, totalLeftZonePixels);
+            const rightObjectRatio = rightZoneObjects / Math.max(1, totalRightZonePixels);
+            const chestObjectRatio = chestZoneObjects / Math.max(1, totalChestZonePixels);
             const avgMotion = motionDelta / (w * h);
 
             const currentAlertsList = [];
 
-            // 12. Lighting Metric (45 lx <= illuminance <= 230 lx)
+            // A. Ambient Lighting Conditions (45 lx <= illuminance <= 230 lx)
             let isLightingOk = false;
             if (estLux < 45) {
               setLightingMetric({ status: 'fail', label: `Low ambient lighting (${estLux} lx) — Min 45 lx required`, lux: estLux });
               currentAlertsList.push('Low ambient lighting detected (minimum 45 lx required)');
+              if (stage === 'interview') {
+                consecutiveFailuresRef.current['lighting'] = (consecutiveFailuresRef.current['lighting'] || 0) + 1;
+                if (consecutiveFailuresRef.current['lighting'] >= 4) {
+                  triggerViolation('insufficient_lighting', 'Poor Lighting Detected', 'Ambient lighting is insufficient (below 45 lx). Please illuminate your face and workspace.');
+                }
+              }
             } else if (estLux > 230) {
               setLightingMetric({ status: 'fail', label: `Excessive glare (${estLux} lx) — Max 230 lx allowed`, lux: estLux });
               currentAlertsList.push('Excessive glare detected (maximum 230 lx allowed)');
+              if (stage === 'interview') {
+                consecutiveFailuresRef.current['lighting'] = (consecutiveFailuresRef.current['lighting'] || 0) + 1;
+                if (consecutiveFailuresRef.current['lighting'] >= 4) {
+                  triggerViolation('insufficient_lighting', 'Excessive Glare Detected', 'Excessive lighting/glare detected (above 230 lx). Please adjust camera exposure.');
+                }
+              }
             } else {
               isLightingOk = true;
               setLightingMetric({ status: 'pass', label: `Ambient lighting optimal: ${estLux} lx (45–230 lx)`, lux: estLux });
+              consecutiveFailuresRef.current['lighting'] = 0;
+              if (stage === 'interview' && activeViolationsRef.current.has('insufficient_lighting')) {
+                triggerRecovery('insufficient_lighting', 'Lighting Conditions Restored', 'Ambient illuminance is now within the optimal 45–230 lx range.');
+              }
             }
 
-            // B. Camera Covered / Blank Detection
-            const isCamCovered = avgLuminance < 6;
+            // B. Camera Covered / Blank Lens Detection
+            const isCamCovered = avgLuminance < 8;
             if (isCamCovered) {
               setFaceDetected(false);
               setFaceAlignmentMessage('CAMERA COVERED');
@@ -1343,8 +1440,8 @@ function InterviewRoom() {
 
               if (stage === 'interview') {
                 consecutiveFailuresRef.current['camera_covered'] = (consecutiveFailuresRef.current['camera_covered'] || 0) + 1;
-                if (consecutiveFailuresRef.current['camera_covered'] >= 6) {
-                  triggerViolation('camera_covered', 'Camera Off / Covered', 'Please enable and uncover your camera to continue.');
+                if (consecutiveFailuresRef.current['camera_covered'] >= 3) {
+                  triggerViolation('camera_covered', 'Camera Off / Covered', 'Your video feed is unavailable or the camera lens is obscured. Please enable and uncover camera.');
                 }
               }
               return;
@@ -1352,8 +1449,35 @@ function InterviewRoom() {
               triggerRecovery('camera_covered', 'Camera Restored', 'Camera stream is now active and unobstructed.');
             }
 
-            // C. Face Presence Check
-            const hasFace = centerSkinRatio >= 0.12 && avgLuminance >= 18;
+            // C. Multi-Zone Unauthorized Object / Mobile Phone Detection
+            let detectedObjectBox = null;
+            let isObjectPresent = false;
+
+            if (leftObjectRatio > 0.08) {
+              isObjectPresent = true;
+              detectedObjectBox = { top: '15%', left: '8%', width: '36%', height: '52%' };
+            } else if (rightObjectRatio > 0.08) {
+              isObjectPresent = true;
+              detectedObjectBox = { top: '15%', left: '56%', width: '36%', height: '52%' };
+            } else if (chestObjectRatio > 0.10) {
+              isObjectPresent = true;
+              detectedObjectBox = { top: '48%', left: '28%', width: '44%', height: '48%' };
+            }
+
+            if (isObjectPresent && stage === 'interview') {
+              consecutiveFailuresRef.current['object_detected'] = (consecutiveFailuresRef.current['object_detected'] || 0) + 1;
+              if (consecutiveFailuresRef.current['object_detected'] >= 2) {
+                triggerViolation('unauthorized_object', 'Unauthorized Object / Phone Detected', 'A mobile phone or unauthorized device was detected in your hands or workspace.', null, 0.98, detectedObjectBox);
+              }
+            } else {
+              consecutiveFailuresRef.current['object_detected'] = 0;
+              if (stage === 'interview' && activeViolationsRef.current.has('unauthorized_object')) {
+                triggerRecovery('unauthorized_object', 'Workspace Cleared', 'Unauthorized object is no longer detected in your hands or workspace.');
+              }
+            }
+
+            // D. Face Presence Check (Requires real skin chromaticity + facial contrast texture)
+            const hasFace = (centerSkinRatio >= 0.08 && centerVariance >= 12.0 && avgLuminance >= 18);
 
             if (!hasFace) {
               setFaceDetected(false);
@@ -1364,8 +1488,8 @@ function InterviewRoom() {
 
               if (stage === 'interview') {
                 consecutiveFailuresRef.current['face_missing'] = (consecutiveFailuresRef.current['face_missing'] || 0) + 1;
-                if (consecutiveFailuresRef.current['face_missing'] >= 8) {
-                  triggerViolation('face_left_frame', 'Candidate Left Camera Frame', 'The camera detected that you moved out of the camera frame during the live assessment.');
+                if (consecutiveFailuresRef.current['face_missing'] >= 2) {
+                  triggerViolation('face_left_frame', 'Face Not Visible / Left Camera Frame', 'Your face is not visible in the camera frame. Please remain in front of the camera and centered.', null, 0.99, { top: '18%', left: '26%', width: '48%', height: '56%' });
                 }
               }
             } else {
@@ -1381,12 +1505,25 @@ function InterviewRoom() {
               }
             }
 
-            // D. Candidate Positioning (Auto-passed, no shoulder restrictions)
+            // E. Microphone Muted Check during Active Interview
+            if (stage === 'interview' && !isMicActive) {
+              consecutiveFailuresRef.current['mic_muted'] = (consecutiveFailuresRef.current['mic_muted'] || 0) + 1;
+              if (consecutiveFailuresRef.current['mic_muted'] >= 2) {
+                triggerViolation('mic_muted', 'Microphone Muted', 'Your microphone was muted while voice audio is required for this assessment.');
+              }
+            } else if (stage === 'interview' && isMicActive) {
+              consecutiveFailuresRef.current['mic_muted'] = 0;
+              if (activeViolationsRef.current.has('mic_muted')) {
+                triggerRecovery('mic_muted', 'Microphone Audio Restored', 'Microphone audio feed is now active and receiving input.');
+              }
+            }
+
+            // F. Candidate Metrics
             setShouldersMetric({ status: 'pass', label: 'Position optimal' });
             setUpperBodyMetric({ status: 'pass', label: 'Position optimal' });
-            setHandsMetric({ status: 'pass', label: 'Work area ready' });
+            setHandsMetric({ status: isObjectPresent ? 'fail' : 'pass', label: isObjectPresent ? 'Unauthorized object detected' : 'Work area ready' });
 
-            // E. Attention & Motion Smoothing
+            // G. Attention & Motion Smoothing
             if (avgMotion > 28.0) {
               setAttentionScore(prev => Math.max(70, prev - 2));
             } else {
@@ -1409,6 +1546,13 @@ function InterviewRoom() {
         setHandsMetric({ status: 'pass', label: 'Work area ready' });
         setLightingMetric({ status: 'pending', label: 'Camera inactive', lux: 0 });
         setActiveAlerts([]);
+
+        if (stage === 'interview') {
+          consecutiveFailuresRef.current['camera_covered'] = (consecutiveFailuresRef.current['camera_covered'] || 0) + 1;
+          if (consecutiveFailuresRef.current['camera_covered'] >= 2) {
+            triggerViolation('camera_covered', 'Camera Off / Unavailable', 'Your camera video stream is disabled. Please turn on your camera to continue.');
+          }
+        }
       }
     }, 250);
 
@@ -1508,7 +1652,7 @@ function InterviewRoom() {
             }
             if (json.session.is_terminated || json.session.status === 'unsuccessful' || (json.session.warning_count || 0) >= 15) {
               setIsTerminated(true);
-              setTerminationReason('The maximum number of allowed warnings (15/15) has been reached. The interview has been automatically ended.');
+              setTerminationReason('We noticed multiple violations during your interview. The maximum allowed violation limit has been reached.');
               setStage('terminated');
               setWarningCount(json.session.warning_count || 15);
             } else if (json.session.warning_count) {
@@ -1521,20 +1665,134 @@ function InterviewRoom() {
     };
     checkInitialSession();
 
-    // Fullscreen State Listener
+    // Fullscreen State Listener & Departure Detection
     const handleFullscreenChange = () => {
-      const isNowFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      const isNowFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
       setIsFullscreen(isNowFull);
+      if (stage === 'interview' && !isNowFull && !isTerminated) {
+        setShowFullscreenModal(true);
+        triggerViolation('fullscreen_exited', 'Fullscreen Mode Exited', 'You navigated away from or exited fullscreen mode during the live assessment.');
+      } else if (stage === 'interview' && isNowFull) {
+        setShowFullscreenModal(false);
+        triggerRecovery('fullscreen_exited', 'Fullscreen Restored', 'You have returned to fullscreen assessment mode.');
+      }
     };
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    // Anti-Tampering: Copy, Cut, Paste Interception
+    const handleClipboardEvent = (e) => {
+      if (stage === 'interview' && !isTerminated) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+        if (window.getSelection) {
+          try { window.getSelection().removeAllRanges(); } catch (err) {}
+        }
+        triggerViolation('copy_paste_attempt', 'Restricted Action: Clipboard Operation', 'Clipboard cut, copy, or paste operations are strictly prohibited during the interview.');
+      }
+    };
+
+    // Anti-Tampering: Context Menu Right-Click Interception
+    const handleContextMenu = (e) => {
+      if (stage === 'interview' && !isTerminated) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+        triggerViolation('restricted_action', 'Restricted Action: Context Menu', 'Right-click context menus and developer inspection options are disabled.');
+      }
+    };
+
+    // Anti-Tampering: Prohibited Keyboard Shortcuts (Escape, PrintScreen, Win+Shift+S, Cmd+Shift+3/4/5, DevTools F12, Ctrl+C/V/X/A)
+    const handleKeyDown = (e) => {
+      if (stage !== 'interview' || isTerminated) return;
+
+      const keyLower = (e.key || '').toLowerCase();
+      const isPrintScreen = e.key === 'PrintScreen' || e.code === 'PrintScreen' || e.keyCode === 44;
+      const isDevTools = e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(keyLower));
+      const isMacScreenshot = e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key);
+      const isWindowsSnip = ((e.key === 'Meta' || e.key === 'OS' || e.metaKey) && e.shiftKey && (keyLower === 's' || e.code === 'KeyS'));
+      const isCopyPasteShortcut = (e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'a', 'p', 's', 'insert'].includes(keyLower);
+      const isEscape = e.key === 'Escape' || e.code === 'Escape' || e.key === 'F11';
+
+      if (isEscape) {
+        setShowFullscreenModal(true);
+        triggerViolation('fullscreen_exited', 'Fullscreen Exited via Key', 'Escape and window exit shortcuts are restricted. Please remain in fullscreen mode.');
+      } else if (isPrintScreen || isMacScreenshot || isWindowsSnip) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+        triggerViolation('screenshot_attempt', 'Restricted Action: Screenshot Attempt', 'Screen-capture, PrintScreen, or snipping tool shortcuts are strictly prohibited.');
+      } else if (isDevTools) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+        triggerViolation('restricted_action', 'Restricted Action: Developer Tools Attempt', 'Developer tools and inspection panels are restricted during the assessment.');
+      } else if (isCopyPasteShortcut) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+        if (window.getSelection) {
+          try { window.getSelection().removeAllRanges(); } catch (err) {}
+        }
+        triggerViolation('copy_paste_attempt', 'Restricted Shortcut Attempt', 'Keyboard copy, cut, paste, or select shortcuts are strictly disabled during the interview.');
+      }
+    };
+
+    // Anti-Tampering: Tab Switching & Window Blur Interception
+    const handleVisibilityChange = () => {
+      if (stage === 'interview' && !isTerminated) {
+        if (document.hidden) {
+          triggerViolation('tab_switch', 'Restricted Action: Tab Switch', 'Navigating away from the interview tab or minimizing the browser is strictly restricted.');
+        } else {
+          triggerRecovery('tab_switch', 'Focus Restored', 'Interview viewport is focused and active.');
+        }
+      }
+    };
+
+    const handleWindowBlur = () => {
+      if (stage === 'interview' && !isTerminated) {
+        triggerViolation('window_blur', 'Restricted Action: Window Unfocused', 'The interview window lost focus. Please keep the interview window active.');
+      }
+    };
+
+    const handleWindowFocus = () => {
+      if (stage === 'interview' && !isTerminated) {
+        triggerRecovery('window_blur', 'Window Focused', 'Assessment window focus has been restored.');
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange, true);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange, true);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange, true);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange, true);
+    document.addEventListener('copy', handleClipboardEvent, true);
+    document.addEventListener('cut', handleClipboardEvent, true);
+    document.addEventListener('paste', handleClipboardEvent, true);
+    document.addEventListener('selectstart', handleClipboardEvent, true);
+    window.addEventListener('copy', handleClipboardEvent, true);
+    window.addEventListener('cut', handleClipboardEvent, true);
+    window.addEventListener('paste', handleClipboardEvent, true);
+    window.addEventListener('contextmenu', handleContextMenu, true);
+    window.addEventListener('keydown', handleKeyDown, true);
+    document.addEventListener('keydown', handleKeyDown, true);
+    document.addEventListener('visibilitychange', handleVisibilityChange, true);
+    window.addEventListener('blur', handleWindowBlur, true);
+    window.addEventListener('focus', handleWindowFocus, true);
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange, true);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange, true);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange, true);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange, true);
+      document.removeEventListener('copy', handleClipboardEvent, true);
+      document.removeEventListener('cut', handleClipboardEvent, true);
+      document.removeEventListener('paste', handleClipboardEvent, true);
+      document.removeEventListener('selectstart', handleClipboardEvent, true);
+      window.removeEventListener('copy', handleClipboardEvent, true);
+      window.removeEventListener('cut', handleClipboardEvent, true);
+      window.removeEventListener('paste', handleClipboardEvent, true);
+      window.removeEventListener('contextmenu', handleContextMenu, true);
+      window.removeEventListener('keydown', handleKeyDown, true);
+      document.removeEventListener('keydown', handleKeyDown, true);
+      document.removeEventListener('visibilitychange', handleVisibilityChange, true);
+      window.removeEventListener('blur', handleWindowBlur, true);
+      window.removeEventListener('focus', handleWindowFocus, true);
     };
-  }, [stage, isTerminated]);
+  }, [stage, isTerminated, isFullscreen]);
 
   // 8. Launch Interview Room (Gated by 12 Mandatory Conditions)
   const startInterview = async () => {
@@ -2157,7 +2415,7 @@ function InterviewRoom() {
 
 
 
-            {/* Proctoring Alerts / Threats Bell Button */}
+            {/* Violation Notification Bell Button */}
             <button
               onClick={() => setShowThreatsModal(true)}
               className={`relative px-3 py-2 rounded-xl border transition-all shadow-2xs cursor-pointer flex items-center gap-1.5 text-xs font-semibold ${
@@ -2165,15 +2423,15 @@ function InterviewRoom() {
                   ? 'border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100'
                   : 'border-slate-200 bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
-              title="Proctoring Threats & Integrity Dossier"
+              title="Violation Notifications History"
             >
               <span className={`material-symbols-outlined text-sm ${warningCount > 0 ? 'text-rose-600 animate-pulse' : 'text-slate-500'}`}>
                 notifications
               </span>
-              <span className="hidden sm:inline">Alerts</span>
+              <span className="hidden sm:inline">Notifications</span>
               {warningCount > 0 ? (
-                <span className="px-1.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-bold">
-                  {warningCount}/15
+                <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-bold shadow-xs">
+                  Violation {warningCount}
                 </span>
               ) : (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -2382,14 +2640,14 @@ function InterviewRoom() {
         {activeLiveViolation.open && (
           <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-rose-950/95 text-white border border-rose-500/70 rounded-2xl p-4 shadow-2xl backdrop-blur-md max-w-lg w-full animate-in slide-in-from-top-4 duration-300">
             <div className="flex items-start justify-between gap-3">
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 flex-1">
                 <div className="w-9 h-9 rounded-xl bg-rose-600/30 border border-rose-500/60 flex items-center justify-center shrink-0 text-rose-300">
                   <span className="material-symbols-outlined text-xl animate-pulse">warning</span>
                 </div>
-                <div className="space-y-1 text-left">
+                <div className="space-y-1 text-left flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[10px] uppercase">
-                      Warning #{activeLiveViolation.warningNumber || 1}/15
+                    <span className="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[10px] uppercase shadow-xs">
+                      Violation #{activeLiveViolation.warningNumber || 1}/15
                     </span>
                     <h4 className="font-bold text-xs text-rose-200">{activeLiveViolation.title}</h4>
                   </div>
@@ -2404,9 +2662,36 @@ function InterviewRoom() {
               </button>
             </div>
 
+            {/* Evidence Snapshot Thumbnail with Target Box Preview */}
+            {activeLiveViolation.snapshot && (
+              <div className="mt-3 w-full h-28 rounded-xl overflow-hidden bg-slate-900 border border-rose-500/40 relative shadow-inner">
+                <img
+                  src={activeLiveViolation.snapshot}
+                  alt="Violation Snapshot Evidence"
+                  className="w-full h-full object-cover opacity-90"
+                />
+                {activeLiveViolation.targetBox && (
+                  <div
+                    className="absolute border-2 border-rose-500 bg-rose-500/20 rounded shadow-[0_0_12px_rgba(244,63,94,0.6)] flex items-center justify-center pointer-events-none"
+                    style={{
+                      top: activeLiveViolation.targetBox.top,
+                      left: activeLiveViolation.targetBox.left,
+                      width: activeLiveViolation.targetBox.width,
+                      height: activeLiveViolation.targetBox.height
+                    }}
+                  >
+                    <span className="text-[8px] bg-rose-600 text-white font-bold px-1.5 py-0.5 rounded absolute -top-4 left-0 uppercase whitespace-nowrap">
+                      {activeLiveViolation.targetLabel || 'DETECTED'}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="mt-3 pt-2.5 border-t border-rose-800/60 flex items-center justify-between">
-              <span className="text-[10px] text-rose-300/80">
-                Logged to Session Forensic Audit
+              <span className="text-[10px] text-rose-300/80 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                Logged to Session Forensic Audit ({activeLiveViolation.timestamp})
               </span>
               <button
                 onClick={() => handleOpenProtestModal(activeLiveViolation)}
@@ -2503,7 +2788,7 @@ function InterviewRoom() {
         )}
 
         {/* ========================================================================= */}
-        {/* PROCTORING THREATS & INCIDENTS DOSSIER MODAL */}
+        {/* PROCTORING NOTIFICATIONS & VIOLATIONS DOSSIER MODAL */}
         {/* ========================================================================= */}
         {showThreatsModal && (
           <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -2511,11 +2796,11 @@ function InterviewRoom() {
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2.5">
                   <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-xl">security</span>
+                    <span className="material-symbols-outlined text-xl">notifications_active</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-slate-950">Proctoring Telemetry & Violations Dossier</h3>
-                    <p className="text-[11px] text-slate-500">{violationLogs.length} Infraction{violationLogs.length === 1 ? '' : 's'} recorded • Max 15 Warnings</p>
+                    <h3 className="font-bold text-base text-slate-950">Recorded Violation Notifications</h3>
+                    <p className="text-[11px] text-slate-500">{violationLogs.length} Violation{violationLogs.length === 1 ? '' : 's'} recorded • Max 15 before automatic termination</p>
                   </div>
                 </div>
                 <button
@@ -2531,52 +2816,76 @@ function InterviewRoom() {
                   <div className="text-center py-10 space-y-2">
                     <span className="material-symbols-outlined text-4xl text-emerald-500">verified</span>
                     <h4 className="font-bold text-sm text-slate-900">Zero Violations Logged</h4>
-                    <p className="text-xs text-slate-500">Your session maintains 100% proctoring integrity with no optical alerts.</p>
+                    <p className="text-xs text-slate-500">Your session maintains 100% integrity with no recorded violations.</p>
                   </div>
                 ) : (
-                  violationLogs.map((item, idx) => (
-                    <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start justify-between gap-3">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[10px]">
-                            #{item.warningNumber || idx + 1}
-                          </span>
-                          <span className="font-bold text-xs text-slate-900">{item.title}</span>
-                          <span className="text-[10px] text-slate-400">• {item.timestamp}</span>
-                          {item.contested && (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold uppercase">
-                              Contested / Protest Filed
+                  violationLogs.map((item, idx) => {
+                    const targetBox = item.targetBox || { top: '20%', left: '20%', width: '60%', height: '60%' };
+                    const targetLabel = item.targetLabel || 'VIOLATION DETECTED';
+                    const detectionType = item.detectionType || 'CV TELEMETRY';
+
+                    return (
+                      <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-start justify-between gap-3">
+                        <div className="space-y-1 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[10px]">
+                              Violation #{item.warningNumber || idx + 1}
                             </span>
+                            <span className="font-bold text-xs text-slate-900">{item.title}</span>
+                            <span className="text-[10px] text-slate-400">• {item.timestamp}</span>
+                            {item.contested && (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold uppercase">
+                                Contested / Protest Filed
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-600">{item.whatHappened}</p>
+                          {item.contested && (
+                            <div className="mt-1 p-2 rounded-lg bg-amber-50 border border-amber-200 text-[10px] text-amber-900">
+                              <strong>Dispute Reason:</strong> {item.protestReason}
+                              {item.protestExplanation && <div><em>"{item.protestExplanation}"</em></div>}
+                            </div>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-600">{item.whatHappened}</p>
-                        {item.contested && (
-                          <div className="mt-1 p-2 rounded-lg bg-amber-50 border border-amber-200 text-[10px] text-amber-900">
-                            <strong>Dispute Reason:</strong> {item.protestReason}
-                            {item.protestExplanation && <div><em>"{item.protestExplanation}"</em></div>}
+
+                        {item.snapshot && (
+                          <div className="w-28 h-20 rounded-xl overflow-hidden bg-slate-950 border border-slate-700 shrink-0 relative">
+                            <img src={item.snapshot} alt="Evidence" className="w-full h-full object-cover" />
+                            <div
+                              className="absolute border border-rose-500 bg-rose-500/20 rounded pointer-events-none"
+                              style={{
+                                top: targetBox.top,
+                                left: targetBox.left,
+                                width: targetBox.width,
+                                height: targetBox.height
+                              }}
+                            >
+                              <span className="absolute -top-1 -left-1 w-1 h-1 border-t border-l border-rose-400"></span>
+                              <span className="absolute -top-1 -right-1 w-1 h-1 border-t border-r border-rose-400"></span>
+                            </div>
                           </div>
                         )}
-                      </div>
 
-                      {!item.contested && (
-                        <button
-                          onClick={() => {
-                            setShowThreatsModal(false);
-                            handleOpenProtestModal(item);
-                          }}
-                          className="px-2.5 py-1.5 rounded-lg border border-rose-200 bg-white text-rose-700 hover:bg-rose-50 text-[11px] font-bold shrink-0 cursor-pointer flex items-center gap-1"
-                        >
-                          <span className="material-symbols-outlined text-xs">gavel</span>
-                          <span>Protest</span>
-                        </button>
-                      )}
-                    </div>
-                  ))
+                        {!item.contested && (
+                          <button
+                            onClick={() => {
+                              setShowThreatsModal(false);
+                              handleOpenProtestModal(item);
+                            }}
+                            className="px-2.5 py-1.5 rounded-lg border border-rose-200 bg-white text-rose-700 hover:bg-rose-50 text-[11px] font-bold shrink-0 cursor-pointer flex items-center gap-1"
+                          >
+                            <span className="material-symbols-outlined text-xs">gavel</span>
+                            <span>Protest</span>
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })
                 )}
               </div>
 
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Session Status: {warningCount < 15 ? 'Active & Monitored' : 'Locked'}</span>
+                <span className="text-xs text-slate-500">Current Count: {warningCount}/15 Violations</span>
                 <button
                   onClick={() => setShowThreatsModal(false)}
                   className="px-4 py-2 rounded-xl bg-slate-950 text-white text-xs font-semibold cursor-pointer hover:bg-slate-900"
@@ -2587,8 +2896,6 @@ function InterviewRoom() {
             </div>
           </div>
         )}
-
-
 
       </div>
     );
@@ -2713,114 +3020,137 @@ function InterviewRoom() {
     );
   }
 
-
   // =========================================================================
-  // VIEW 4: TERMINATED SCREEN (15 ALL REASONS DISPLAYED WITH RED MARKDOWN SNAPSHOT EVIDENCE)
+  // VIEW 4: INTERVIEW TERMINATION SCREEN (FULL WHITE BACKGROUND & 4 CARDS PER ROW)
   // =========================================================================
   if (stage === 'terminated' || isTerminated) {
     const cleanInterviewer = (interviewerName || 'Zaroon').replace(/\s*AI\s*/gi, '').trim() + ' AI';
 
-    // Real captured session violations only (No fake / simulated placeholder cards)
-    const recordedViolations = [...violationLogs].reverse();
+    // Temporary session violations only (No permanent database storage)
+    const recordedViolations = [...violationLogs];
     const violationCount = recordedViolations.length;
 
+    const handleRejoinInterview = () => {
+      // Clear all temporary session violations, evidence snapshots, and state
+      setViolationLogs([]);
+      setWarningCount(0);
+      warningCountRef.current = 0;
+      activeViolationsRef.current.clear();
+      consecutiveFailuresRef.current = {};
+      lastViolationPerTypeRef.current = {};
+      setIsTerminated(false);
+      setTerminationReason('');
+      setActiveLiveViolation({ open: false });
+      setStage('validation');
+    };
+
+    const handlePermanentEnd = () => {
+      // Clear all temporary session evidence completely and exit to candidate portal
+      setViolationLogs([]);
+      setWarningCount(0);
+      warningCountRef.current = 0;
+      activeViolationsRef.current.clear();
+      setIsTerminated(false);
+      window.location.href = 'candidate-portal.html#history';
+    };
+
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between p-4 sm:p-8 font-sans selection:bg-rose-100 selection:text-rose-900">
-        {/* Header */}
-        <header className="w-full max-w-5xl mx-auto flex items-center justify-between border-b border-slate-200 pb-4">
-          <div className="flex items-center gap-3">
-            <img src="zevaro.png" alt="Zavran AI Logo" className="h-8 w-8 rounded-xl object-contain shadow-2xs" />
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-lg text-slate-950 font-headline tracking-tight">Zavran AI</span>
-              <span className="text-slate-400">/</span>
-              <span className="text-rose-600 text-xs font-bold uppercase tracking-wider">Security & Proctoring Lock</span>
+      <div className="min-h-screen bg-white text-slate-900 flex flex-col justify-between p-6 sm:p-10 font-sans selection:bg-rose-100 selection:text-rose-900">
+        {/* Header with Zavran AI branding on the left */}
+        <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-slate-200/80 pb-5">
+          <div className="flex items-center gap-3.5">
+            <img src="zevaro.png" alt="Zavran AI Logo" className="h-10 w-10 rounded-2xl object-contain shadow-2xs border border-slate-200/60" />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-xl text-slate-950 font-headline tracking-tight">Zavran AI</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold uppercase tracking-wider border border-rose-200">
+                  Security Enforcement
+                </span>
+              </div>
+              <span className="text-xs text-slate-500 font-medium">Automated AI Interview Proctoring & Security System</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 uppercase">
-              Proctored by {cleanInterviewer}
+            <span className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200">
+              Recruiter: {cleanInterviewer}
             </span>
           </div>
         </header>
 
-        {/* Central High-End Card Container */}
-        <main className="max-w-5xl w-full mx-auto my-6 bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/60 space-y-6 text-center">
-          <div className="w-20 h-20 rounded-3xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto shadow-sm animate-pulse">
-            <span className="material-symbols-outlined text-4xl">gavel</span>
+        {/* Main Central Container */}
+        <main className="max-w-7xl w-full mx-auto my-8 space-y-8 text-center">
+          
+          {/* Central Termination Badge & Header */}
+          <div className="space-y-3">
+            <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto shadow-sm">
+              <span className="material-symbols-outlined text-3xl animate-pulse">gavel</span>
+            </div>
+            
+            <div className="space-y-1.5">
+              <span className="px-3.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 uppercase tracking-wider inline-block">
+                Maximum Limit Reached • {violationCount >= 15 ? '15/15 Violations' : `${violationCount} Violations Recorded`}
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 font-headline">
+                Your interview has been terminated by {cleanInterviewer}.
+              </h1>
+              <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                We noticed multiple violations during your interview. The maximum allowed violation limit has been reached.
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <span className="px-4 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 uppercase tracking-wider inline-block">
-              Assessment Terminated • {violationCount >= 15 ? '15/15 Warnings Exceeded' : `${violationCount} Infraction${violationCount === 1 ? '' : 's'} Recorded`}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950 font-headline">
-              Interview Session Terminated
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              {violationCount >= 15
-                ? 'This assessment session has been locked and permanently concluded due to reaching the maximum threshold of 15 proctoring integrity violations.'
-                : 'This assessment session has been locked according to organizational security and AI proctoring enforcement policies.'}
-            </p>
-          </div>
-
-          {/* Primary Summary Banner */}
-          <div className="p-5 rounded-2xl bg-rose-50/70 border border-rose-200 text-left space-y-2 shadow-2xs">
+          {/* Section Explaining Detected Violations */}
+          <div className="p-5 rounded-2xl bg-rose-50/70 border border-rose-200/90 text-left space-y-2 max-w-5xl mx-auto shadow-2xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-rose-800 font-bold text-xs">
-                <span className="material-symbols-outlined text-base">error</span>
-                <span>Termination Reason & Forensic Proctor Audit</span>
+                <span className="material-symbols-outlined text-base">report_problem</span>
+                <span>Proctoring Telemetry Summary & Incident Audit</span>
               </div>
               <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold uppercase">
-                {violationCount} Event{violationCount === 1 ? '' : 's'} Logged
+                {violationCount} Violation{violationCount === 1 ? '' : 's'} Recorded
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-              {terminationReason || `A proctoring integrity event was logged by the continuous AI proctoring engine (${cleanInterviewer}). Below is the authentic forensic dossier of recorded session infractions.`}
+              During the live interview, the automated proctoring engine continuously monitored the session for security compliance. Below is the itemized visual evidence captured at the moment of each detected violation.
             </p>
           </div>
 
-          {/* REAL RECORDED VIOLATIONS DOSSIER GRID WITH RED MARKDOWN SNAPSHOTS — NO INTERNAL SCROLLBAR */}
-          <div className="space-y-4 text-left">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-slate-100">
+          {/* Card-based Violation History Grid (4 Cards Per Row) */}
+          <div className="space-y-4 text-left max-w-7xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
               <div>
-                <h3 className="font-headline font-bold text-base text-slate-950">
-                  Itemized Forensic Trail — Session Violations & Captured Camera Snapshots
+                <h3 className="font-headline font-bold text-lg text-slate-950">
+                  Itemized Violation History & Screenshot Evidence
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Authentic chronological telemetry records captured live by {cleanInterviewer}
+                  Real-time screenshots with highlighted detection areas captured by {cleanInterviewer}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                  {violationCount} Real Event{violationCount === 1 ? '' : 's'}
-                </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-600 text-white shadow-2xs">
-                  Session Sealed
-                </span>
-              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-600 text-white shadow-xs self-start sm:self-auto">
+                {violationCount} Evidence Card{violationCount === 1 ? '' : 's'} Logged
+              </span>
             </div>
 
-            {/* Flat Responsive Grid (No Overflow-Y / No Scrolling Stick) */}
             {recordedViolations.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2">
                 {recordedViolations.map((item, idx) => {
                   const targetBox = item.targetBox || { top: '20%', left: '20%', width: '60%', height: '60%' };
-                  const targetLabel = item.targetLabel || 'INTEGRITY ALERT';
+                  const targetLabel = item.targetLabel || 'VIOLATION DETECTED';
                   const detectionType = item.detectionType || 'CV TELEMETRY';
-                  const confidence = item.confidence || '99.2%';
+                  const violationNumber = item.warningNumber || idx + 1;
 
                   return (
                     <div
                       key={idx}
-                      className="p-4 rounded-2xl bg-white border border-rose-100/90 shadow-2xs hover:border-rose-300 hover:shadow-xs transition-all flex flex-col justify-between gap-3"
+                      className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-rose-300 hover:shadow-md transition-all flex flex-col justify-between gap-3 group"
                     >
-                      {/* Card Header & Text Explanation */}
+                      {/* Card Header: Violation Number, Title, Timestamp */}
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
                           <span className="px-2.5 py-0.5 rounded-lg bg-rose-600 text-white font-sans font-bold text-xs shadow-2xs">
-                            #{item.warningNumber || idx + 1}
+                            Violation #{violationNumber}
                           </span>
-                          <span className="text-[11px] font-sans font-medium text-slate-400 flex items-center gap-1">
+                          <span className="text-[10px] font-sans font-medium text-slate-400 flex items-center gap-1">
                             <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
                             {item.timestamp}
                           </span>
@@ -2828,41 +3158,41 @@ function InterviewRoom() {
                         <h4 className="font-bold text-slate-950 text-xs leading-snug">
                           {item.title}
                         </h4>
-                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                        <p className="text-[11px] text-slate-600 leading-relaxed line-clamp-3">
                           {item.whatHappened}
                         </p>
                       </div>
 
-                      {/* FORENSIC SCREENSHOT EVIDENCE CARD WITH RED MARKDOWN BOUNDING BOX */}
-                      <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-950 border border-slate-700/80 relative shadow-inner select-none group">
-                        {/* Real Camera Feed Snapshot */}
+                      {/* Evidence Screenshot with Highlighted Detection Area */}
+                      <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-950 border border-slate-700/80 relative shadow-inner select-none">
                         {item.snapshot ? (
-                          <img src={item.snapshot} alt="Captured Violation Snapshot" className="w-full h-full object-cover opacity-90" />
+                          <img
+                            src={item.snapshot}
+                            alt={`Violation ${violationNumber} Evidence`}
+                            className="w-full h-full object-cover opacity-90"
+                          />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-b from-slate-900 via-[#0a0f1d] to-slate-950 relative flex items-center justify-center">
-                            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:16px_16px] opacity-25"></div>
-                            <div className="flex flex-col items-center gap-1 text-slate-400">
-                              <span className="material-symbols-outlined text-3xl text-rose-400">security_update_warning</span>
-                              <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">Telemetry Event Logged</span>
-                            </div>
+                          <div className="w-full h-full bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center gap-1 text-slate-400">
+                            <span className="material-symbols-outlined text-3xl text-rose-400">warning</span>
+                            <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">Telemetry Logged</span>
                           </div>
                         )}
 
-                        {/* HUD Top Bar */}
+                        {/* Top HUD Metadata */}
                         <div className="absolute top-1.5 left-2 right-2 flex items-center justify-between text-[8.5px] font-sans font-semibold text-white/90 z-10">
                           <div className="flex items-center gap-1 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded border border-white/10">
                             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
-                            <span className="text-rose-300 font-bold">EVENT #{item.warningNumber || idx + 1}</span>
+                            <span className="text-rose-300 font-bold">VIOLATION #{violationNumber}</span>
                           </div>
-                          <div className="bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded border border-white/10 text-slate-300 text-[8.5px]">
+                          <div className="bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded border border-white/10 text-slate-300 text-[8px]">
                             {detectionType}
                           </div>
                         </div>
 
-                        {/* RED BOUNDING BOX / RED MARKDOWN TARGET OVERLAY */}
+                        {/* Red Bounding Box & Target Highlight Overlay */}
                         {item.snapshot && (
                           <div
-                            className="absolute border-2 border-rose-500 bg-rose-500/15 rounded shadow-[0_0_15px_rgba(244,63,94,0.45)] flex flex-col justify-between p-1 pointer-events-none transition-all"
+                            className="absolute border-2 border-rose-500 bg-rose-500/15 rounded shadow-[0_0_15px_rgba(244,63,94,0.45)] flex flex-col justify-between p-1 pointer-events-none"
                             style={{
                               top: targetBox.top,
                               left: targetBox.left,
@@ -2876,26 +3206,26 @@ function InterviewRoom() {
                             <span className="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-rose-400"></span>
                             <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-rose-400"></span>
 
-                            {/* Red Markdown Tag Badge Notifying Where Mistake Occurred */}
+                            {/* Red Tag Badge on Detection Area */}
                             <div className="absolute -top-5 left-0 bg-rose-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase tracking-wide whitespace-nowrap z-20">
                               <span className="material-symbols-outlined text-[9px]">emergency</span>
                               <span>{targetLabel}</span>
                             </div>
 
-                            {/* Center Reticle Point */}
+                            {/* Center Target Point */}
                             <div className="m-auto w-2 h-2 rounded-full border border-rose-400 bg-rose-500/40 flex items-center justify-center">
                               <div className="w-0.5 h-0.5 rounded-full bg-white"></div>
                             </div>
                           </div>
                         )}
 
-                        {/* HUD Bottom Bar */}
+                        {/* Bottom HUD Metadata */}
                         <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[8px] font-sans text-slate-300 z-10">
                           <span className="bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded border border-white/10 text-slate-300">
-                            FRAME: {item.timestamp}
+                            TIME: {item.timestamp}
                           </span>
                           <span className="bg-rose-950/80 text-rose-300 px-1.5 py-0.5 rounded border border-rose-700/50 font-bold">
-                            CONFIDENCE: {confidence}
+                            CONFIDENCE: {item.confidence || '99.5%'}
                           </span>
                         </div>
                       </div>
@@ -2904,10 +3234,10 @@ function InterviewRoom() {
                       <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-rose-700 font-semibold">
                         <span className="flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                          CAPTURED & SEALED
+                          RECORDED EVIDENCE
                         </span>
                         <span className="text-slate-400 font-normal">
-                          Event #{item.warningNumber || idx + 1} of {violationCount}
+                          #{violationNumber} of {violationCount}
                         </span>
                       </div>
                     </div>
@@ -2917,45 +3247,40 @@ function InterviewRoom() {
             ) : (
               <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-2">
                 <span className="material-symbols-outlined text-4xl text-slate-400">verified_user</span>
-                <p className="text-xs font-semibold text-slate-800">Zero Recorded Optical Infractions</p>
+                <p className="text-xs font-semibold text-slate-800">Zero Recorded Violations</p>
                 <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
-                  No visual integrity violations were flagged during this assessment session.
+                  No visual security violations were flagged during this session.
                 </p>
               </div>
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-3">
+          {/* Action Buttons: Rejoin Interview and End Interview */}
+          <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              onClick={() => window.location.href = 'candidate-portal.html#history'}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+              onClick={handleRejoinInterview}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01]"
             >
-              <span className="material-symbols-outlined text-base">arrow_back</span>
-              <span>Return to Candidate Dashboard</span>
+              <span className="material-symbols-outlined text-base">replay</span>
+              <span>Rejoin Interview</span>
             </button>
             <button
-              onClick={() => {
-                if (navigator.clipboard) {
-                  navigator.clipboard.writeText(roomCode);
-                  alert(`Session Audit ID ${roomCode} copied to clipboard.`);
-                }
-              }}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs border border-slate-300 shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              onClick={handlePermanentEnd}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-white hover:bg-rose-50 text-rose-700 font-bold text-xs border border-rose-200 shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]"
             >
-              <span className="material-symbols-outlined text-base">content_copy</span>
-              <span>Copy Forensic Audit ID</span>
+              <span className="material-symbols-outlined text-base">logout</span>
+              <span>End Interview</span>
             </button>
           </div>
 
-          <p className="text-xs text-slate-500 font-medium">
-            Session ID: {roomCode} • Telemetry recorded and sealed by {cleanInterviewer}.
+          <p className="text-xs text-slate-400 font-medium">
+            Session ID: {roomCode} • Recorded evidence is session-only and cleared upon exit.
           </p>
         </main>
 
         {/* Footer */}
-        <footer className="w-full text-center text-xs text-slate-500 py-3 border-t border-slate-200 font-medium">
-          © 2026 Zavran AI Inc. • Automated Proctoring & Anti-Tampering Engine Active
+        <footer className="w-full text-center text-xs text-slate-400 py-4 border-t border-slate-100 font-medium">
+          © 2026 Zavran AI Inc. • Automated Proctoring & Anti-Tampering Security Active
         </footer>
       </div>
     );
