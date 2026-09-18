@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Select AI Interviewer - Zavran AI</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f8fafc',
+              900: '#090d16',
+              dark: '#0b0f19',
+            }
+          },
+          boxShadow: {
+            'card-active': '0 0 0 2px #0f172a, 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
+            'card-hover': '0 12px 24px -4px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.02)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Strictly Stationary Spheres with Internal Fluid Motion Only -->
+<style data-purpose="static-orb-fluid-animation">
+    /* 100% Rigid stationary orb container: no rotate, wobble, or position shift */
+    .orb-container {
+      width: 72px;
+      height: 72px;
+      position: relative;
+      margin: 0 auto;
+      border-radius: 9999px;
+      overflow: hidden;
+      clip-path: circle(50% at 50% 50%);
+      -webkit-clip-path: circle(50% at 50% 50%);
+      transform: none !important;
+      isolation: isolate;
+      flex-shrink: 0;
+    }
+
+    /* Base orb static image - locked in place, never rotates */
+    .static-orb-base {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: none !important;
+      pointer-events: none;
+    }
+
+    /* Fluid wave internal motion layer 1 - gentle translation & morph only, NO ROTATION */
+    .orb-fluid-wave-1 {
+      position: absolute;
+      inset: -20%;
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+      animation: fluidWaveDrift1 6s ease-in-out infinite alternate;
+      border-radius: 40%;
+    }
+
+    /* Fluid wave internal motion layer 2 - secondary wave shimmer, NO ROTATION */
+    .orb-fluid-wave-2 {
+      position: absolute;
+      inset: -25%;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+      animation: fluidWaveDrift2 8s ease-in-out infinite alternate;
+      border-radius: 44%;
+    }
+
+    /* Blue persona fluid gradients */
+    .fluid-blue-1 {
+      background: radial-gradient(ellipse at 40% 40%, rgba(255, 255, 255, 0.8) 0%, rgba(96, 165, 250, 0.6) 40%, rgba(37, 99, 235, 0) 70%);
+    }
+    .fluid-blue-2 {
+      background: radial-gradient(circle at 60% 65%, rgba(147, 197, 253, 0.7) 10%, rgba(59, 130, 246, 0.4) 50%, rgba(29, 78, 216, 0) 75%);
+    }
+
+    /* Purple persona fluid gradients */
+    .fluid-purple-1 {
+      background: radial-gradient(ellipse at 40% 40%, rgba(255, 255, 255, 0.8) 0%, rgba(192, 132, 252, 0.6) 40%, rgba(147, 51, 234, 0) 70%);
+    }
+    .fluid-purple-2 {
+      background: radial-gradient(circle at 60% 65%, rgba(233, 213, 255, 0.7) 10%, rgba(168, 85, 247, 0.4) 50%, rgba(126, 34, 206, 0) 75%);
+    }
+
+    /* Teal persona fluid gradients */
+    .fluid-teal-1 {
+      background: radial-gradient(ellipse at 40% 40%, rgba(255, 255, 255, 0.8) 0%, rgba(45, 212, 191, 0.6) 40%, rgba(13, 148, 136, 0) 70%);
+    }
+    .fluid-teal-2 {
+      background: radial-gradient(circle at 60% 65%, rgba(167, 243, 208, 0.7) 10%, rgba(20, 184, 166, 0.4) 50%, rgba(15, 118, 110, 0) 75%);
+    }
+
+    /* Internal liquid motion keyframes - strictly translation and scale, NO ROTATE */
+    @keyframes fluidWaveDrift1 {
+      0% {
+        transform: translate3d(-6%, -5%, 0) scale(1);
+      }
+      50% {
+        transform: translate3d(5%, 4%, 0) scale(1.08);
+      }
+      100% {
+        transform: translate3d(-3%, 6%, 0) scale(0.96);
+      }
+    }
+
+    @keyframes fluidWaveDrift2 {
+      0% {
+        transform: translate3d(4%, 6%, 0) scale(1.05);
+      }
+      50% {
+        transform: translate3d(-5%, -4%, 0) scale(0.95);
+      }
+      100% {
+        transform: translate3d(6%, -3%, 0) scale(1.06);
+      }
+    }
+
+    /* Glass specular surface shine - completely fixed/static to anchor spherical glass illusion */
+    .glass-specular-fixed {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      pointer-events: none;
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.85),
+                  inset 0 -3px 8px rgba(15, 23, 42, 0.35),
+                  inset 2px 0 6px rgba(255, 255, 255, 0.3);
+      background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0) 60%);
+    }
+  </style>
+<!-- END: Strictly Stationary Spheres with Internal Fluid Motion Only -->
+</head>
+<body class="bg-slate-100/70 min-h-screen text-slate-800 font-sans flex items-center justify-center p-4 sm:p-6 lg:p-8 antialiased selection:bg-slate-900 selection:text-white">
+<!-- BEGIN: MainModalContainer -->
+<main class="w-full max-w-5xl bg-white border border-slate-200/90 rounded-3xl shadow-2xl shadow-slate-200/70 overflow-hidden flex flex-col">
+<!-- BEGIN: HeaderSection -->
+<header class="p-8 pb-6 border-b border-slate-100" data-purpose="step-progression-header">
+<!-- Top Meta Bar: Step Pill & Dots -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-3 py-1 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-md shadow-sm">
+            Step 4 of 5
+          </span>
+<span class="text-xs uppercase font-bold tracking-wider text-slate-400">
+            EVALUATOR
+          </span>
+</div>
+<!-- Stepper Dots -->
+<div aria-label="Step 4 of 5 active" class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-slate-900"></span>
+<span class="w-2 h-2 rounded-full bg-slate-900"></span>
+<span class="w-2 h-2 rounded-full bg-slate-900"></span>
+<span class="w-2 h-2 rounded-full bg-slate-900 ring-2 ring-slate-900/20 ring-offset-1"></span>
+<span class="w-2 h-2 rounded-full bg-slate-300"></span>
+</div>
+</div>
+<!-- Main Step Heading -->
+<div class="mb-5">
+<h1 class="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight">
+          Select AI Interviewer
+        </h1>
+<p class="text-sm sm:text-base text-slate-500 mt-1 font-normal">
+          Choose an AI character calibrated to your interview format.
+        </p>
+</div>
+<!-- Linear Progress Bar (80%) -->
+<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden" role="progressbar">
+<div class="bg-slate-950 h-full w-4/5 rounded-full transition-all duration-500 ease-out"></div>
+</div>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: ContentSection -->
+<section class="p-8 pt-7 flex-1 bg-white" data-purpose="persona-selection-area">
+<!-- Section Sub-Header with Badge -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+<div>
+<h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            Choose Your AI Recruiter &amp; Evaluator
+          </h2>
+<p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Select a calibrated AI persona with specialized domain rigor and voice synthesis engine.
+          </p>
+</div>
+<!-- Live Status Pill -->
+
+</div>
+<!-- Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="persona-grid">
+<!-- Card 1: Zaroon AI -->
+<div class="persona-card relative flex flex-col justify-between p-6 rounded-2xl bg-white hover:border-slate-300 hover:shadow-card-hover transition-all duration-200 cursor-pointer border border-slate-200" data-persona="zaroon">
+<div class="relative flex items-center justify-center w-full mb-4">
+<div class="flex items-center justify-center gap-2">
+<h3 class="text-xl font-bold text-slate-950 tracking-tight">Zaroon AI</h3>
+</div>
+<div class="absolute right-0 flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-sm">
+<svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span>
+</div>
+</div>
+<!-- Locked Stationary Orb with Internal Fluid Motion Only -->
+<div class="flex items-center justify-center my-2">
+<div class="orb-container" style="box-shadow: rgba(59, 130, 246, 0.4) 0px 0px 24px, rgba(59, 130, 246, 0.18) 0px 0px 40px; border-radius: 9999px; overflow: hidden;">
+<img alt="Zaroon AI" class="static-orb-base" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC05LypyD3K4M2vNQWJ-f0DpDT8kVj-lgGYXGc3xyfU0WFEChjMRN1Ty7KDk8kq5HIhPDxQu_B-ph3EtBKlgcRjcEa4oWCed2H68g-khggvaIsYnE5wvcVijHQA9x4vNFPsslsc9kP8bZ8MpJt8ertWveQ5eGuZYKi565T9Oa6TM3WT_yYRqf4h3aGn28DqoANvSuGq-U7Socw5lCfwqMNBiVoYnQJC-8QHCToSkx2kkajHCytZLE5KysqCsyY6mrH7ZVQ" style="object-fit: cover; transform-origin: center center; transform: scale(1.65) !important;">
+<div class="orb-fluid-wave-1 fluid-blue-1"></div>
+<div class="orb-fluid-wave-2 fluid-blue-2"></div>
+<div class="glass-specular-fixed" style="box-shadow: rgba(255, 255, 255, 0.6) 0px 2px 6px inset, rgba(15, 23, 42, 0.1) 0px -2px 6px inset;"></div>
+</div>
+</div>
+<!-- Audio Player Bar -->
+<div class="mt-4 rounded-2xl bg-white border border-slate-200 p-4 shadow-sm flex flex-col items-center justify-center text-slate-900">
+<div class="w-full flex items-center gap-2 mb-3">
+<div class="relative flex-1 h-1.5 bg-slate-200 rounded-full">
+<div class="absolute left-0 top-0 h-full w-1/3 bg-emerald-500 rounded-full"></div>
+<div class="absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white shadow-xs"></div>
+</div>
+</div>
+<div class="w-full flex items-center justify-center px-2 text-slate-700">
+<button class="w-8 h-8 rounded-full border-2 border-slate-900 text-slate-900 flex items-center justify-center hover:bg-slate-100 transition" type="button"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button>
+</div>
+</div>
+</div>
+<!-- Card 2: Aarin AI -->
+<div class="persona-card relative flex flex-col justify-between p-6 rounded-2xl bg-white hover:border-slate-300 hover:shadow-card-hover transition-all duration-200 cursor-pointer border-2 border-slate-950 shadow-card-active" data-persona="aarin">
+<div class="flex items-center justify-center w-full mb-4">
+<div class="flex items-center justify-center gap-2">
+<h3 class="text-xl font-bold text-slate-950 tracking-tight">Aarin AI</h3>
+</div>
+</div>
+<!-- Locked Stationary Orb with Internal Fluid Motion Only -->
+<div class="flex items-center justify-center my-2">
+<div class="orb-container" style="box-shadow: rgba(168, 85, 247, 0.4) 0px 0px 24px, rgba(168, 85, 247, 0.18) 0px 0px 40px;">
+<img alt="Aarin AI" class="static-orb-base" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsT5d413MgGKNlwaO09jUqHW7HEN01Vm6CKTY87HpjVqrlqLEGrQqwjzPNQF5HH71OhweRHiA-F4G-btRn3UFOWDfOH5U-3S7RwtGfQ8yuUZuRA9XnbSp7poQN6yCYNuwVrjv0IFnuacGKwfip0xHRsSsYmbwFiiSdnNkn_ZIGJv-cdJl4hcwZWXPt1PLWmeDPUJl4iwtgf0yheiddRiJjtoEGJLIT0ziIfnqTPcyYN8lxrVt4n2_leQ" style="object-fit: cover; transform-origin: center center; transform: scale(1.65) !important;">
+<div class="orb-fluid-wave-1 fluid-purple-1"></div>
+<div class="orb-fluid-wave-2 fluid-purple-2"></div>
+<div class="glass-specular-fixed" style="box-shadow: rgba(255, 255, 255, 0.6) 0px 2px 6px inset, rgba(15, 23, 42, 0.1) 0px -2px 6px inset;"></div>
+</div>
+</div>
+<!-- Audio Player Bar -->
+<div class="mt-4 rounded-2xl bg-white border border-slate-200 p-4 shadow-sm flex flex-col items-center justify-center text-slate-900">
+<div class="w-full flex items-center gap-2 mb-3">
+<div class="relative flex-1 h-1.5 bg-slate-200 rounded-full">
+<div class="absolute left-0 top-0 h-full w-2/5 bg-emerald-500 rounded-full"></div>
+<div class="absolute top-1/2 left-2/5 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white shadow-xs"></div>
+</div>
+</div>
+<div class="w-full flex items-center justify-between px-2 text-slate-700">
+<button class="text-emerald-500 hover:text-emerald-600 transition" type="button"></button>
+<button class="hover:text-slate-900 transition" type="button"></button>
+<button class="w-8 h-8 rounded-full border-2 border-slate-900 text-slate-900 flex items-center justify-center hover:bg-slate-100 transition" type="button"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button>
+<button class="hover:text-slate-900 transition" type="button"></button>
+<button class="hover:text-slate-900 transition" type="button"></button>
+</div>
+</div>
+</div>
+<!-- Card 3: Soni AI (Active Selection matching layout) -->
+<div class="persona-card relative flex flex-col justify-between p-6 rounded-2xl bg-white hover:border-slate-300 hover:shadow-card-hover transition-all duration-200 cursor-pointer border border-slate-200" data-persona="soni">
+<div class="flex items-center justify-center w-full mb-4">
+<div class="flex items-center justify-center gap-2">
+<h3 class="text-xl font-bold text-slate-950 tracking-tight">Soni AI</h3>
+</div>
+</div>
+<!-- Locked Stationary Orb with Internal Fluid Motion Only -->
+<div class="flex items-center justify-center my-2">
+<div class="orb-container" style="box-shadow: rgba(20, 184, 166, 0.4) 0px 0px 24px, rgba(20, 184, 166, 0.18) 0px 0px 40px;">
+<img alt="Soni AI" class="static-orb-base" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL9bS9q1P99f-CfZ2Wk97dGCCG1ygSs864jzSeQE7rYK_MNjS8Ak4kB0ZIajiOLK5FesuL4YzQt6hmo8lrFrXZbtqmAqq4YlvUvqvGXldvo_S60okFYh8dKYcv8V_GdrWMfivA2Ap9ATqakp16PPWr0ziVP73SF5fbihkK8s-bEjAO96BYbqpuOHvHFO3t9pJrztezc6Xu9Ey_2f9XPJtT7dxnv78KoVwBU_loBtz-x5kbBbZbqtBl2Q" style="object-fit: cover; transform-origin: center center; transform: scale(1.65) !important;">
+<div class="orb-fluid-wave-1 fluid-teal-1"></div>
+<div class="orb-fluid-wave-2 fluid-teal-2"></div>
+<div class="glass-specular-fixed" style="box-shadow: rgba(255, 255, 255, 0.6) 0px 2px 6px inset, rgba(15, 23, 42, 0.1) 0px -2px 6px inset;"></div>
+</div>
+</div>
+<!-- Audio Player Bar -->
+<div class="mt-4 rounded-2xl bg-white border border-slate-200 p-4 shadow-sm flex flex-col items-center justify-center text-slate-900">
+<div class="w-full flex items-center gap-2 mb-3">
+<div class="relative flex-1 h-1.5 bg-slate-200 rounded-full">
+<div class="absolute left-0 top-0 h-full w-1/4 bg-emerald-500 rounded-full"></div>
+<div class="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white shadow-xs"></div>
+</div>
+</div>
+<div class="w-full flex items-center justify-between px-2 text-slate-700">
+<button class="text-emerald-500 hover:text-emerald-600 transition" type="button"></button>
+<button class="hover:text-slate-900 transition" type="button"></button>
+<button class="w-8 h-8 rounded-full border-2 border-slate-900 text-slate-900 flex items-center justify-center hover:bg-slate-100 transition" type="button"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button>
+<button class="hover:text-slate-900 transition" type="button"></button>
+<button class="hover:text-slate-900 transition" type="button"></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: ContentSection -->
+<!-- BEGIN: NavigationFooter -->
+<footer class="p-6 sm:px-8 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between" data-purpose="modal-actions">
+<!-- Back Action -->
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold text-sm hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Back</span>
+</button>
+<!-- Next Action -->
+<button class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-950 text-white font-semibold text-sm hover:bg-slate-800 active:scale-[0.99] transition shadow-md shadow-slate-950/10" type="button">
+<span class="">Next</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</footer>
+<!-- END: NavigationFooter -->
+</main>
+<!-- END: MainModalContainer -->
+<!-- BEGIN: InteractiveScripts -->
+<script data-purpose="card-selection">
+    // Interactive card selection
+    document.querySelectorAll('.persona-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return;
+
+        document.querySelectorAll('.persona-card').forEach(c => {
+          c.classList.remove('border-2', 'border-slate-950', 'shadow-card-active');
+          c.classList.add('border', 'border-slate-200');
+        });
+
+        card.classList.remove('border', 'border-slate-200');
+        card.classList.add('border-2', 'border-slate-950', 'shadow-card-active');
+      });
+    });
+  </script>
+<!-- END: InteractiveScripts -->
+
+
+</body></html>

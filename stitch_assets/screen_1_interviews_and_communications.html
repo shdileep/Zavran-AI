@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#07006c", "secondary-fixed-dim": "#93ccff", "surface-container": "#ebedfb", "error": "#ba1a1a", "background": "#faf9ff", "outline": "#767586", "outline-variant": "#c7c4d7", "secondary-fixed": "#cce5ff", "on-background": "#181b25", "on-secondary-fixed": "#001d31", "secondary-container": "#5bb8fe", "surface-container-high": "#e5e8f5", "surface-bright": "#faf9ff", "on-surface-variant": "#464554", "on-tertiary": "#ffffff", "primary-container": "#6063ee", "secondary": "#006398", "primary-fixed-dim": "#c0c1ff", "surface-container-lowest": "#ffffff", "on-secondary-container": "#00476e", "surface-container-low": "#f1f3ff", "on-primary-container": "#fffbff", "on-tertiary-fixed": "#25005a", "primary-fixed": "#e1e0ff", "error-container": "#ffdad6", "on-surface": "#181b25", "on-secondary-fixed-variant": "#004b73", "primary": "#4648d4", "surface-variant": "#dfe2ef", "on-error": "#ffffff", "on-secondary": "#ffffff", "surface-container-highest": "#dfe2ef", "on-primary-fixed-variant": "#2f2ebe", "surface": "#faf9ff", "surface-dim": "#d7d9e7", "on-tertiary-container": "#fffbff", "on-primary": "#ffffff", "inverse-surface": "#2c303a", "tertiary-fixed-dim": "#d2bbff", "on-tertiary-fixed-variant": "#5a00c6", "on-error-container": "#93000a", "tertiary-container": "#8a4cfc", "inverse-on-surface": "#eef0fe", "surface-tint": "#494bd6", "tertiary-fixed": "#eaddff", "tertiary": "#712ae2", "inverse-primary": "#c0c1ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "margin": "4rem", "margin-mobile": "1.25rem", "margin-tablet": "2rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "gutter-tablet": "1.25rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-md": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "display-xl-mobile": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "display-xl": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "body-md": ["Inter"], "headline-sm": ["Plus Jakarta Sans"], "label-mono": ["JetBrains Mono"], "label-md": ["Inter"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "display-xl-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "display-xl": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-mono": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.015em", "fontWeight": "500" }], "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-lg"><div class="px-space-sm flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-lg">psychology</span></div><div><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Zavran</span><span class="font-label-mono text-label-mono bg-primary-fixed text-on-primary-fixed-variant px-1.5 py-0.5 rounded">AI</span></div><span class="block font-label-mono text-label-mono text-outline tracking-wider uppercase">Enterprise ATS</span></div></div></div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary-container font-label-lg text-label-lg shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-xl">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="hire" href="#"><span class="material-symbols-outlined text-xl">work</span><span>Hire</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="candidates" href="#"><span class="material-symbols-outlined text-xl">group</span><span>Candidates</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="interviews" href="#"><span class="material-symbols-outlined text-xl">video_call</span><span>Interviews</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg transition-colors bg-primary-container text-on-primary-container font-label-lg text-label-lg shadow-sm" data-path="hiring-decisions" href="#"><span class="material-symbols-outlined text-xl">fact_check</span><span>Hiring Decisions</span></a></nav></div><div class="flex flex-col gap-space-sm"><nav class="flex flex-col gap-1" data-active-classes="bg-surface-container-high text-on-surface font-label-lg text-label-lg"><a class="flex items-center gap-space-sm px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" data-path="settings" href="#"><span class="material-symbols-outlined text-lg">settings</span><span>Settings</span></a><a class="flex items-center gap-space-sm px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" data-path="company-profile" href="#"><span class="material-symbols-outlined text-lg">domain</span><span>Company Profile</span></a><a class="flex items-center gap-space-sm px-space-md py-2 rounded-lg text-error hover:bg-error-container hover:text-on-error-container transition-colors font-label-md text-label-md" data-path="logout" href="#"><span class="material-symbols-outlined text-lg">logout</span><span>Log Out</span></a></nav><div class="bg-surface-container-low p-space-sm rounded-xl flex items-center gap-space-sm mt-space-xs"><img alt="Profile" class="w-9 h-9 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1U3w1iyHTUXuRqJqx9hDkmCLXaKQ5NU4Aiw43ImXEBHZU3QOMSy6InBeXj57eCB67ag_7uV4rDGthIwK1AHhFHUAyMOClSoDUgpIdzPCiq_kaq9mFdrMvlck10mhlsjqxkfhj_6zhZoIuLDsC4I9uzai3Gmco6xr_HKM_Btexjmr4wpoQjRxxngge7helwDYXnPcAPOkgx4rywh6b_DZsioZObFv-_1srOfPUSKaBWmUprzVHFcVB1wPsbi0Jc4lhmgfw8P9SvW4FI"/><div class="flex-1 min-w-0"><p class="font-label-md text-label-md text-on-surface truncate font-semibold">Sarah Jenkins</p><p class="font-label-mono text-label-mono text-outline truncate">Head of Talent</p></div><button class="text-on-surface-variant hover:text-on-surface p-1 rounded transition-colors"><span class="material-symbols-outlined text-base">more_vert</span></button></div></div></aside><div class="pl-72 min-h-screen flex flex-col"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-1.5 rounded-lg text-on-surface-variant cursor-pointer hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-base text-outline">corporate_fare</span><span class="font-label-md text-label-md text-on-surface font-medium">Acme Corp (Global)</span><span class="material-symbols-outlined text-sm text-outline">unfold_more</span></div><div class="hidden md:flex items-center bg-surface-container-low rounded-lg px-space-md py-1.5 w-72 text-outline-variant focus-within:ring-1 focus-within:ring-primary focus-within:bg-surface-container-lowest transition-all"><span class="material-symbols-outlined text-outline text-lg mr-space-xs">search</span><span class="font-body-sm text-body-sm text-outline flex-1">Search requisitions, candidates...</span><kbd class="font-label-mono text-label-mono bg-surface-container-lowest text-outline px-1.5 py-0.5 rounded border border-outline-variant/30 text-[10px]">⌘K</kbd></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs text-on-surface-variant"><button class="p-2 rounded-lg hover:bg-surface-container-low hover:text-on-surface transition-colors relative"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary"></span></button><button class="p-2 rounded-lg hover:bg-surface-container-low hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-xl">help</span></button></div><div class="h-5 w-[1px] bg-surface-container-high"></div><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1U3w1iyHTUXuRqJqx9hDkmCLXaKQ5NU4Aiw43ImXEBHZU3QOMSy6InBeXj57eCB67ag_7uV4rDGthIwK1AHhFHUAyMOClSoDUgpIdzPCiq_kaq9mFdrMvlck10mhlsjqxkfhj_6zhZoIuLDsC4I9uzai3Gmco6xr_HKM_Btexjmr4wpoQjRxxngge7helwDYXnPcAPOkgx4rywh6b_DZsioZObFv-_1srOfPUSKaBWmUprzVHFcVB1wPsbi0Jc4lhmgfw8P9SvW4FI"/><span class="hidden lg:inline font-label-md text-label-md text-on-surface font-medium">Sarah Jenkins</span></div></div></header><main class="w-full pt-16 bg-surface flex-1"><div class="flex flex-col w-full bg-surface-container-lowest min-h-screen text-on-surface">
+<!-- Main View Container with strict white canvas styling -->
+<div class="px-space-xl py-space-lg flex flex-col gap-space-lg max-w-[1440px] mx-auto w-full">
+<!-- Top Breadcrumb & Page Title Block -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Talent Pipeline</span>
+<span class="text-outline-variant font-label-mono text-label-mono">/</span>
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Interview Management</span>
+<span class="text-outline-variant font-label-mono text-label-mono">/</span>
+<span class="font-label-mono text-label-mono text-primary font-semibold uppercase tracking-wider">Active Cycles</span>
+</div>
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-md flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">Interviews</h1>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-mono text-label-mono font-semibold shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              4 Sessions Live / 12 Scheduled Today
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+            Coordinate and monitor AI-driven technical &amp; behavioral interviews, review candidate profiles, and dispatch calibrated invite communications.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="flex items-center gap-2 px-space-md py-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-all shadow-sm" onclick="openQuickEmail('Global Broadcast', 'all-active@candidates.zavran.internal', 'Standard Technical')">
+<span class="material-symbols-outlined text-lg">outgoing_mail</span>
+<span>+ Quick Invite Candidate</span>
+</button>
+<button class="flex items-center gap-2 px-space-md py-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">download</span>
+<span>Export Schedule</span>
+</button>
+<button class="flex items-center gap-2 px-space-lg py-2.5 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-lg text-label-lg transition-all shadow-md">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+<span>Schedule Interview</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Telemetry Metrics Strip (Pure White Background with soft crisp borders) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric Card 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Today's Interviews</span>
+<div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-base">video_camera_front</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-xl-mobile text-display-xl-mobile font-bold text-on-surface">18</span>
+<span class="font-label-mono text-label-mono text-outline">sessions</span>
+</div>
+<div class="flex items-center gap-2 mt-3 pt-2">
+<span class="inline-flex items-center text-[11px] font-semibold text-primary font-label-mono bg-primary-fixed px-2 py-0.5 rounded">
+            6 Active Now
+          </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">12 Upcoming</span>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Completed Evaluations</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-base">fact_check</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-xl-mobile text-display-xl-mobile font-bold text-on-surface">142</span>
+<span class="font-label-mono text-label-mono text-outline">synthesized</span>
+</div>
+<div class="flex items-center gap-2 mt-3 pt-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Average Calibration:</span>
+<span class="font-label-mono text-label-mono font-bold text-secondary">86.4%</span>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Pending Candidate Response</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-base">mark_email_unread</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-xl-mobile text-display-xl-mobile font-bold text-on-surface">9</span>
+<span class="font-label-mono text-label-mono text-outline">awaiting RSVP</span>
+</div>
+<div class="flex items-center gap-2 mt-3 pt-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Invitations Dispatched</span>
+<span class="font-label-mono text-label-mono text-primary font-medium">(3 reminders due)</span>
+</div>
+</div>
+<!-- Metric Card 4 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">AI Room Capacity</span>
+<div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-base">memory</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-xl-mobile text-display-xl-mobile font-bold text-on-surface">99.8%</span>
+<span class="font-label-mono text-label-mono text-outline">Uptime</span>
+</div>
+<div class="flex items-center gap-2 mt-3 pt-2">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Zaroon &amp; Aarin Engines Active</span>
+</div>
+</div>
+</div>
+<!-- Filter & Batch Action Header Bar -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm flex-1">
+<!-- Search -->
+<div class="relative flex-1 min-w-[240px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full pl-9 pr-space-md py-2 text-body-sm rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="candidateFilterInput" onkeyup="filterCards()" placeholder="Search candidate name, email, target role, company..." type="text"/>
+</div>
+<!-- Role Dropdown -->
+<select class="px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface font-body-sm focus:outline-none cursor-pointer">
+<option value="all">All Roles (Eng, Systems, AI)</option>
+<option value="ai">AI Engineer (L5)</option>
+<option value="arch">Lead Systems Architect</option>
+<option value="ml">ML Principal Engineer</option>
+<option value="fs">Full Stack Developer</option>
+</select>
+<!-- Stage Filter -->
+<select class="px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface font-body-sm focus:outline-none cursor-pointer">
+<option value="all">All Interview Stages</option>
+<option value="live">Live Code Synthesis</option>
+<option value="concurrency">Concurrency &amp; RAG</option>
+<option value="behavioral">Consensus &amp; Leadership</option>
+</select>
+<!-- Date Filter -->
+<div class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface font-body-sm">
+<span class="material-symbols-outlined text-outline text-base">calendar_today</span>
+<span>Today &amp; Tomorrow</span>
+</div>
+</div>
+<!-- Batch Actions -->
+<div class="flex items-center gap-space-sm justify-between sm:justify-end">
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-on-surface-variant select-none">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary" id="selectAllCandidates" onclick="toggleSelectAll(this)" type="checkbox"/>
+<span>Select All (4)</span>
+</label>
+<button class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-primary-fixed text-on-primary-fixed-variant hover:bg-primary hover:text-on-primary transition-all font-label-md text-label-md font-semibold" id="batchEmailBtn" onclick="dispatchBatchInvite()">
+<span class="material-symbols-outlined text-base">mark_email_read</span>
+<span>Send Email Invites (Selected)</span>
+</button>
+</div>
+</div>
+<!-- Candidate Interview Cards List -->
+<div class="flex flex-col gap-space-md" id="cardsContainer">
+<!-- CARD 1: Arjun Kumar -->
+<div class="candidate-card p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg" data-keywords="arjun kumar arjun.kumar@techmail.dev ai engineer razorpay swiggy">
+<!-- Col 1: Candidate Profile & Experience -->
+<div class="flex items-start gap-space-md flex-1">
+<div class="pt-1">
+<input class="candidate-checkbox w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
+</div>
+<div class="relative">
+<img class="w-14 h-14 rounded-xl object-cover bg-surface-container shadow-sm" data-alt="Professional studio headshot of Arjun Kumar, a South Asian male software architect in a dark tech casual shirt against a clean neutral background, soft key lighting, sharp realistic portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF0bxaL_BMsgIAEBpn6bHVj1BTH9YM7BnqLcgbRfQA2Even3KzdnkEsSgKiPG7k4g4jsa47kj5qahjqPm4yX43CFueT688aOakT4GSFOw-FxzJUjPk8IqC9Al2gljF36g7ztPpvhZxKAihGabXFfdHqJ1HwrNCfSN0T_0d_jR_B7WJ94dDCFjwq0xKJQs7z1PZ-RQ32yV4f-bzwDEGXusiJAbpmNYvOoVWuaPcH76XLhWT_SEBcsC2lw"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-secondary ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Arjun Kumar</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-mono text-label-mono font-semibold">
+                AI Engineer (L5)
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-mono text-label-mono">
+                98.4% Match
+              </span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-sm flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-outline">mail</span>
+<span class="font-label-mono text-label-mono">arjun.kumar@techmail.dev</span>
+</span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-outline">call</span>
+<span class="font-label-mono text-label-mono">+91 98765 43210</span>
+</span>
+</div>
+<div class="flex items-center gap-2 text-outline font-body-sm mt-0.5">
+<span class="material-symbols-outlined text-sm">domain</span>
+<span>Ex-Razorpay &amp; Swiggy</span>
+<span>•</span>
+<span class="font-label-mono text-label-mono">4.5 Years Production Exp</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Interview Session Meta -->
+<div class="flex flex-col gap-2 xl:w-96 px-0 xl:px-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Evaluation Stage</span>
+<span class="font-label-mono text-label-mono text-primary font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+              Live in 25 Mins
+            </span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">
+            Live System Validation &amp; Code Synthesis
+          </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-base text-tertiary">smart_toy</span>
+<span>Evaluator: <strong>Zaroon AI</strong> (Distributed Systems)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm pt-1">
+<span class="flex items-center gap-1 text-on-surface font-medium">
+<span class="material-symbols-outlined text-sm text-outline">schedule</span>
+              Today · 3:30 PM (IST)
+            </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container font-label-mono text-[10px] text-secondary font-medium">
+<span class="material-symbols-outlined text-xs">verified</span> Secure Token Active
+            </span>
+</div>
+</div>
+<!-- Col 3: Actions Group -->
+<div class="flex flex-col sm:flex-row xl:flex-col gap-2 min-w-[200px] justify-center">
+<button class="flex items-center justify-center gap-2 px-space-md py-2.5 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-semibold transition-all shadow-sm" onclick="enterLiveRoom('Arjun Kumar', 'AI-L5-SYNTH-902')">
+<span class="material-symbols-outlined text-base">sensors</span>
+<span>Enter Live Room</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="openQuickEmail('Arjun Kumar', 'arjun.kumar@techmail.dev', 'Standard Technical')">
+<span class="material-symbols-outlined text-base text-primary">mail</span>
+<span>Send Invite</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="fetchCandidateTelemetry(this, 'Arjun Kumar')">
+<span class="material-symbols-outlined text-base text-secondary">sync</span>
+<span>Sync Telemetry</span>
+</button>
+</div>
+</div>
+</div>
+<!-- CARD 2: Priya Sharma -->
+<div class="candidate-card p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg" data-keywords="priya sharma priya.sharma@cloudcore.io lead systems architect cloudcore backend">
+<!-- Col 1: Profile -->
+<div class="flex items-start gap-space-md flex-1">
+<div class="pt-1">
+<input class="candidate-checkbox w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
+</div>
+<div class="relative">
+<img class="w-14 h-14 rounded-xl object-cover bg-surface-container shadow-sm" data-alt="Studio corporate portrait of Priya Sharma, a South Asian woman engineer with thoughtful expression wearing a dark tailored blazer, well-lit executive backdrop, sharp photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7ipGao_seqceXGNrAkFgs-xviDC-5canL22JtCuJTyHL8zoUVeDMr8fSJfPLup_IjcrfQQ-_dBTbCIEKNJVueBLucHp8tOaM6B2Dw1iodOldgfwIHTbOPTu5_kuQj0I3AOLQvSHUf7dc_ukgVnctIHAnJoRsKcTkuO5B0tScEdJyIeR7_OeMyToqhFnn7vX5zSsfjvYL9DHI6bLrrX-wQYsCwZXiYyXm3xQsDJD9frCJU5AznsFIoAw"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-surface-dim ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Priya Sharma</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-mono text-label-mono font-semibold">
+                Lead Systems Architect
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-mono text-label-mono">
+                95.2% Match
+              </span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-sm flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-outline">mail</span>
+<span class="font-label-mono text-label-mono">priya.sharma@cloudcore.io</span>
+</span>
+</div>
+<div class="flex items-center gap-2 text-outline font-body-sm mt-0.5">
+<span class="material-symbols-outlined text-sm">apartment</span>
+<span>Senior Backend Architect at CloudCore</span>
+<span>•</span>
+<span class="font-label-mono text-label-mono">6 Years Exp</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Session Meta -->
+<div class="flex flex-col gap-2 xl:w-96 px-0 xl:px-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Evaluation Stage</span>
+<span class="font-label-mono text-label-mono text-outline">Upcoming</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">
+            High-Throughput Concurrency &amp; RAG Pipeline
+          </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-base text-tertiary">group_work</span>
+<span>Evaluators: <strong>Zaroon AI &amp; Soni AI</strong></span>
+</div>
+<div class="flex items-center justify-between text-body-sm pt-1">
+<span class="flex items-center gap-1 text-on-surface font-medium">
+<span class="material-symbols-outlined text-sm text-outline">schedule</span>
+              Today · 5:00 PM (IST)
+            </span>
+<span class="font-label-mono text-[11px] text-outline">Calendar Sync Confirmed</span>
+</div>
+</div>
+<!-- Col 3: Actions -->
+<div class="flex flex-col sm:flex-row xl:flex-col gap-2 min-w-[200px] justify-center">
+<button class="flex items-center justify-center gap-2 px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-all shadow-sm" onclick="openQuickEmail('Priya Sharma', 'priya.sharma@cloudcore.io', 'Executive Prompt')">
+<span class="material-symbols-outlined text-base text-primary">forward_to_inbox</span>
+<span>Send Email / Reminder</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="fetchCandidateTelemetry(this, 'Priya Sharma')">
+<span class="material-symbols-outlined text-base text-secondary">sync</span>
+<span>Fetch &amp; Sync</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="viewCandidateDossier('Priya Sharma')">
+<span class="material-symbols-outlined text-base text-outline">description</span>
+<span>View Dossier</span>
+</button>
+</div>
+</div>
+</div>
+<!-- CARD 3: Devika Nair -->
+<div class="candidate-card p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg" data-keywords="devika nair devika.nair@kernelai.org ml principal engineer tensorscale gpu kernel">
+<!-- Col 1: Profile -->
+<div class="flex items-start gap-space-md flex-1">
+<div class="pt-1">
+<input class="candidate-checkbox w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
+</div>
+<div class="relative">
+<img class="w-14 h-14 rounded-xl object-cover bg-surface-container shadow-sm" data-alt="Authentic professional headshot of Devika Nair, an Indian woman technologist with sleek spectacles, minimalist tech workspace atmosphere, gentle ambient blue illumination, high resolution" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSr04xhnS8dKvaIM5HXOmMXJjKjOkPK8K7D27bP2b7Sqntedq_LXVYk-7Xf5PC34jrl_NlEKlcqJydaCenVZ6vh42vkEwPPr0bsyfzzPcB9LONbon6j4Oa2aScr53dCsZw76_wxnReJqvdHpOkJIm9MAOsQHCD50CTFXOIt-HSlriSmzAR4grUkanZAGIN7WJE5z--DUxQtL5gP4dHUwrlV4JQV8SniJeDE3bNW0_HbQR0zzgm8sGLgQ"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-surface-dim ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Devika Nair</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-mono text-label-mono font-semibold">
+                ML Principal Engineer
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-mono text-label-mono">
+                99.1% Top Match
+              </span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-sm flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-outline">mail</span>
+<span class="font-label-mono text-label-mono">devika.nair@kernelai.org</span>
+</span>
+</div>
+<div class="flex items-center gap-2 text-outline font-body-sm mt-0.5">
+<span class="material-symbols-outlined text-sm">memory</span>
+<span>Staff ML Engineer at TensorScale</span>
+<span>•</span>
+<span class="font-label-mono text-label-mono">7+ Years Exp</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Session Meta -->
+<div class="flex flex-col gap-2 xl:w-96 px-0 xl:px-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Evaluation Stage</span>
+<span class="font-label-mono text-label-mono text-outline">Scheduled Tomorrow</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">
+            Distributed GPU Kernel Optimization
+          </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-base text-primary">developer_board</span>
+<span>Evaluator: <strong>Zaroon AI</strong> (Hardware Benchmark)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm pt-1">
+<span class="flex items-center gap-1 text-on-surface font-medium">
+<span class="material-symbols-outlined text-sm text-outline">event</span>
+              Tomorrow · 10:30 AM (IST)
+            </span>
+<span class="font-label-mono text-[11px] text-primary font-medium">CUDA C++ Rubric Loaded</span>
+</div>
+</div>
+<!-- Col 3: Actions -->
+<div class="flex flex-col sm:flex-row xl:flex-col gap-2 min-w-[200px] justify-center">
+<button class="flex items-center justify-center gap-2 px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-all shadow-sm" onclick="openQuickEmail('Devika Nair', 'devika.nair@kernelai.org', 'Standard Technical')">
+<span class="material-symbols-outlined text-base text-primary">send</span>
+<span>Send Email Invite</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="fetchCandidateTelemetry(this, 'Devika Nair')">
+<span class="material-symbols-outlined text-base text-secondary">sync</span>
+<span>Sync Profile</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="rescheduleCandidate('Devika Nair')">
+<span class="material-symbols-outlined text-base text-outline">edit_calendar</span>
+<span>Reschedule</span>
+</button>
+</div>
+</div>
+</div>
+<!-- CARD 4: Rahul Verma -->
+<div class="candidate-card p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg" data-keywords="rahul verma rahul.v@stackforge.in full stack developer stackforge finnext react node">
+<!-- Col 1: Profile -->
+<div class="flex items-start gap-space-md flex-1">
+<div class="pt-1">
+<input class="candidate-checkbox w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
+</div>
+<div class="relative">
+<img class="w-14 h-14 rounded-xl object-cover bg-surface-container shadow-sm" data-alt="Modern close-up corporate headshot of Rahul Verma, a young Indian male software developer smiling confidently with soft rim lighting and blurred tech office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR1OhLEOZVVC5S-aOQ1oiq6sZwnxvolWO_Wer4IqYTQAlvuarcBYqotd7-Ju3fhUVq4IJFGWqpHvIuaaW3pSSm3XACIWP_CFv11-r8yWd6hpBr088Pu0QIEOFWLhF982QtFYXUciQviGDbuu1yBgrYkG6torHUzrdmNmydqPtBVKCiBGWEL-sAY49PqkTVIfUOwHGTtqgWaDiC1oBbGXJRf60dAJTdTvFBXzfDPiw5V9jjGUqThhh0kg"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-surface-dim ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Rahul Verma</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-mono text-label-mono font-semibold">
+                Full Stack Developer
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-mono text-label-mono">
+                91.8% Match
+              </span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-sm flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-outline">mail</span>
+<span class="font-label-mono text-label-mono">rahul.v@stackforge.in</span>
+</span>
+</div>
+<div class="flex items-center gap-2 text-outline font-body-sm mt-0.5">
+<span class="material-symbols-outlined text-sm">badge</span>
+<span>Full Stack Engineer at FinNext</span>
+<span>•</span>
+<span class="font-label-mono text-label-mono">3.5 Years Exp</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Session Meta -->
+<div class="flex flex-col gap-2 xl:w-96 px-0 xl:px-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Evaluation Stage</span>
+<span class="font-label-mono text-label-mono text-outline">Scheduled Tomorrow</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">
+            Behavioral &amp; Cross-Functional Consensus
+          </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-base text-secondary">psychology_alt</span>
+<span>Evaluator: <strong>Aarin AI</strong> (Consensus Engine)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm pt-1">
+<span class="flex items-center gap-1 text-on-surface font-medium">
+<span class="material-symbols-outlined text-sm text-outline">event</span>
+              Tomorrow · 2:00 PM (IST)
+            </span>
+<span class="font-label-mono text-[11px] text-outline">Invitation Pending RSVP</span>
+</div>
+</div>
+<!-- Col 3: Actions -->
+<div class="flex flex-col sm:flex-row xl:flex-col gap-2 min-w-[200px] justify-center">
+<button class="flex items-center justify-center gap-2 px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-all shadow-sm" onclick="openQuickEmail('Rahul Verma', 'rahul.v@stackforge.in', 'Reminder')">
+<span class="material-symbols-outlined text-base text-primary">send</span>
+<span>Send Email Invite</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="fetchCandidateTelemetry(this, 'Rahul Verma')">
+<span class="material-symbols-outlined text-base text-secondary">sync</span>
+<span>Sync Profile</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all" onclick="viewCandidateDossier('Rahul Verma')">
+<span class="material-symbols-outlined text-base text-outline">description</span>
+<span>View Dossier</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Telemetry & System Status Footer Bar -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-sm font-label-mono text-label-mono text-outline">
+<div class="flex items-center gap-space-md flex-wrap">
+<span class="flex items-center gap-1.5 text-on-surface font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+          Zavran Autonomous Gateway: Optimal
+        </span>
+<span>•</span>
+<span>Candidate Sync Protocol: v4.8 (OAuth2 Webhooks Live)</span>
+<span>•</span>
+<span>AI Synthesizer Latency: 42ms</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="hover:text-on-surface cursor-pointer">Security Audit Log</span>
+<span>•</span>
+<span class="hover:text-on-surface cursor-pointer">API Integration Docs</span>
+</div>
+</div>
+</div>
+<!-- Interactive Quick Email Dispatch Drawer / Modal Backdrop -->
+<div class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" id="quickEmailModal">
+<div class="bg-surface-container-lowest rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden flex flex-col transform transition-all">
+<!-- Modal Header -->
+<div class="px-space-lg py-space-md bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-base">outgoing_mail</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface" id="modalHeading">Dispatch Interview Invitation</h3>
+<p class="font-label-mono text-label-mono text-outline">Powered by Zavran Automated Candidate Communicator</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low flex items-center justify-center text-on-surface-variant transition-colors" onclick="closeQuickEmail()">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- Recipient display -->
+<div class="flex flex-col gap-1">
+<label class="font-label-mono text-label-mono text-outline uppercase">Candidate Target</label>
+<div class="flex items-center justify-between px-space-md py-2 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary">person</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="modalCandidateName">Arjun Kumar</span>
+<span class="font-label-mono text-label-mono text-outline" id="modalCandidateEmail">&lt;arjun.kumar@techmail.dev&gt;</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-mono text-[10px] text-secondary">Verified</span>
+</div>
+</div>
+<!-- Template Selector -->
+<div class="flex flex-col gap-1">
+<label class="font-label-mono text-label-mono text-outline uppercase">Select Dispatch Template</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-primary text-on-primary font-semibold transition-all" id="btnTplStandard" onclick="selectTemplate('Standard Technical')" type="button">
+              Standard Technical
+            </button>
+<button class="px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" id="btnTplExecutive" onclick="selectTemplate('Executive Prompt')" type="button">
+              Executive Prompt
+            </button>
+<button class="px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" id="btnTplReminder" onclick="selectTemplate('Reminder')" type="button">
+              Urgent Reminder
+            </button>
+</div>
+</div>
+<!-- Dynamic Message Box -->
+<div class="flex flex-col gap-1">
+<label class="font-label-mono text-label-mono text-outline uppercase">Communication Preview &amp; Tokens</label>
+<textarea class="w-full p-space-md rounded-lg bg-surface-container-lowest font-body-sm text-on-surface focus:outline-none resize-none shadow-sm" id="modalEmailBody" rows="5">Hi Arjun, 
+
+Your live interview session with Zaroon AI is scheduled for Today at 3:30 PM (IST). Please use the secure evaluation room link attached below. Complete the quick audio-visual telemetry check 5 minutes prior to start.
+
+Room Link: https://zavran.ai/live/ai-l5-synth-902?auth=ephemeral_k39f</textarea>
+</div>
+<!-- Prep Packet Attached Banner -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">attachment</span>
+<span class="font-label-md text-label-md text-on-surface">Zavran-AI-Candidate-Prep-Packet-v4.pdf</span>
+</div>
+<span class="font-label-mono text-label-mono text-outline">1.2 MB</span>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-space-lg py-space-md bg-surface-container-lowest flex items-center justify-between">
+<button class="px-space-md py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" onclick="closeQuickEmail()">
+          Cancel
+        </button>
+<button class="flex items-center gap-2 px-space-lg py-2.5 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-semibold shadow-md transition-all" id="sendEmailActionBtn" onclick="submitEmailDispatch()">
+<span class="material-symbols-outlined text-base">send</span>
+<span>Send Email Now</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Toast Notification Container for Micro-Interactions -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+<div class="bg-on-surface text-surface px- space-md py-3 rounded-xl shadow-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed" id="toastIcon">check_circle</span>
+<span class="font-body-sm text-body-sm font-medium" id="toastMessage">Candidate telemetry updated successfully.</span>
+</div>
+</div>
+</div>
+<!-- Client-side Interactive Logic -->
+<script>
+  // Filter Cards live search
+  function filterCards() {
+    const input = document.getElementById('candidateFilterInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.candidate-card');
+    cards.forEach(card => {
+      const keywords = card.getAttribute('data-keywords').toLowerCase();
+      if (keywords.includes(input)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Select All Toggle
+  function toggleSelectAll(masterCheckbox) {
+    const checkboxes = document.querySelectorAll('.candidate-checkbox');
+    checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+    updateBatchButton();
+  }
+
+  function updateBatchButton() {
+    const checkedCount = document.querySelectorAll('.candidate-checkbox:checked').length;
+    const btn = document.getElementById('batchEmailBtn');
+    if (checkedCount > 0) {
+      btn.innerHTML = `<span class="material-symbols-outlined text-base">mark_email_read</span><span>Send Email Invites (${checkedCount} Selected)</span>`;
+      btn.classList.add('bg-primary', 'text-on-primary');
+      btn.classList.remove('bg-primary-fixed', 'text-on-primary-fixed-variant');
+    } else {
+      btn.innerHTML = `<span class="material-symbols-outlined text-base">mark_email_read</span><span>Send Email Invites (Selected)</span>`;
+      btn.classList.remove('bg-primary', 'text-on-primary');
+      btn.classList.add('bg-primary-fixed', 'text-on-primary-fixed-variant');
+    }
+  }
+
+  document.querySelectorAll('.candidate-checkbox').forEach(cb => {
+    cb.addEventListener('change', updateBatchButton);
+  });
+
+  // Batch action
+  function dispatchBatchInvite() {
+    const checkedCount = document.querySelectorAll('.candidate-checkbox:checked').length;
+    if (checkedCount === 0) {
+      showToast('Please select at least one candidate card first.', 'info');
+      return;
+    }
+    openQuickEmail(`${checkedCount} Selected Candidates`, 'batch-dispatch@zavran.internal', 'Standard Technical');
+  }
+
+  // Modal Functions
+  let currentCandidate = '';
+  function openQuickEmail(name, email, templateType) {
+    currentCandidate = name;
+    document.getElementById('modalCandidateName').innerText = name;
+    document.getElementById('modalCandidateEmail').innerText = `<${email}>`;
+    selectTemplate(templateType || 'Standard Technical');
+    document.getElementById('quickEmailModal').classList.remove('hidden');
+  }
+
+  function closeQuickEmail() {
+    document.getElementById('quickEmailModal').classList.add('hidden');
+  }
+
+  function selectTemplate(tplName) {
+    const tplStandard = document.getElementById('btnTplStandard');
+    const tplExecutive = document.getElementById('btnTplExecutive');
+    const tplReminder = document.getElementById('btnTplReminder');
+    const emailBody = document.getElementById('modalEmailBody');
+
+    // Reset styles
+    [tplStandard, tplExecutive, tplReminder].forEach(btn => {
+      btn.className = 'px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-surface-container-low text-on-surface hover:bg-surface-container transition-all';
+    });
+
+    if (tplName === 'Standard Technical') {
+      tplStandard.className = 'px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-primary text-on-primary font-semibold transition-all';
+      emailBody.value = `Hi ${currentCandidate || 'Candidate'},\n\nYour live technical evaluation with Zaroon AI has been scheduled. Please review the live coding guidelines and test your camera & microphone using the session portal link.\n\nRoom Link: https://zavran.ai/live/ai-l5-eval?auth=tk_live_secure`;
+    } else if (tplName === 'Executive Prompt') {
+      tplExecutive.className = 'px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-primary text-on-primary font-semibold transition-all';
+      emailBody.value = `Dear ${currentCandidate || 'Candidate'},\n\nWe look forward to your architectural dialogue with the Zavran AI consensus panel. This discussion focuses on system resilience, trade-offs, and team leadership.\n\nExecutive Access: https://zavran.ai/exec/panel-stream?token=exec_v9`;
+    } else {
+      tplReminder.className = 'px-3 py-2 rounded-lg text-left font-label-md text-label-md bg-primary text-on-primary font-semibold transition-all';
+      emailBody.value = `Urgent Reminder for ${currentCandidate || 'Candidate'}:\n\nYour scheduled evaluation session begins shortly. Kindly confirm your attendance or request an immediate reschedule via this link.\n\nDirect Confirmation: https://zavran.ai/rsvp/confirm?c=${encodeURIComponent(currentCandidate || 'candidate')}`;
+    }
+  }
+
+  function submitEmailDispatch() {
+    const btn = document.getElementById('sendEmailActionBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">progress_activity</span><span>Dispatching...</span>`;
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      closeQuickEmail();
+      showToast(`Interview invitation successfully dispatched to ${currentCandidate}!`, 'check_circle');
+    }, 600);
+  }
+
+  // Profile Telemetry Sync
+  function fetchCandidateTelemetry(buttonElement, candidateName) {
+    const origHTML = buttonElement.innerHTML;
+    buttonElement.innerHTML = `<span class="material-symbols-outlined text-base animate-spin text-secondary">sync</span><span>Syncing...</span>`;
+    buttonElement.disabled = true;
+
+    setTimeout(() => {
+      buttonElement.innerHTML = `<span class="material-symbols-outlined text-base text-secondary">done_all</span><span>Synced</span>`;
+      showToast(`Synchronized latest GitHub, LinkedIn & ATS telemetry for ${candidateName}.`, 'insights');
+      setTimeout(() => {
+        buttonElement.innerHTML = origHTML;
+        buttonElement.disabled = false;
+      }, 2500);
+    }, 750);
+  }
+
+  function enterLiveRoom(candidateName, roomId) {
+    showToast(`Initializing WebRTC secure pipeline to ${candidateName}'s room (${roomId})...`, 'meeting_room');
+  }
+
+  function viewCandidateDossier(candidateName) {
+    showToast(`Accessing comprehensive evaluation dossier for ${candidateName}...`, 'folder_shared');
+  }
+
+  function rescheduleCandidate(candidateName) {
+    showToast(`Opened calendar re-allocation slot for ${candidateName}.`, 'calendar_month');
+  }
+
+  // Toast System
+  function showToast(msg, icon) {
+    const toast = document.getElementById('toastNotification');
+    const msgEl = document.getElementById('toastMessage');
+    const iconEl = document.getElementById('toastIcon');
+    
+    msgEl.innerText = msg;
+    iconEl.innerText = icon || 'check_circle';
+
+    toast.classList.remove('translate-y-24', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 3200);
+  }
+</script></main></div></body></html>

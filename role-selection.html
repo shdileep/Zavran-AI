@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Zavran AI — Select Your Workspace</title>
+  <link rel="icon" type="image/png" href="zevaro.png">
+  <link rel="shortcut icon" type="image/png" href="zevaro.png">
+  <link rel="apple-touch-icon" href="zevaro.png">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #faf9ff;
+      color: #0b0f19;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    input:focus::placeholder, textarea:focus::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+
+    @keyframes slowPanZoomCandidate {
+      0% { transform: scale(1.04) translate(0%, 0%); }
+      50% { transform: scale(1.12) translate(-1.2%, -0.8%); }
+      100% { transform: scale(1.04) translate(0%, 0%); }
+    }
+    @keyframes slowPanZoomEnterprise {
+      0% { transform: scale(1.04) translate(0%, 0%); }
+      50% { transform: scale(1.12) translate(1.2%, -0.6%); }
+      100% { transform: scale(1.04) translate(0%, 0%); }
+    }
+    .ken-burns-candidate {
+      animation: slowPanZoomCandidate 18s ease-in-out infinite alternate;
+    }
+    .ken-burns-enterprise {
+      animation: slowPanZoomEnterprise 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes scanlineSweep {
+      0% { top: -25%; opacity: 0; }
+      20% { opacity: 0.7; }
+      80% { opacity: 0.7; }
+      100% { top: 125%; opacity: 0; }
+    }
+    .scanline-hud {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 35%;
+      background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.15) 50%, rgba(56, 189, 248, 0.35) 85%, #ffffff 98%, transparent 100%);
+      animation: scanlineSweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      pointer-events: none;
+    }
+    .scanline-hud-enterprise {
+      animation-delay: 2.2s;
+      background: linear-gradient(180deg, transparent 0%, rgba(79, 70, 229, 0.15) 50%, rgba(139, 92, 246, 0.35) 85%, #ffffff 98%, transparent 100%);
+    }
+  </style>
+</head>
+<body class="h-screen max-h-screen flex flex-col justify-between p-4 sm:p-5 lg:p-6 relative select-none selection:bg-indigo-600 selection:text-white">
+  
+  <!-- Ambient Luxury Background Glow & Mesh -->
+  <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[1100px] h-[450px] bg-gradient-to-b from-indigo-100/50 via-purple-50/30 to-transparent blur-3xl opacity-80"></div>
+    <div class="absolute bottom-[-100px] left-1/4 w-[450px] h-[300px] bg-blue-100/40 blur-3xl rounded-full"></div>
+    <div class="absolute inset-0 opacity-[0.025]" style="background-image: radial-gradient(#0f172a 1.2px, transparent 1.2px); background-size: 24px 24px;"></div>
+  </div>
+
+  <!-- Minimal Header Navigation -->
+  <header class="w-full max-w-6xl mx-auto px-5 py-3 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-xs flex items-center justify-between z-20 shrink-0">
+    <a href="index.html" class="flex items-center gap-2.5 group">
+      <img alt="Zavran AI Logo" class="h-7 w-7 rounded-lg object-contain transition-transform group-hover:scale-105" src="zevaro.png"/>
+      <span class="text-base font-extrabold tracking-tight text-slate-900">Zavran AI</span>
+    </a>
+    
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-950 transition-colors">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        <span>Back to Home</span>
+      </a>
+      <div class="h-3.5 w-[1px] bg-slate-200 hidden sm:block"></div>
+      <div class="hidden sm:flex items-center gap-2 text-xs text-slate-600 font-medium">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>System Operational</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Central Content Stage -->
+  <main class="w-full max-w-6xl mx-auto flex-1 flex flex-col justify-center items-center py-4 lg:py-6 z-10 min-h-0">
+    
+    <!-- Clean Hero Intro (No ugly badges or extra boxes) -->
+    <div class="text-center max-w-2xl mx-auto mb-5 lg:mb-7 shrink-0">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
+        Welcome to Zavran AI
+      </h1>
+      <p class="mt-1.5 text-xs sm:text-sm text-slate-500 font-normal max-w-xl mx-auto leading-normal">
+        Select your tailored workspace track to get started.
+      </p>
+    </div>
+
+    <!-- Dual Role Pathway Cards (Clean cinematic images without text dumps) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-7 w-full max-h-[580px] flex-1 items-stretch">
+      
+      <!-- CARD 1: CANDIDATE PORTAL -->
+      <div class="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-400/80 transition-all duration-300 flex flex-col justify-between overflow-hidden group relative">
+        
+        <!-- Clean Cinematic Image Area (NO DUMPED WORDS OR PILLS) -->
+        <div class="relative h-44 lg:h-48 w-full overflow-hidden shrink-0 border-b border-slate-200/60 bg-slate-950">
+          <img alt="Candidate Experience" class="w-full h-full object-cover object-center ken-burns-candidate will-change-transform" src="img_74d8_candidate_coding.png"/>
+          <div class="scanline-hud"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
+        </div>
+
+        <!-- Card Body Content -->
+        <div class="p-5 lg:p-6 flex-1 flex flex-col justify-between gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight">
+                Candidate Portal
+              </h2>
+              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                For Engineers
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed mb-3">
+              Master high-stakes system design and coding simulations with real-time AI critique, latency metrics, and FAANG-calibrated rubrics.
+            </p>
+            
+            <div class="space-y-2 text-xs text-slate-700">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span>Interactive AI System Design &amp; Architecture simulator</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span>Instant Staff &amp; Principal engineer rubric scorecards</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span>Targeted cognitive latency diagnostics and drill modules</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-slate-100">
+            <a href="candidate-signup.html" class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+              <span>Continue as Candidate</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <div class="text-center">
+              <a href="candidate-login.html" class="text-[11px] text-slate-500 hover:text-slate-950 font-medium transition-colors">
+                Already have an account? <span class="font-bold text-slate-900 underline">Sign in</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CARD 2: ENTERPRISE PORTAL -->
+      <div class="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-400/80 transition-all duration-300 flex flex-col justify-between overflow-hidden group relative">
+        
+        <!-- Clean Cinematic Image Area (NO DUMPED WORDS OR PILLS) -->
+        <div class="relative h-44 lg:h-48 w-full overflow-hidden shrink-0 border-b border-slate-200/60 bg-slate-950">
+          <img alt="Enterprise Experience" class="w-full h-full object-cover object-center ken-burns-enterprise will-change-transform" src="img_4356_executive_boardroom.png"/>
+          <div class="scanline-hud scanline-hud-enterprise"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
+        </div>
+
+        <!-- Card Body Content -->
+        <div class="p-5 lg:p-6 flex-1 flex flex-col justify-between gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight">
+                Enterprise Portal
+              </h2>
+              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                For Companies
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed mb-3">
+              Deploy autonomous technical screening pipelines, calibrate candidate talent with standard rubrics, and save 300+ engineering hours.
+            </p>
+            
+            <div class="space-y-2 text-xs text-slate-700">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span>Autonomous technical &amp; architectural candidate screening</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span>Standardized multi-dimensional candidate evaluation packets</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">check_circle</span>
+                <span>Seamless Greenhouse, Lever &amp; Ashby ATS integration</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-slate-100">
+            <a href="company-signup.html" class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+              <span>Continue as Organization</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <div class="text-center">
+              <a href="company-login.html" class="text-[11px] text-slate-500 hover:text-slate-950 font-medium transition-colors">
+                Already registered? <span class="font-bold text-slate-900 underline">Sign in</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="w-full text-center text-[11px] text-slate-400 py-2 border-t border-slate-200/50 shrink-0">
+    <p>© 2026 Zavran AI Inc. All rights reserved. High-fidelity intelligence &amp; technical evaluation.</p>
+  </footer>
+</body>
+</html>

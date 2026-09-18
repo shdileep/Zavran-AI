@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zavran AI — Select Your Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #faf9ff;
+      color: #0b0f19;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    input:focus::placeholder, textarea:focus::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+
+    /* Continuous Ken Burns living pan & zoom */
+    @keyframes slowPanZoomCandidate {
+      0% { transform: scale(1.05) translate(0%, 0%); }
+      50% { transform: scale(1.15) translate(-1.5%, -1%); }
+      100% { transform: scale(1.05) translate(0%, 0%); }
+    }
+    @keyframes slowPanZoomEnterprise {
+      0% { transform: scale(1.05) translate(0%, 0%); }
+      50% { transform: scale(1.14) translate(1.5%, -0.8%); }
+      100% { transform: scale(1.05) translate(0%, 0%); }
+    }
+    .ken-burns-candidate {
+      animation: slowPanZoomCandidate 18s ease-in-out infinite alternate;
+    }
+    .ken-burns-enterprise {
+      animation: slowPanZoomEnterprise 20s ease-in-out infinite alternate;
+    }
+
+    /* Holographic Radar / Scanline Sweep */
+    @keyframes scanlineSweep {
+      0% { top: -25%; opacity: 0; }
+      20% { opacity: 0.85; }
+      80% { opacity: 0.85; }
+      100% { top: 125%; opacity: 0; }
+    }
+    .scanline-hud {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 38%;
+      background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.18) 50%, rgba(56, 189, 248, 0.45) 85%, #ffffff 98%, transparent 100%);
+      animation: scanlineSweep 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      pointer-events: none;
+    }
+    .scanline-hud-enterprise {
+      animation-delay: 2.1s;
+      background: linear-gradient(180deg, transparent 0%, rgba(79, 70, 229, 0.18) 50%, rgba(139, 92, 246, 0.45) 85%, #ffffff 98%, transparent 100%);
+    }
+
+    /* Floating micro telemetry pills */
+    @keyframes floatBob1 {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes floatBob2 {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    .float-pill-1 {
+      animation: floatBob1 4.5s ease-in-out infinite;
+    }
+    .float-pill-2 {
+      animation: floatBob2 5s ease-in-out infinite 0.75s;
+    }
+
+    /* Grid overlay for HUD aesthetic */
+    .cyber-hud-grid {
+      background-image: linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+  </style>
+</head>
+<body class="h-screen max-h-screen flex flex-col justify-between p-3 sm:p-4 lg:p-5 relative select-none selection:bg-indigo-600 selection:text-white">
+<!-- Ambient Luxury Background Glow & Mesh -->
+<div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[1200px] h-[500px] bg-gradient-to-b from-indigo-100/60 via-purple-50/40 to-transparent blur-3xl opacity-80"></div>
+<div class="absolute bottom-[-100px] left-1/4 w-[500px] h-[350px] bg-blue-100/50 blur-3xl rounded-full"></div>
+<div class="absolute top-1/3 right-10 w-[450px] h-[450px] bg-purple-100/40 blur-3xl rounded-full"></div>
+<div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#0f172a 1.2px, transparent 1.2px); background-size: 24px 24px;"></div>
+</div>
+<!-- Compact Top Executive Header Navigation -->
+<header class="w-full max-w-6xl mx-auto px-5 py-2.5 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-xs flex items-center justify-between z-20 shrink-0">
+<div class="flex items-center gap-3">
+<img alt="Zavran AI Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKj9XhEuLutS01V0tq3aIa770W5x6VTT4NqcVs5972mZLy3tyke1QtlH5pfQBO-its5RTp4bwnSKTY4dr4Yy6DjoztOk1bNH-U7vcRtAs2_-MEcCblu-pp_XuTcVqj3jSNmhHRu07JZGdgmiqhhs9hyz2MPvPr01Bbka89-iBcSfywzBlEPnmr5ucFKA2-Di5YMcDJOvRn61F39P-fddd0YSN5qpVl4ZOLttx4xfDPHMmvB-sX8N9q6ST08gEelELAU18"/>
+<div class="flex items-baseline gap-2">
+<span class="text-base font-extrabold tracking-tight text-slate-900">Zavran AI</span>
+<span class="text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-100/90 text-slate-600 border border-slate-200 mono">WORKSPACE GATEWAY</span>
+</div>
+</div>
+<div class="flex items-center gap-5">
+<div class="hidden sm:flex items-center gap-2 text-xs text-slate-600 font-medium">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Deterministic Calibration Active</span>
+</div>
+<div class="h-3.5 w-[1px] bg-slate-200 hidden sm:block"></div>
+<a class="text-xs font-semibold text-slate-600 hover:text-indigo-600 transition-colors flex items-center gap-1" href="#help">
+        Need assistance? <span class="text-indigo-600">Contact Support →</span>
+</a>
+</div>
+</header>
+<!-- Central Single-Viewport Content Stage -->
+<main class="w-full max-w-6xl mx-auto flex-1 flex flex-col justify-center items-center py-2 lg:py-3 z-10 min-h-0">
+<!-- Concise Hero Intro -->
+<div class="text-center max-w-2xl mx-auto mb-3 lg:mb-4 shrink-0">
+<div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-indigo-50/90 border border-indigo-200/70 text-indigo-700 text-[11px] font-bold mb-1.5 tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+        • ROLE SELECTION GATEWAY • STEP 01 OF 02
+      </div>
+<h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
+        Choose how you want to use Zavran AI
+      </h1>
+
+<p class="mt-1 text-xs sm:text-sm text-slate-500 font-normal max-w-xl mx-auto leading-normal">
+        Select your environment to access tailored simulations, behavioral telemetry, and calibrated rubrics.
+      </p>
+</div>
+<!-- Dual Role Pathway Side-by-Side Cards (Strict Compact Height for Single Screen) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 w-full max-h-[570px] flex-1 items-stretch">
+<!-- CARD 1: CANDIDATE PORTAL -->
+<div class="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-lg hover:shadow-2xl hover:border-indigo-400/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden group cursor-pointer relative" onclick="window.location.href='#candidate'">
+<!-- Top accent color line -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 z-20"></div>
+<!-- Moving Image Section (Living Ken Burns + Holographic Radar Sweep) -->
+<div class="relative h-40 lg:h-44 w-full overflow-hidden shrink-0 border-b border-slate-200/60 bg-slate-950">
+<img alt="Candidate AI Telemetry Session" class="w-full h-full object-cover object-center ken-burns-candidate will-change-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC27JWuy0p6NoJL8OpjaVxm3BGoLRGVw9P_jonXMVpIwvbUBf8Bu9MGrVTTZGjUJxfRrgN_VkOXEZZTGxbxJ8MVsVcZKCtYdGeDcVa1Sqv-PbiCYPbAVcyCN_AKZUru9hHfQDIOMtKSvoVvqQ62Igkbk1kZGIxC1Gn4kPNu-N59SnGNsatKFZbHzYbEA9NV7I58MUkI5Yf0zNBFeLw00v_x8i1Z91RadUp2_sSuewGcB9TXfwxSfmc6TQ"/>
+<!-- Holographic Radar Sweep Line -->
+<div class="scanline-hud"></div>
+<div class="absolute inset-0 cyber-hud-grid opacity-30 pointer-events-none"></div>
+<!-- Subtle Dark Scrim Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-slate-950/15"></div>
+<!-- Top Overlay Live Badges -->
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+<div class="float-pill-1 px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-white flex items-center gap-1.5 border border-white/20 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Candidate Portal
+            </div>
+<div class="float-pill-2 px-2.5 py-0.5 rounded-full bg-indigo-950/80 backdrop-blur-md text-[10px] font-semibold text-indigo-200 mono border border-indigo-400/30">
+              L5 – L8 Calibration
+            </div>
+</div>
+<!-- Bottom Image Punchy Headline -->
+<div class="absolute bottom-2.5 left-3.5 right-3.5 text-white z-10 pointer-events-none">
+<p class="text-[9px] uppercase font-bold tracking-widest text-indigo-300 mono mb-0.5 flex items-center gap-1">
+<span class="inline-block w-1 h-1 rounded-full bg-indigo-400"></span> AI-Powered Career Mobility
+            </p>
+<h3 class="text-base font-bold leading-tight drop-shadow-sm text-white">
+              Master the interview. Command your career.
+            </h3>
+</div>
+</div>
+<!-- Card Body Content -->
+<div class="p-4 lg:p-5 flex-1 flex flex-col justify-between gap-3">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<h2 class="text-lg lg:text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
+                Candidate Portal
+              </h2>
+<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                Free &amp; Pro Access
+              </span>
+</div>
+<p class="text-xs text-slate-500 leading-snug mb-2.5">
+              Designed for software engineers and product leaders to rehearse high-pressure technical interviews with adaptive FAANG rubrics.
+            </p>
+<!-- 3 Concise Feature Checkmarks -->
+<div class="space-y-1.5 text-xs text-slate-700">
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="truncate"><strong>Deterministic Mock Screens:</strong> Real-time behavioral &amp; system architecture loops</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="truncate"><strong>Acoustic &amp; Latency Telemetry:</strong> Live speech cadence, hesitation and instant rubrics</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="truncate"><strong>Confidential &amp; Private:</strong> Zero data leakage to current or prospective employers</span>
+</div>
+</div>
+</div>
+<!-- Bottom Metric Strip + Action Button -->
+<div class="space-y-2.5 pt-2 border-t border-slate-100">
+<!-- 3-Metric Comparison Pill Bar -->
+<div class="grid grid-cols-3 py-1.5 px-2.5 bg-slate-50 rounded-xl border border-slate-200/70 text-center">
+<div>
+<p class="text-xs font-extrabold text-slate-900">94.8%</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Offer Rate</p>
+</div>
+<div class="border-x border-slate-200/60">
+<p class="text-xs font-extrabold text-slate-900">120k+</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Sessions</p>
+</div>
+<div>
+<p class="text-xs font-extrabold text-slate-900">&lt;40ms</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Latency</p>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-indigo-900 text-white font-semibold text-xs tracking-wide transition-all duration-200 shadow-md flex items-center justify-center gap-2 group-hover:bg-indigo-950" type="button">
+<span>Continue as Candidate</span>
+<svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+<!-- CARD 2: ENTERPRISE WORKSPACE -->
+<div class="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-lg hover:shadow-2xl hover:border-indigo-400/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden group cursor-pointer relative" onclick="window.location.href='#enterprise'">
+<!-- Top accent color line -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-slate-900 z-20"></div>
+<!-- Moving Image Section (Living Ken Burns + Holographic Radar Sweep) -->
+<div class="relative h-40 lg:h-44 w-full overflow-hidden shrink-0 border-b border-slate-200/60 bg-slate-950">
+<img alt="Executive Talent Holographic Boardroom" class="w-full h-full object-cover object-center ken-burns-enterprise will-change-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU7TRdCa8lJNwzIwQ6cgTm7TncHSSfKTkn7R89VBYelgIBCyVlsymoQ6CQdeSMRR8XEVoVAnV2CI-FTW9DVQX9X7sM5Q1Qtw_zMvKVpQzRWhXhr6_PWH0LKBeb2_MRWk9oXbh6SVuienLpo7vARC7XrJoJLoAXPdetui1KyTvvurV7RwexOpeEV47I965Jhfvl6yQRKu0DbHd4B4hrCttQw_JcTZwafYRz2vp_GQQ_HaK20zCeNblX0Q"/>
+<!-- Holographic Radar Sweep Line -->
+<div class="scanline-hud scanline-hud-enterprise"></div>
+<div class="absolute inset-0 cyber-hud-grid opacity-30 pointer-events-none"></div>
+<!-- Subtle Dark Scrim Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-slate-950/15"></div>
+<!-- Top Overlay Live Badges -->
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+<div class="float-pill-2 px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-white flex items-center gap-1.5 border border-white/20 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+              Enterprise &amp; Teams
+            </div>
+<div class="float-pill-1 px-2.5 py-0.5 rounded-full bg-purple-950/80 backdrop-blur-md text-[10px] font-semibold text-purple-200 mono border border-purple-400/30">
+              Multi-Seat Tenant
+            </div>
+</div>
+<!-- Bottom Image Punchy Headline -->
+<div class="absolute bottom-2.5 left-3.5 right-3.5 text-white z-10 pointer-events-none">
+<p class="text-[9px] uppercase font-bold tracking-widest text-indigo-300 mono mb-0.5 flex items-center gap-1">
+<span class="inline-block w-1 h-1 rounded-full bg-purple-400"></span> Autonomous Talent Intelligence
+            </p>
+<h3 class="text-base font-bold leading-tight drop-shadow-sm text-white">
+              Calibrate technical hiring with deterministic AI.
+            </h3>
+</div>
+</div>
+<!-- Card Body Content -->
+<div class="p-4 lg:p-5 flex-1 flex flex-col justify-between gap-3">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<h2 class="text-lg lg:text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
+                Enterprise Workspace
+              </h2>
+<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
+                Team &amp; HR Admin
+              </span>
+</div>
+<p class="text-xs text-slate-500 leading-snug mb-2.5">
+              Tailored for talent acquisition leaders, engineering directors, and recruiting teams running high-volume, standardized hiring funnels.
+            </p>
+<!-- 3 Concise Feature Checkmarks -->
+<div class="space-y-1.5 text-xs text-slate-700">
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="truncate"><strong>Standardized Technical Screening:</strong> Eliminate subjective bias across engineering loops</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="truncate"><strong>Multi-Seat Calibration Console:</strong> ATS integrations, aggregate cohort analytics &amp; cohorts</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="truncate"><strong>SOC-2 &amp; EEOC Compliant:</strong> Fully audited zero-variance demographic neutrality</span>
+</div>
+</div>
+</div>
+<!-- Bottom Metric Strip + Action Button -->
+<div class="space-y-2.5 pt-2 border-t border-slate-100">
+<!-- 3-Metric Comparison Pill Bar -->
+<div class="grid grid-cols-3 py-1.5 px-2.5 bg-slate-50 rounded-xl border border-slate-200/70 text-center">
+<div>
+<p class="text-xs font-extrabold text-slate-900">4x</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Pipeline Speed</p>
+</div>
+<div class="border-x border-slate-200/60">
+<p class="text-xs font-extrabold text-slate-900">300+ hrs</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Saved / Hire</p>
+</div>
+<div>
+<p class="text-xs font-extrabold text-slate-900">100%</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Audit Rigor</p>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-indigo-900 text-white font-semibold text-xs tracking-wide transition-all duration-200 shadow-md flex items-center justify-center gap-2 group-hover:bg-indigo-950" type="button">
+<span>Continue to Enterprise</span>
+<svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Security & Trust Indicators -->
+<div class="mt-2.5 lg:mt-3 flex flex-wrap items-center justify-center gap-4 sm:gap-7 text-[11px] text-slate-500 font-medium shrink-0">
+<div class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>SOC-2 Type II Audited</span>
+</div>
+<div class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>EEOC Compliant &amp; Zero-Bias Calibrated</span>
+</div>
+<div class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Single Sign-On (Google &amp; SAML / Okta Ready)</span>
+</div>
+</div>
+</main>
+<!-- Ultra Compact Sub-Footer -->
+<footer class="w-full text-center text-[10px] text-slate-400 py-1 border-t border-slate-200/50 shrink-0">
+<p>© 2026 Zavran AI Inc. All rights reserved. Ultra-precision cognitive architecture.</p>
+
+</footer>
+</body></html>

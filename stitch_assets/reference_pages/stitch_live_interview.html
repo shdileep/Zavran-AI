@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-fixed-dim": "#93ccff", "surface-bright": "#faf9ff", "tertiary-fixed": "#eaddff", "primary-fixed-dim": "#c0c1ff", "secondary-fixed": "#cce5ff", "on-tertiary-fixed": "#25005a", "primary-fixed": "#e1e0ff", "surface-container": "#ebedfb", "on-secondary-fixed-variant": "#004b73", "surface": "#faf9ff", "tertiary-container": "#8a4cfc", "on-background": "#181b25", "on-primary": "#ffffff", "error": "#ba1a1a", "primary-container": "#6063ee", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "on-tertiary-fixed-variant": "#5a00c6", "on-primary-container": "#fffbff", "outline-variant": "#c7c4d7", "on-primary-fixed": "#07006c", "on-secondary-fixed": "#001d31", "inverse-surface": "#2c303a", "outline": "#767586", "inverse-primary": "#c0c1ff", "on-error-container": "#93000a", "surface-container-highest": "#dfe2ef", "on-secondary-container": "#00476e", "inverse-on-surface": "#eef0fe", "on-tertiary-container": "#fffbff", "primary": "#4648d4", "surface-dim": "#d7d9e7", "on-primary-fixed-variant": "#2f2ebe", "secondary-container": "#5bb8fe", "tertiary-fixed-dim": "#d2bbff", "surface-tint": "#494bd6", "error-container": "#ffdad6", "surface-container-high": "#e5e8f5", "background": "#faf9ff", "surface-container-low": "#f1f3ff", "secondary": "#006398", "tertiary": "#712ae2", "on-surface": "#181b25", "surface-variant": "#dfe2ef", "on-surface-variant": "#464554", "on-secondary": "#ffffff", "on-tertiary": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-mobile": "1rem", "margin": "4rem", "space-xs": "0.25rem", "gutter-tablet": "1.25rem", "space-lg": "1.5rem", "margin-mobile": "1.25rem", "space-xl": "2.5rem", "gutter": "1.5rem", "space-md": "1rem", "margin-tablet": "2rem", "space-sm": "0.5rem" }, "fontFamily": { "display-xl-mobile": [ "Plus Jakarta Sans" ], "display-xl": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "headline-md": [ "Plus Jakarta Sans" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "body-sm": [ "Inter" ], "label-lg": [ "Inter" ], "body-lg": [ "Inter" ], "label-mono": [ "JetBrains Mono" ] }, "fontSize": { "display-xl-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-xl": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "700" } ], "headline-lg": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.015em", "fontWeight": "500" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-sm": [ "13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" } ], "label-lg": [ "14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" } ], "body-lg": [ "16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" } ], "label-mono": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" } ] } } } };</script></head>
+<body class="bg-surface font-body-md text-body-md text-on-surface h-screen w-screen overflow-hidden select-none relative">
+<!-- TOP HEADER / HUD NAVIGATION -->
+<header class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-8 py-5 pointer-events-auto">
+<!-- Top Left Breadcrumb / Status -->
+<div class="flex items-center gap-3"><div class="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center p-0.5 overflow-hidden"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCBsSO9iCt-4GhJef-5OjGdfbExezfwcr8gcxO2l21o1pS3Le_DRhqoUmietjvuOArD37S28Aaxe8R4sFeuSJ_P4_YrWNAsEmnZ6risW_HkOTqZaEK9BJIn1Sm4EKf759i-z_sybZ3dPhGvyMY6xcq-Oyfc1Qtk_7S2PhKmuu9L_ANAbAX9hJFlZhcxhfXFTcNjsBpswzK_NP1SaVrQNVfu3QZWhPnLHXDv6C9oO5oShNSkCzgOnBl_oOsLfrBB1atsBk" alt="Zavran AI Logo" class="w-7 h-7 object-contain rounded-lg"></div><div class="flex items-center gap-2"><span class="font-headline-sm text-sm font-bold tracking-tight text-on-surface">Zavran AI</span><span class="font-label-mono text-xs text-on-surface-variant font-medium">AI Engineer Interview</span></div><div class="ml-2 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface-variant text-[11px]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span id="session-clock" class="font-semibold tracking-tight text-on-surface text-xs font-headline-sm">38:39</span></div></div>
+<!-- Top Right Utility Actions -->
+<div class="flex items-center gap-space-sm">
+<button class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high text-on-surface shadow-xs border border-outline-variant/30 transition-all" title="Notifications"><span class="material-symbols-outlined text-[20px] text-outline">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-primary ring-2 ring-surface-container-lowest"></span></button><button class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high text-on-surface shadow-xs border border-outline-variant/30 transition-all" title="Help Center">
+<span class="material-symbols-outlined text-[20px] text-outline">help_center</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high text-on-surface shadow-xs border border-outline-variant/30 transition-all font-label-lg text-label-lg font-medium">
+<span class="material-symbols-outlined text-[18px] text-outline">tune</span>
+<span class="">Settings</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-error text-on-error shadow-sm hover:opacity-90 transition-all font-label-lg text-label-lg font-medium" id="end-interview-btn">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">call_end</span>
+<span class="">End Session</span>
+</button>
+</div>
+</header>
+<!-- KEY SPECIFICATION 2: DEAD CENTER ZAROON AI VOICE INTERFACE (NO CARD BOX / FLOATING MINIMAL ON CANVAS) -->
+<div class="fixed inset-0 flex items-center justify-center pointer-events-none z-20" style="transform: translateY(-22vh);">
+<div class="flex flex-col items-center gap-6 pointer-events-auto max-w-md w-full px-4 text-center">
+<!-- Top Title & Voice Mode Badge -->
+<div class="flex flex-col items-center gap-2">
+<div class="flex items-center gap-2.5">
+<h1 class="font-headline-md text-2xl md:text-3xl font-bold tracking-tight text-on-surface">Zaroon AI</h1>
+
+</div>
+</div>
+<!-- Center ChatGPT Voice-style Fluid Sonic Orb -->
+<div class="relative flex items-center justify-center my-2">
+<!-- Radial Ambient Sonic Ripple Waves -->
+<div class="absolute w-64 h-64 rounded-full bg-gradient-to-tr from-primary/10 via-tertiary/10 to-secondary-container/15 blur-2xl pointer-events-none animate-pulse" style="animation-duration: 4s;"></div>
+<div class="absolute w-48 h-48 rounded-full border border-primary/20 animate-ping opacity-40 pointer-events-none" style="animation-duration: 3.5s;"></div>
+<div class="absolute w-40 h-40 rounded-full bg-gradient-to-r from-primary-fixed-dim/40 via-tertiary-fixed-dim/30 to-secondary-fixed/40 blur-md animate-pulse pointer-events-none"></div>
+<!-- The Main Smooth Acoustic Fluid Orb -->
+<div class="relative w-32 h-32 rounded-full bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-800 shadow-2xl flex items-center justify-center overflow-hidden transition-transform duration-500 hover:scale-105 group cursor-pointer border border-white/20">
+<!-- Fluid Ambient Plasma Waveforms (Spinning Smooth Gradient) -->
+<div class="absolute inset-0 bg-gradient-to-tr from-primary via-tertiary-container to-secondary opacity-80 mix-blend-screen animate-spin" style="animation-duration: 10s;"></div>
+<!-- Interior Secondary Fluid Sheen -->
+<div class="absolute -inset-2 bg-gradient-to-br from-indigo-500/30 via-purple-500/20 to-sky-400/30 blur-sm"></div>
+<!-- Central Acoustic Cavity Core -->
+<div class="w-20 h-20 rounded-full bg-white/95 backdrop-blur-xl flex items-center justify-center shadow-lg relative z-10 border border-white/60">
+<!-- Reactive Soundwave Bars -->
+<div class="flex items-center gap-1.5 h-8">
+<div class="w-1 bg-primary rounded-full animate-bounce h-4" style="animation-delay: 0.1s;"></div>
+<div class="w-1 bg-tertiary rounded-full animate-bounce h-7" style="animation-delay: 0.25s;"></div>
+<div class="w-1 bg-secondary rounded-full animate-bounce h-8" style="animation-delay: 0.15s;"></div>
+<div class="w-1 bg-primary rounded-full animate-bounce h-6" style="animation-delay: 0.3s;"></div>
+<div class="w-1 bg-tertiary rounded-full animate-bounce h-3" style="animation-delay: 0.05s;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- State Subtitle / Listening Status -->
+<div class="flex flex-col items-center gap-1">
+
+
+</div>
+<!-- Clean Minimal Tactile Controls & Telemetry -->
+<div class="flex items-center justify-center gap-4 pt-1">
+<!-- Mic Toggle Button -->
+
+<!-- Live Equalizer Bars -->
+<div class="flex items-center gap-1 h-5 px-3 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/30 shadow-xs">
+<div class="w-1 h-2 bg-primary/40 rounded-full animate-pulse"></div>
+<div class="w-1 h-4 bg-primary rounded-full animate-pulse" style="animation-delay: 100ms;"></div>
+<div class="w-1 h-2.5 bg-secondary rounded-full animate-pulse" style="animation-delay: 250ms;"></div>
+<div class="w-1 h-4.5 bg-tertiary rounded-full animate-pulse" style="animation-delay: 80ms;"></div>
+<div class="w-1 h-3 bg-primary rounded-full animate-pulse" style="animation-delay: 170ms;"></div>
+</div>
+<!-- Latency Badge -->
+
+</div>
+</div>
+</div>
+<!-- KEY SPECIFICATION 1: CANDIDATE VIDEO CARD & HEADSET PILL (BOTTOM-LEFT) -->
+<div class="fixed bottom-8 left-8 z-30 flex flex-col gap-2.5 w-[460px] pointer-events-auto">
+<!-- Candidate Video Call Card -->
+<div class="w-full h-[288px] rounded-2xl overflow-hidden border border-outline-variant/40 shadow-xl bg-surface-container-lowest relative group">
+<!-- Candidate Video Stream -->
+
+<!-- Ambient Overlays -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 pointer-events-none"></div>
+<!-- Top Status Tags -->
+
+<!-- Top Right Candidate Audio Indicator -->
+
+<!-- Bottom Bar with Identity & Video Controls -->
+<div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5 text-white font-semibold text-sm drop-shadow-sm">
+<span class="">Alex Chen</span>
+<span class="text-[11px] text-white/70 font-normal">(You)</span>
+</div>
+
+</div>
+<!-- Video Control Buttons -->
+<div class="flex items-center gap-1 bg-black/50 backdrop-blur-md p-1 rounded-xl border border-white/15"><button class="w-7 h-7 rounded-lg flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-colors" title="Microphone Toggle"><span class="material-symbols-outlined text-[16px]">mic</span></button>
+<button class="w-7 h-7 rounded-lg flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-colors" title="Camera Toggle">
+<span class="material-symbols-outlined text-[16px]">videocam</span>
+</button>
+<button class="w-7 h-7 rounded-lg flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-colors" title="Video Settings">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Connected Headset / Audio Device Indicator Pill -->
+<div class="w-full bg-surface-container-lowest/95 backdrop-blur-md rounded-xl px-3.5 py-2.5 shadow-sm flex items-center justify-between border border-outline-variant/40">
+<div class="flex items-center gap-2.5 overflow-hidden">
+<span class="relative flex h-2 w-2 shrink-0">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<div class="flex items-center gap-1.5 truncate">
+<span class="text-sm shrink-0">🎧</span>
+<span class="font-label-mono text-[11px] text-on-surface font-medium truncate">
+            AirPods Pro (2nd Gen) Connected • Spatial Audio
+          </span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-lg hover:bg-surface-container shrink-0 ml-1" title="Switch Audio Device">
+<span class="material-symbols-outlined text-[16px]">swap_horiz</span>
+</button>
+</div>
+</div>
+<script>
+    (function() {
+      // Dynamic timer
+      let minutes = 24;
+      let seconds = 18;
+      const clockEl = document.getElementById('session-clock');
+      if (clockEl) {
+        setInterval(() => {
+          seconds++;
+          if (seconds >= 60) {
+            minutes++;
+            seconds = 0;
+          }
+          clockEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
+      }
+
+      // Mic Toggle
+      const micBtn = document.getElementById('mic-toggle-btn');
+      const micIcon = document.getElementById('mic-icon');
+      const micLabel = document.getElementById('mic-label');
+      let isMuted = false;
+
+      if (micBtn && micIcon && micLabel) {
+        micBtn.addEventListener('click', () => {
+          isMuted = !isMuted;
+          if (isMuted) {
+            micIcon.textContent = 'mic_off';
+            micIcon.classList.remove('text-primary');
+            micIcon.classList.add('text-error');
+            micLabel.textContent = 'Unmute';
+            micBtn.classList.add('bg-error-container/30');
+          } else {
+            micIcon.textContent = 'mic';
+            micIcon.classList.add('text-primary');
+            micIcon.classList.remove('text-error');
+            micLabel.textContent = 'Mute';
+            micBtn.classList.remove('bg-error-container/30');
+          }
+        });
+      }
+
+      // End call action
+      const endBtn = document.getElementById('end-interview-btn');
+      if (endBtn) {
+        endBtn.addEventListener('click', () => {
+          if (confirm('Are you sure you want to conclude this interview session? Your assessment metrics will be synthesized.')) {
+            endBtn.innerHTML = '<span class="material-symbols-outlined text-body-md animate-spin">sync</span><span>Synthesizing...</span>';
+            endBtn.classList.add('opacity-75', 'pointer-events-none');
+          }
+        });
+      }
+    })();
+  </script>
+
+
+
+
+
+
+</body></html>

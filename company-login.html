@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Enterprise Sign In — Zavran AI</title>
+  <link rel="icon" type="image/png" href="zevaro.png">
+  <link rel="shortcut icon" type="image/png" href="zevaro.png">
+  <link rel="apple-touch-icon" href="zevaro.png">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .eye-slash { transition: stroke-dashoffset 0.25s ease, transform 0.2s ease, opacity 0.2s ease; }
+    input:focus::placeholder, textarea:focus::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+  </style>
+
+  <!-- Clerk Authentication JS SDK -->
+  <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_ZW5hYmxpbmctbGFicmFkb3ItOTYwMC5jbGVyay5hY2NvdW50cy5kZXYk" src="https://enabling-labrador-9600.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" type="text/javascript"></script>
+</head>
+<body class="min-h-screen bg-[#faf9ff] text-slate-900 flex flex-col justify-between selection:bg-slate-900 selection:text-white relative overflow-x-hidden">
+
+  <!-- Top Navigation -->
+  <header class="w-full max-w-7xl mx-auto px-6 py-4 flex items-center justify-between z-10">
+    <a class="flex items-center gap-3 group" href="index.html">
+      <img alt="Zavran AI Logo" class="h-8 w-8 rounded-lg object-contain transition-transform group-hover:scale-105 duration-200" src="zevaro.png">
+      <div class="flex items-baseline gap-1.5">
+        <span class="font-extrabold text-lg tracking-tight text-slate-900">Zavran AI</span>
+        <span class="text-[11px] font-semibold tracking-wider uppercase text-indigo-700 bg-indigo-50/90 px-2 py-0.5 rounded border border-indigo-200 mono">Enterprise Track</span>
+      </div>
+    </a>
+    
+    <div class="flex items-center gap-4 text-xs font-medium text-slate-600">
+      <span>Are you an individual candidate?</span>
+      <a class="text-slate-900 font-semibold hover:underline flex items-center gap-1" href="candidate-login.html">
+        Candidate Portal
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Split Layout Container -->
+  <main class="flex-1 flex items-center justify-center px-4 sm:px-6 py-4 sm:py-6 z-10">
+    <div class="w-full max-w-6xl mx-auto bg-white/95 rounded-[28px] border border-slate-200/90 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.08)] p-3 lg:p-4 grid grid-cols-1 lg:grid-cols-12 overflow-hidden items-stretch gap-6">
+      
+      <!-- LEFT SIDE: Clean Image with ONLY a short elegant one-line caption -->
+      <div class="lg:col-span-6 flex flex-col">
+        <div class="relative w-full h-full min-h-[480px] lg:min-h-[580px] rounded-[22px] overflow-hidden flex flex-col justify-end p-7 sm:p-8 group bg-slate-950 shadow-md">
+          
+          <div class="absolute inset-0 z-0 overflow-hidden">
+            <img alt="Enterprise Team in Boardroom" class="object-cover w-full h-full min-h-[580px] rounded-[22px] block transition-transform duration-700 ease-out group-hover:scale-105" src="img_a9fc_enterprise_team.png">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+          </div>
+
+          <!-- Bottom: ONLY Short, elegant one-line caption -->
+          <div class="relative z-10">
+            <p class="text-sm font-medium text-slate-200 tracking-wide leading-relaxed drop-shadow-sm">
+              Autonomous technical evaluation engine powering world-class engineering teams.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: Enterprise Sign In Form -->
+      <div class="lg:col-span-6 flex flex-col justify-center px-4 sm:px-8 lg:px-10 py-4 sm:py-6">
+        
+        <div class="flex items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/70 mb-5">
+          <a href="company-login.html" class="flex-1 py-2 text-center text-xs font-semibold rounded-lg text-slate-900 bg-white shadow-sm">
+            Sign In
+          </a>
+          <a href="company-signup.html" class="flex-1 py-2 text-center text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-900 transition-all">
+            Create Account
+          </a>
+        </div>
+
+        <div class="mb-4">
+          <h1 class="text-2xl font-bold tracking-tight text-slate-900">Welcome back</h1>
+          <p class="text-xs text-slate-500 mt-1">Sign in with your enterprise credentials to access your workspace.</p>
+        </div>
+
+        <!-- Google Workspace SSO -->
+        <button id="google-btn" type="button" class="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 transition-all font-medium text-xs sm:text-sm text-slate-800 shadow-xs hover:border-slate-300 mb-4">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          <span>Continue with Google Workspace</span>
+        </button>
+
+        <div class="relative flex items-center justify-center mb-4">
+          <div class="border-t border-slate-200/80 w-full"></div>
+          <span class="bg-white/95 px-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider mono">or continue with work email</span>
+        </div>
+
+        <form id="login-form" class="space-y-4">
+          
+          <!-- 1. Work Email -->
+          <div>
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-700 mb-1.5" for="email">Work Email</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-base">mail</span>
+              <input id="email" required class="w-full pl-9 pr-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-colors" placeholder="sarah.chen@company.com" type="email">
+            </div>
+          </div>
+
+          <!-- 2. Password with Custom Animated SVG Toggle -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-700" for="password">Password</label>
+              <a href="javascript:void(0)" class="text-[11px] font-semibold text-slate-500 hover:text-slate-900 transition-colors">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-base">lock</span>
+              <input id="password" required class="w-full pl-9 pr-10 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-colors" placeholder="Enter your password" type="password">
+
+              
+<button type="button" class="pwd-toggle-btn absolute right-3.5 top-3 text-slate-400 hover:text-slate-800 transition-colors focus:outline-none" aria-label="Toggle password visibility">
+  <svg class="w-4 h-4 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path class="eye-path" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+    <circle class="eye-pupil transition-all duration-200" cx="12" cy="12" r="3"></circle>
+    <line class="eye-slash transition-all duration-300 opacity-0 origin-center" x1="3" y1="3" x2="21" y2="21" style="transform: scale(0); stroke-dasharray: 28; stroke-dashoffset: 28;"></line>
+  </svg>
+</button>
+
+            </div>
+          </div>
+
+          <div id="status-msg" class="hidden p-2.5 rounded-xl text-xs font-medium text-center"></div>
+
+          <button id="submit-btn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-semibold text-xs sm:text-sm transition-all duration-200 shadow-md flex items-center justify-center gap-2 mt-2">
+            <span>Sign In to Workspace</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </form>
+
+        <div class="mt-4 text-center">
+          <p class="text-xs text-slate-500">
+            Need to register your organization?
+            <a href="company-signup.html" class="font-bold text-slate-950 hover:underline ml-1">Create workspace</a>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="w-full text-center text-[10px] text-slate-400 py-3 border-t border-slate-200/50">
+    <p>© 2026 Zavran AI Inc. All rights reserved. Precision cognitive architecture.</p>
+  </footer>
+
+  <script>
+    
+  document.querySelectorAll('.pwd-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const container = btn.closest('.relative');
+      const input = container.querySelector('input');
+      const slash = btn.querySelector('.eye-slash');
+      const pupil = btn.querySelector('.eye-pupil');
+      const isPwd = input.type === 'password';
+
+      if (isPwd) {
+        input.type = 'text';
+        slash.style.opacity = '1';
+        slash.style.transform = 'scale(1)';
+        slash.style.strokeDashoffset = '0';
+        pupil.style.opacity = '0.3';
+        btn.classList.add('text-slate-900');
+        btn.classList.remove('text-slate-400');
+      } else {
+        input.type = 'password';
+        slash.style.opacity = '0';
+        slash.style.transform = 'scale(0)';
+        slash.style.strokeDashoffset = '28';
+        pupil.style.opacity = '1';
+        btn.classList.remove('text-slate-900');
+        btn.classList.add('text-slate-400');
+      }
+    });
+  });
+
+
+    const loginForm = document.getElementById('login-form');
+    const statusMsg = document.getElementById('status-msg');
+    const googleBtn = document.getElementById('google-btn');
+    const emailInput = document.getElementById('email');
+    const CLERK_PK = "pk_test_ZW5hYmxpbmctbGFicmFkb3ItOTYwMC5jbGVyay5hY2NvdW50cy5kZXYk";
+
+    function enterEnterpriseWorkspace(companyEmail) {
+      statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-900 border border-emerald-200 block';
+      statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span> Organization Verified! Entering Enterprise Workspace...</span>';
+      
+      const domain = companyEmail && companyEmail.includes('@') ? companyEmail.split('@')[1] : 'enterprise.co';
+      localStorage.setItem('zaveran_company_auth', JSON.stringify({
+        email: companyEmail || 'lead@enterprise.com',
+        domain: domain,
+        role: 'Enterprise Administrator'
+      }));
+
+      setTimeout(() => {
+        window.location.href = 'enterprise-workspace.html';
+      }, 800);
+    }
+
+
+
+    async function getClerkInstance(timeoutMs = 6000) {
+      if (window.Clerk && window.Clerk.loaded) return window.Clerk;
+      const startTime = Date.now();
+      return new Promise((resolve) => {
+        const check = async () => {
+          if (window.Clerk) {
+            try {
+              if (!window.Clerk.loaded) {
+                await window.Clerk.load({ publishableKey: CLERK_PK });
+              }
+              return resolve(window.Clerk);
+            } catch (e) {
+              console.warn("Clerk load error:", e);
+              return resolve(window.Clerk);
+            }
+          }
+          if (Date.now() - startTime > timeoutMs) return resolve(null);
+          setTimeout(check, 100);
+        };
+        check();
+      });
+    }
+
+    if (googleBtn) {
+      googleBtn.addEventListener('click', async () => {
+        statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-slate-100 text-slate-800 border border-slate-200 block';
+        statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Connecting to Google Workspace...</span>';
+
+        try {
+          const clerk = await getClerkInstance();
+          if (!clerk) {
+            throw new Error("Clerk authentication service is currently loading. Please check your internet connection and try again.");
+          }
+
+          if (clerk.authenticateWithRedirect) {
+            await clerk.authenticateWithRedirect({
+              strategy: 'oauth_google',
+              redirectUrl: window.location.origin + '/enterprise-workspace.html',
+              redirectUrlComplete: window.location.origin + '/enterprise-workspace.html'
+            });
+            return;
+          } else if (clerk.openSignIn) {
+            clerk.openSignIn({
+              afterSignInUrl: window.location.origin + '/enterprise-workspace.html',
+              afterSignUpUrl: window.location.origin + '/enterprise-workspace.html'
+            });
+            return;
+          } else if (clerk.client && clerk.client.signIn) {
+            await clerk.client.signIn.authenticateWithRedirect({
+              strategy: 'oauth_google',
+              redirectUrl: window.location.origin + '/enterprise-workspace.html',
+              redirectUrlComplete: window.location.origin + '/enterprise-workspace.html'
+            });
+            return;
+          }
+        } catch (err) {
+          console.error("Clerk Enterprise Google OAuth notice:", err);
+          statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-700 border border-rose-200 block';
+          statusMsg.innerText = 'Google Workspace Authentication: ' + (err.message || 'Unable to connect.');
+        }
+      });
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+
+      statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-slate-100 text-slate-800 border border-slate-200 block';
+      statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Authenticating enterprise access...</span>';
+      setTimeout(() => {
+        enterEnterpriseWorkspace(email);
+      }, 900);
+    });
+
+  </script>
+</body>
+</html>

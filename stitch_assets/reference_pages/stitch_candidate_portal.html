@@ -1,0 +1,1219 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Zavran AI — Candidate Portal</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            obsidian: "#090d16",
+            surface: "#ffffff",
+            slate: {
+              50: "#f8fafc",
+              100: "#f1f5f9",
+              200: "#e2e8f0",
+              300: "#cbd5e1",
+              400: "#94a3b8",
+              500: "#64748b",
+              600: "#475569",
+              700: "#334155",
+              800: "#1e293b",
+              900: "#0f172a"
+            }
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    body {
+      background-color: #ffffff;
+      color: #0f172a;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+  </style>
+</head>
+<body class="bg-white text-slate-900 min-h-screen flex antialiased selection:bg-slate-900 selection:text-white">
+<!-- ========================================================================= -->
+<!-- 1. BRANDING & SIDEBAR -->
+<!-- ========================================================================= -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-40 flex flex-col justify-between" id="mainSidebar">
+<div class="flex flex-col">
+<!-- Brand & Badge -->
+<div class="h-20 px-6 flex items-center gap-3.5 border-b border-slate-100">
+<div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-xs">
+<img alt="Zavran AI Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYlDSGoQ0qkC4C7OxNNQ1NppTZJWjqAXLcUfTnPyKwqdJ88MNMtG36jTMgrXpmGM9zvhewwyWh05Lgnug-9wFVtX0YToh6YEbojsqgr1bCUCTqccSAySWI-y2S6XRSsLBogDYgzcxrxBE3-qmj_0MJXD-Ra6pi8pLMHFjTfa2_n0helMaDovHB1sAxvqSkfi_geI2IJeBlInKsn2B5cSt5w9M_mm6QSOxyF8ZUhJx91SXELhaIFKqKjtmcRM7_h-Dj-iY">
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-slate-950 text-base tracking-tight">Zavran AI</span>
+</div>
+<span class="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded text-[10px] font-mono font-semibold tracking-wider text-slate-500 uppercase bg-slate-100">
+            Candidate Portal
+          </span>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="px-3.5 py-6 space-y-1">
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-dashboard" onclick="switchTab('dashboard')">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+<span class="">Dashboard</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-history" onclick="switchTab('history')">
+<span class="material-symbols-outlined text-[20px]">history_edu</span>
+<span class="">Interview History</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-950 text-white shadow-xs" id="nav-profile" onclick="switchTab('profile')">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+<span class="">Profile</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-settings" onclick="switchTab('settings')">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+<span class="">Settings</span>
+</button>
+</nav>
+</div>
+<!-- Candidate Mini-Card Footer -->
+<div class="p-3 m-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+<div class="flex items-center gap-2.5 overflow-hidden">
+<img alt="Dileep Sai" class="w-9 h-9 rounded-lg object-cover ring-1 ring-slate-200 shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1X9TuDCr78WaHQVKFz_m1BJAM0oop1ZLotUU2PAn4ajszsahKlmaffYykpcBTiP8xRfpRFqlF2UuZsEROE6pu7-eBeWS46nY-ZwiOMK7bGcE_N3il5lyfab6bZP0czuFojgpdgyQMFz8Q46WLdTj6oBsLGLuU1WDu6rJVipxeHX-P_F992FF24h8OaUi77CQugZcOmIj_ZUkCXQHyoQ8ka5IByBR-rVqyFUxqyss9pOojK8zBeHGGw0CGBN">
+<div class="flex flex-col truncate">
+<span class="font-headline font-bold text-slate-900 text-xs truncate">Dileep Sai</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="font-mono text-[10px] text-slate-500 font-medium">Candidate Active</span>
+</div>
+</div>
+</div>
+<button class="p-1 text-slate-400 hover:text-slate-700 rounded-md hover:bg-white transition-colors" title="Candidate Options">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- MAIN WORKSPACE CONTENT -->
+<!-- ========================================================================= -->
+<div class="pl-64 flex flex-col flex-1 min-h-screen bg-white">
+<!-- TOP HEADER -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 h-20 px-8 flex items-center justify-between">
+<div>
+<div class="flex items-center gap-3">
+<h1 class="font-headline font-bold text-xl text-slate-950 tracking-tight" id="headerTitle">Candidate Profile &amp; Dossier</h1>
+
+</div>
+<p class="text-xs text-slate-500 mt-0.5" id="headerSubtitle">Resume-driven single source of truth parsed directly for interview simulations.</p>
+</div>
+<!-- Top Right Controls -->
+<div class="flex items-center gap-3.5">
+<!-- Search bar input -->
+<div class="relative hidden sm:block w-64">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-slate-400">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950 focus:border-slate-950 transition-all" placeholder="Search sessions, roles..." type="text">
+</div>
+<button class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-all relative">
+<span class="material-symbols-outlined text-[19px]">notifications</span>
+<span class="w-1.5 h-1.5 rounded-full bg-slate-950 absolute top-2 right-2"></span>
+</button>
+<div class="h-6 w-px bg-slate-200"></div>
+<!-- Candidate Profile Chip -->
+<button class="flex items-center gap-2.5 pl-1 py-1 pr-2 rounded-xl hover:bg-slate-50 transition-all text-left" onclick="switchTab('profile')">
+<img alt="Dileep Sai" class="w-8 h-8 rounded-lg object-cover ring-1 ring-slate-200" src="https://lh3.googleusercontent.com/aida/AEtjO1X9TuDCr78WaHQVKFz_m1BJAM0oop1ZLotUU2PAn4ajszsahKlmaffYykpcBTiP8xRfpRFqlF2UuZsEROE6pu7-eBeWS46nY-ZwiOMK7bGcE_N3il5lyfab6bZP0czuFojgpdgyQMFz8Q46WLdTj6oBsLGLuU1WDu6rJVipxeHX-P_F992FF24h8OaUi77CQugZcOmIj_ZUkCXQHyoQ8ka5IByBR-rVqyFUxqyss9pOojK8zBeHGGw0CGBN">
+<div class="hidden md:flex flex-col">
+<span class="font-headline font-semibold text-xs text-slate-900">Dileep Sai</span>
+<span class="font-mono text-[10px] text-slate-500">Sr. AI Engineer</span>
+</div>
+</button>
+</div>
+</header>
+<!-- CONTENT BODY VIEW CONTAINER -->
+<main class="flex-1 p-8 bg-white max-w-6xl w-full mx-auto">
+<!-- ===================================================================== -->
+<!-- TAB 1: CANDIDATE DASHBOARD SECTION (#view-dashboard) -->
+<!-- ===================================================================== -->
+<section class="space-y-8 hidden" id="view-dashboard">
+<!-- Top Hero Card: Zarun AI Interview Reviewer -->
+<div class="rounded-2xl border border-slate-200 bg-white p-7 relative overflow-hidden shadow-xs hover:border-slate-300 transition-all">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+<div class="space-y-2 max-w-2xl">
+
+<h2 class="font-headline font-bold text-2xl text-slate-950 tracking-tight">Boost Your Interview Skills</h2>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Review comprehensive telemetry, question-by-question breakdown, and actionable AI feedback to continuously sharpen and improve your technical and behavioral interview performance.
+              </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-5 py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-headline font-semibold text-xs shadow-sm transition-all flex items-center gap-2 group" onclick="openReviewModal('Principal AI Systems Architect', 'Oct 24, 2026', '94%')">
+<span class="">Start Review</span>
+<span class="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 3 Separate Statistic Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+<!-- Card 1: Interview Rate -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-500 mb-2">
+<span class="text-xs font-medium uppercase font-mono tracking-wider">Interview Rate</span>
+<span class="material-symbols-outlined text-[20px] text-slate-400">trending_up</span>
+</div>
+<div class="space-y-1 my-1">
+<div class="font-headline font-bold text-3xl text-slate-950">84.6%</div>
+
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-slate-950 h-1.5 rounded-full" style="width: 84.6%"></div>
+</div>
+</div>
+<!-- Card 2: Successful Interviews -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-500 mb-2">
+<span class="text-xs font-medium uppercase font-mono tracking-wider">Successful Interviews</span>
+<span class="material-symbols-outlined text-[20px] text-emerald-600">check_circle</span>
+</div>
+<div class="space-y-1 my-1">
+<div class="font-headline font-bold text-3xl text-slate-950">18</div>
+
+</div>
+
+</div>
+<!-- Card 3: Unsuccessful Interviews -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-500 mb-2">
+<span class="text-xs font-medium uppercase font-mono tracking-wider">Unsuccessful Interviews</span>
+<span class="material-symbols-outlined text-[20px] text-amber-600">error_outline</span>
+</div>
+<div class="space-y-1 my-1">
+<div class="font-headline font-bold text-3xl text-slate-950">4</div>
+
+</div>
+
+</div>
+</div>
+<!-- Recent Interviews Table -->
+<div class="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+<div class="px-6 py-4.5 border-b border-slate-200 flex items-center justify-between">
+<div>
+<h3 class="font-headline font-bold text-base text-slate-950">Recent Interviews</h3>
+<p class="text-xs text-slate-500 mt-0.5">Summary of latest AI evaluations and simulation sessions.</p>
+</div>
+<button class="text-xs font-semibold text-slate-900 hover:text-slate-600 flex items-center gap-1 transition-colors" onclick="switchTab('history')">
+<span class="">View full history</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="border-b border-slate-200 bg-slate-50/70 text-slate-500 font-mono text-[11px] uppercase tracking-wider">
+<th class="py-3 px-6 font-semibold">Date</th>
+<th class="py-3 px-6 font-semibold">Target Role</th>
+<th class="py-3 px-6 font-semibold">Company Name</th>
+<th class="py-3 px-6 font-semibold">Interview</th>
+<th class="py-3 px-6 font-semibold">Status</th>
+<th class="py-3 px-6 font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-slate-700">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 24, 2026</td>
+<td class="py-3.5 px-6 font-semibold text-slate-950">Principal AI Systems Architect</td>
+<td class="py-3.5 px-6 text-slate-600">Stripe / Anthropic Partner</td>
+<td class="py-3.5 px-6 text-slate-600">Technical System &amp; RAG</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors" onclick="openReviewModal('Principal AI Systems Architect', 'Oct 24, 2026', '94%')">
+                      Review
+                    </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 18, 2026</td>
+<td class="py-3.5 px-6 font-semibold text-slate-950">Senior LLM Evaluation Engineer</td>
+<td class="py-3.5 px-6 text-slate-600">Scale AI</td>
+<td class="py-3.5 px-6 text-slate-600">Autonomous Agents &amp; Tool Use</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors" onclick="openReviewModal('Senior LLM Evaluation Engineer', 'Oct 18, 2026', '91%')">
+                      Review
+                    </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 10, 2026</td>
+<td class="py-3.5 px-6 font-semibold text-slate-950">Staff Distributed ML Engineer</td>
+<td class="py-3.5 px-6 text-slate-600">Databricks</td>
+<td class="py-3.5 px-6 text-slate-600">Low-Latency Inference</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors" onclick="openReviewModal('Staff Distributed ML Engineer', 'Oct 10, 2026', '89%')">
+                      Review
+                    </button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 02, 2026</td>
+<td class="py-3.5 px-6 font-semibold text-slate-950">Lead AI Research Engineer</td>
+<td class="py-3.5 px-6 text-slate-600">Cohere Labs</td>
+<td class="py-3.5 px-6 text-slate-600">Alignment &amp; RLHF</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      Uncompleted
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors" onclick="openReviewModal('Lead AI Research Engineer', 'Oct 02, 2026', 'Incomplete (18m)')">
+                      Resume
+                    </button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3.5 px-6 font-mono text-slate-500">Sep 26, 2026</td>
+<td class="py-3.5 px-6 font-semibold text-slate-950">Senior Machine Learning Engineer</td>
+<td class="py-3.5 px-6 text-slate-600">RenoCred</td>
+<td class="py-3.5 px-6 text-slate-600">Behavioral &amp; Leadership</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors" onclick="openReviewModal('Senior Machine Learning Engineer', 'Sep 26, 2026', '92%')">
+                      Review
+                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- TAB 2: INTERVIEW HISTORY SECTION (#view-history) -->
+<!-- ===================================================================== -->
+<section class="space-y-6 hidden" id="view-history">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="font-headline font-bold text-2xl text-slate-950 tracking-tight">Interview History</h2>
+<p class="text-xs text-slate-500 mt-0.5">Comprehensive archive of all scheduled, completed, and in-progress AI interview simulations.</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors" onclick="exportHistoryCsv()">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+              Export CSV
+            </button>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-5">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+    <div class="space-y-0.5">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px] text-slate-900">event_available</span>
+        <h3 class="font-headline font-bold text-lg text-slate-950 tracking-tight">Schedule Interview</h3>
+        <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono text-[10px] font-semibold tracking-wide uppercase">AI Simulation</span>
+      </div>
+      <p class="text-xs text-slate-500">Book an AI mock simulation calibrated to your target role and resume.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-emerald-700 bg-emerald-50 border border-emerald-200">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 3 Available Evaluators
+      </span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+    <!-- Role Selection -->
+    <div class="space-y-1.5">
+      <label class="block font-medium text-slate-700">Target Role</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-2.5 text-[17px] text-slate-400">work</span>
+        <select class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 font-medium focus:ring-1 focus:ring-slate-950 focus:border-slate-950">
+          <option selected="">Senior AI Systems Engineer</option>
+          <option>Principal AI Systems Architect</option>
+          <option>Staff Distributed ML Engineer</option>
+          <option>Senior LLM Evaluation Engineer</option>
+          <option>Lead AI Research Engineer</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Interviewer Selection -->
+    <div class="space-y-1.5">
+      <label class="block font-medium text-slate-700">Interviewer &amp; Focus</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-2.5 text-[17px] text-slate-400">psychology</span>
+        <select class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 font-medium focus:ring-1 focus:ring-slate-950 focus:border-slate-950">
+          <option selected="">Zarun · Technical Rigor &amp; RAG (Technical)</option>
+          <option>Arin · Behavioral &amp; Leadership Dynamics</option>
+          <option>Kaelen · System Design &amp; Scalability</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Session Type & Duration -->
+    <div class="space-y-1.5">
+      <label class="block font-medium text-slate-700">Session Duration</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-2.5 text-[17px] text-slate-400">timer</span>
+        <select class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 font-medium focus:ring-1 focus:ring-slate-950 focus:border-slate-950">
+          <option selected="">45 Minutes · Full Rigor Simulation</option>
+          <option>30 Minutes · Rapid Technical Screen</option>
+          <option>60 Minutes · Deep Architectural Dive</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Slot Selection & Action CTA -->
+  <div class="pt-2 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-t border-slate-100">
+    <div class="space-y-1.5">
+      <span class="text-[11px] font-mono text-slate-500 uppercase tracking-wider block">Suggested Time Slots</span>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-950 bg-slate-950 text-white font-medium text-xs shadow-2xs flex items-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[14px]">schedule</span>
+          <span class="">Today, 2:30 PM</span>
+        </button>
+        <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 font-medium text-xs flex items-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>
+          <span class="">Today, 4:00 PM</span>
+        </button>
+        <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 font-medium text-xs flex items-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>
+          <span class="">Tomorrow, 10:30 AM</span>
+        </button>
+        <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 font-medium text-xs flex items-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[14px] text-slate-400">calendar_month</span>
+          <span class="">Custom Date</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2.5 pt-1 lg:pt-0 self-end lg:self-center shrink-0">
+      <button type="button" onclick="alert('Interview session scheduled! Calibration report prepared.')" class="px-5 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-headline font-semibold text-xs shadow-sm transition-all flex items-center gap-2 group">
+        <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+        <span class="">Schedule Interview</span>
+        <span class="material-symbols-outlined text-[15px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div><div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-wrap items-center justify-between gap-3 text-xs">
+<div class="flex items-center gap-2.5 flex-1 min-w-[240px]">
+<div class="relative w-full max-w-sm">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[17px] text-slate-400">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950 focus:border-slate-950" id="historyFilterSearch" oninput="filterHistoryTable()" placeholder="Filter by target role, interviewer, or company..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<!-- Status Filter -->
+<select class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white font-medium focus:ring-1 focus:ring-slate-950 focus:border-slate-950" id="historyFilterStatus" onchange="filterHistoryTable()">
+<option value="All">All Statuses</option>
+<option value="Completed">Completed</option>
+<option value="Uncompleted">Uncompleted</option>
+</select>
+<!-- Date Range Selector -->
+<select class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white font-medium focus:ring-1 focus:ring-slate-950 focus:border-slate-950">
+<option>Last 90 Days</option>
+<option>Year to Date (2026)</option>
+<option>All Time</option>
+</select>
+</div>
+</div>
+<!-- Structured Table -->
+<div class="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs" id="historyMainTable">
+<thead>
+<tr class="border-b border-slate-200 bg-slate-50/70 text-slate-500 font-mono text-[11px] uppercase tracking-wider">
+<th class="py-3 px-6 font-semibold">Date</th>
+<th class="py-3 px-6 font-semibold">Target Role</th>
+<th class="py-3 px-6 font-semibold">Interview</th>
+<th class="py-3 px-6 font-semibold">Duration</th>
+<th class="py-3 px-6 font-semibold">Status</th>
+<th class="py-3 px-6 font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-slate-700" id="historyTableBody">
+<!-- Row 1 -->
+<tr class="history-row hover:bg-slate-50 transition-colors" data-status="Completed" data-text="principal ai systems architect zarun technical system rag stripe">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 24, 2026</td>
+<td class="py-3.5 px-6">
+<span class="font-semibold text-slate-950 block">Principal AI Systems Architect</span>
+<span class="text-[11px] text-slate-400">Stripe / Anthropic Partner</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="text-slate-800 font-medium block">Zarun (AI Technical)</span>
+<span class="text-[11px] text-slate-400">Technical System &amp; RAG</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-500">45 min</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-3 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-white font-semibold text-xs transition-colors shadow-2xs" onclick="openReviewModal('Principal AI Systems Architect', 'Oct 24, 2026', '94%')">
+                      Review Report
+                    </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="history-row hover:bg-slate-50 transition-colors" data-status="Completed" data-text="senior llm evaluation engineer zarun autonomous agents scale ai">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 18, 2026</td>
+<td class="py-3.5 px-6">
+<span class="font-semibold text-slate-950 block">Senior LLM Evaluation Engineer</span>
+<span class="text-[11px] text-slate-400">Scale AI</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="text-slate-800 font-medium block">Zarun (AI Technical)</span>
+<span class="text-[11px] text-slate-400">Autonomous Agents &amp; Tool Use</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-500">40 min</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-3 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-white font-semibold text-xs transition-colors shadow-2xs" onclick="openReviewModal('Senior LLM Evaluation Engineer', 'Oct 18, 2026', '91%')">
+                      Review Report
+                    </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="history-row hover:bg-slate-50 transition-colors" data-status="Completed" data-text="staff distributed ml engineer zarun low-latency databricks">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 10, 2026</td>
+<td class="py-3.5 px-6">
+<span class="font-semibold text-slate-950 block">Staff Distributed ML Engineer</span>
+<span class="text-[11px] text-slate-400">Databricks</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="text-slate-800 font-medium block">Zarun (AI Technical)</span>
+<span class="text-[11px] text-slate-400">Low-Latency Inference</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-500">40 min</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-3 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-white font-semibold text-xs transition-colors shadow-2xs" onclick="openReviewModal('Staff Distributed ML Engineer', 'Oct 10, 2026', '89%')">
+                      Review Report
+                    </button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="history-row hover:bg-slate-50 transition-colors" data-status="Uncompleted" data-text="lead ai research engineer arin cohere labs alignment rlhf">
+<td class="py-3.5 px-6 font-mono text-slate-500">Oct 02, 2026</td>
+<td class="py-3.5 px-6">
+<span class="font-semibold text-slate-950 block">Lead AI Research Engineer</span>
+<span class="text-[11px] text-slate-400">Cohere Labs</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="text-slate-800 font-medium block">Arin (AI Behavioral)</span>
+<span class="text-[11px] text-slate-400">Alignment &amp; RLHF</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-500">15 min (abandoned)</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Uncompleted
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors" onclick="openReviewModal('Lead AI Research Engineer', 'Oct 02, 2026', 'Incomplete')">
+                      View Diagnostics
+                    </button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="history-row hover:bg-slate-50 transition-colors" data-status="Completed" data-text="senior machine learning engineer arin renocred behavioral leadership">
+<td class="py-3.5 px-6 font-mono text-slate-500">Sep 26, 2026</td>
+<td class="py-3.5 px-6">
+<span class="font-semibold text-slate-950 block">Senior Machine Learning Engineer</span>
+<span class="text-[11px] text-slate-400">RenoCred</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="text-slate-800 font-medium block">Arin (AI Behavioral)</span>
+<span class="text-[11px] text-slate-400">Behavioral &amp; Leadership</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-500">30 min</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
+                    </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="px-3 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-white font-semibold text-xs transition-colors shadow-2xs" onclick="openReviewModal('Senior Machine Learning Engineer', 'Sep 26, 2026', '92%')">
+                      Review Report
+                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- TAB 3: PROFILE SECTION (#view-profile) — RESUME-DRIVEN ARCHITECTURE -->
+<!-- ===================================================================== -->
+<section class="space-y-8" id="view-profile">
+<!-- Top Profile Card -->
+<div class="rounded-2xl border border-slate-200 bg-white p-7 shadow-xs">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+<div class="flex items-center gap-5">
+<div class="relative">
+<img alt="Dileep Sai" class="w-20 h-20 rounded-full object-cover ring-2 ring-slate-200 shadow-sm" src="https://lh3.googleusercontent.com/aida/AEtjO1X9TuDCr78WaHQVKFz_m1BJAM0oop1ZLotUU2PAn4ajszsahKlmaffYykpcBTiP8xRfpRFqlF2UuZsEROE6pu7-eBeWS46nY-ZwiOMK7bGcE_N3il5lyfab6bZP0czuFojgpdgyQMFz8Q46WLdTj6oBsLGLuU1WDu6rJVipxeHX-P_F992FF24h8OaUi77CQugZcOmIj_ZUkCXQHyoQ8ka5IByBR-rVqyFUxqyss9pOojK8zBeHGGw0CGBN">
+<span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2.5 flex-wrap">
+<h2 class="font-headline font-bold text-xl text-slate-950 tracking-tight" id="profileNameDisplay">Dileep Sai</h2>
+
+</div>
+<p class="text-xs text-slate-500 font-mono flex items-center gap-3 flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">mail</span>
+                    dileep.sai@zaveran.ai
+                  </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">location_on</span>
+                    San Francisco, CA
+                  </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">phone</span>
+                    +1 (415) 556-0198
+                  </span>
+</p>
+</div>
+</div>
+<!-- Edit Profile Button -->
+<button class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition-colors self-start sm:self-auto" onclick="toggleEditProfileModal()">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Edit Profile
+            </button>
+</div>
+<!-- Dynamic Resume Sync Banner -->
+<div class="mt-4 pt-2 flex items-center justify-between text-xs text-slate-500 flex-wrap gap-2">
+<div class="flex items-center gap-2">
+
+
+</div>
+
+</div>
+</div>
+<!-- Dedicated Resume Upload Area -->
+<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline font-bold text-base text-slate-950">Resume &amp; Source Dossier</h3>
+
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium flex items-center gap-1 transition-colors" onclick="reparseResume()">
+<span class="material-symbols-outlined text-[15px]">sync</span>
+                Re-parse
+              </button>
+<button class="px-3 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1 transition-colors" onclick="document.getElementById('hiddenResumeInput').click()">
+<span class="material-symbols-outlined text-[15px]">upload</span>
+                Replace Resume
+              </button>
+<input accept=".pdf,.docx" class="hidden" id="hiddenResumeInput" onchange="handleResumeFileChange(event)" type="file">
+</div>
+</div>
+<!-- Active File Tag & Drag Zone -->
+<div class="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 border border-red-100">
+<span class="material-symbols-outlined text-[22px]">description</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline font-semibold text-xs text-slate-950" id="resumeFileName">Dileep_Sai_Principal_AI_Architect_Resume.pdf</span>
+
+</div>
+<p class="text-[11px] text-slate-500 font-mono mt-0.5">1.9 MB • MD5: 9f8a32d • Last processed Oct 24, 2026 at 09:14 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-400 hidden md:inline">Drag &amp; drop new PDF / DOCX here or</span>
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold shadow-2xs" onclick="document.getElementById('hiddenResumeInput').click()">
+                Browse Files
+              </button>
+</div>
+</div>
+</div>
+<!-- Dynamic Resume Sections Rendering (7 structured sections) -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h3 class="font-headline font-bold text-base text-slate-950">Parsed Profile Sections</h3>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] font-semibold">Adaptive Schema</span>
+</div>
+<button class="text-xs font-semibold text-slate-900 hover:text-slate-600 flex items-center gap-1 transition-colors" onclick="alert('Custom schema attribute added to parsing definition.')">
+<span class="material-symbols-outlined text-[16px]">add</span>
+              Add Custom Section
+            </button>
+</div>
+<div class="space-y-4">
+<!-- 1. Executive Summary -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-2">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">1. Summary</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<p class="text-xs text-slate-700 leading-relaxed font-normal">
+                High-impact AI Engineer specializing in distributed inference, multi-agent frameworks (LangGraph, AutoGen), and RAG evaluation systems with 6+ years designing production LLM infrastructure. Proven track record leading low-latency vector pipelines and deterministic agent reasoning loops.
+              </p>
+</div>
+<!-- 2. Technical Skills -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-3">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">2. Technical Skills</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<div class="space-y-2.5">
+<div>
+<span class="text-[11px] font-mono text-slate-400 uppercase block mb-1">Languages &amp; Frameworks</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Python</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">PyTorch</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">LangGraph</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">vLLM</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Triton</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">FastAPI</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-mono text-slate-400 uppercase block mb-1">Distributed Systems</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Ray</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Kubernetes</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Kafka</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Redis</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">gRPC</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-mono text-slate-400 uppercase block mb-1">Evaluation &amp; Ops</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Weights &amp; Biases</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">MLflow</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">PromptLayer</span>
+<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium">Ragas</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Professional Experience -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">3. Experience</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<div class="space-y-4 divide-y divide-slate-100">
+<div class="pt-2 first:pt-0 space-y-1.5">
+<div class="flex items-center justify-between flex-wrap gap-1">
+<span class="font-headline font-bold text-sm text-slate-950">Lead AI Systems Engineer · HyperScale Labs</span>
+<span class="font-mono text-[11px] text-slate-500">2023 — Present · San Francisco, CA</span>
+</div>
+<ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+<li class="">Spearheaded distributed vLLM serving infrastructure lowering p99 response times from 420ms to 78ms across 12M monthly requests.</li>
+<li class="">Architected self-correcting agent supervisor pipelines utilizing LangGraph with automated rollback checkpoints.</li>
+</ul>
+</div>
+<div class="pt-3 space-y-1.5">
+<div class="flex items-center justify-between flex-wrap gap-1">
+<span class="font-headline font-bold text-sm text-slate-950">Senior Machine Learning Engineer · NexaCore AI</span>
+<span class="font-mono text-[11px] text-slate-500">2020 — 2023 · Bengaluru, IN</span>
+</div>
+<ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+<li class="">Designed hybrid dense-sparse vector indexing architectures for multi-tenant enterprise search platforms.</li>
+<li class="">Mentored a squad of 8 ML engineers and standardizing automated CI/CD evaluation test harnesses.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- 4. Projects -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-3">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">4. Key Projects</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<div class="p-3.5 rounded-lg border border-slate-100 bg-slate-50/50 space-y-1">
+<span class="font-headline font-bold text-xs text-slate-950 block">Enterprise Autonomous Multi-Agent Orchestrator</span>
+<p class="text-[11px] text-slate-600">Open-source orchestration engine handling dynamic tool selection and state graph convergence with zero lockups.</p>
+</div>
+<div class="p-3.5 rounded-lg border border-slate-100 bg-slate-50/50 space-y-1">
+<span class="font-headline font-bold text-xs text-slate-950 block">Sub-100ms Streaming RAG Engine</span>
+<p class="text-[11px] text-slate-600">Rust + Python asynchronous retrieval pipeline capable of semantic token chunk streaming at scale.</p>
+</div>
+</div>
+</div>
+<!-- 5. Education -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-2">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">5. Education</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<div class="flex items-center justify-between flex-wrap text-xs">
+<div>
+<span class="font-semibold text-slate-900 block">Master of Science (M.S.) in Artificial Intelligence &amp; Robotics</span>
+<span class="text-slate-500">Stanford University · School of Engineering</span>
+</div>
+<span class="font-mono text-[11px] text-slate-400">Graduated First Class Distinction</span>
+</div>
+</div>
+<!-- 6. Certifications & Publications -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-2">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">6. Certifications &amp; Publications</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<div class="space-y-1.5 text-xs text-slate-700">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[15px] text-emerald-600">bookmark</span>
+<span class="font-medium">Deterministic Guardrails for Multi-Turn LLMs</span>
+<span class="text-slate-400 font-mono text-[11px]">— Published Tech Preprint 2025</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[15px] text-emerald-600">verified</span>
+<span class="font-medium">Certified Kubernetes Administrator (CKA)</span>
+<span class="text-slate-400 font-mono text-[11px]">— Linux Foundation</span>
+</div>
+</div>
+</div>
+<!-- 7. Languages -->
+<div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-2">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">7. Languages</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</div>
+<div class="flex flex-wrap gap-4 text-xs">
+<div><span class="font-semibold text-slate-900">English</span> <span class="text-slate-500">(Bilingual / Native)</span></div>
+<div><span class="font-semibold text-slate-900">Spanish</span> <span class="text-slate-500">(Professional proficiency)</span></div>
+<div><span class="font-semibold text-slate-900">German</span> <span class="text-slate-500">(Working proficiency)</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- TAB 4: SETTINGS SECTION (#view-settings) -->
+<!-- ===================================================================== -->
+<section class="space-y-6 hidden" id="view-settings">
+<div>
+<h2 class="font-headline font-bold text-2xl text-slate-950 tracking-tight">Account &amp; System Preferences</h2>
+<p class="text-xs text-slate-500 mt-0.5">Manage session configurations, telemetry preferences, and candidate privacy settings.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Card 1: Account Preferences -->
+<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+<div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+<span class="material-symbols-outlined text-[20px] text-slate-800">person</span>
+<h3 class="font-headline font-bold text-sm text-slate-950">Account Preferences</h3>
+</div>
+<div class="space-y-3 text-xs">
+<div>
+<label class="block font-medium text-slate-700 mb-1">Full Name</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" type="text" value="Dileep Sai">
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Email Address</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" type="email" value="dileep.sai@zaveran.ai">
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Phone Number</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" type="tel" value="+1 (415) 556-0198">
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div>
+<label class="block font-medium text-slate-700 mb-1">Timezone</label>
+<select class="w-full px-2.5 py-2 rounded-lg border border-slate-200 text-xs bg-white">
+<option>UTC-7 (Pacific Time)</option>
+<option>UTC+5:30 (IST)</option>
+<option>UTC+0 (GMT)</option>
+</select>
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Language</label>
+<select class="w-full px-2.5 py-2 rounded-lg border border-slate-200 text-xs bg-white">
+<option>English (US)</option>
+<option>English (UK)</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Interview Preferences -->
+<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+<div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+<span class="material-symbols-outlined text-[20px] text-slate-800">mic</span>
+<h3 class="font-headline font-bold text-sm text-slate-950">Interview Preferences</h3>
+</div>
+<div class="space-y-3.5 text-xs">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-medium text-slate-900 block">Default Audio / Video Permissions</span>
+<span class="text-[11px] text-slate-500">Auto-test hardware prior to joining rooms</span>
+</div>
+<input checked="" class="rounded border-slate-300 text-slate-950 focus:ring-slate-950" type="checkbox">
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">AI Speech Pace</label>
+<select class="w-full px-2.5 py-2 rounded-lg border border-slate-200 text-xs bg-white">
+<option>Normal (Natural Cadence)</option>
+<option>Deliberate (Clear &amp; Paced)</option>
+<option>Accelerated (Fast-Paced)</option>
+</select>
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Code Editor Layout Theme</label>
+<select class="w-full px-2.5 py-2 rounded-lg border border-slate-200 text-xs bg-white">
+<option>VSCode Dark Theme (Default)</option>
+<option>Light Minimalist Theme</option>
+<option>High Contrast Monochrome</option>
+</select>
+</div>
+<div class="pt-2">
+<span class="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-mono">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                  Hardware calibration verified
+                </span>
+</div>
+</div>
+</div>
+<!-- Card 3: Notification Settings -->
+<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+<div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+<span class="material-symbols-outlined text-[20px] text-slate-800">notifications_active</span>
+<h3 class="font-headline font-bold text-sm text-slate-950">Notification Settings</h3>
+</div>
+<div class="space-y-3 text-xs">
+<label class="flex items-start gap-2.5 cursor-pointer">
+<input checked="" class="mt-0.5 rounded border-slate-300 text-slate-950 focus:ring-slate-950" type="checkbox">
+<div>
+<span class="font-medium text-slate-900 block">Email alerts for completed evaluations</span>
+<span class="text-[11px] text-slate-500">Receive comprehensive Zarun scorecard within 3 minutes</span>
+</div>
+</label>
+<label class="flex items-start gap-2.5 cursor-pointer">
+<input checked="" class="mt-0.5 rounded border-slate-300 text-slate-950 focus:ring-slate-950" type="checkbox">
+<div>
+<span class="font-medium text-slate-900 block">Reminder 15 minutes prior to scheduled session</span>
+<span class="text-[11px] text-slate-500">Direct calendar invitation &amp; room link dispatch</span>
+</div>
+</label>
+<label class="flex items-start gap-2.5 cursor-pointer">
+<input class="mt-0.5 rounded border-slate-300 text-slate-950 focus:ring-slate-950" type="checkbox">
+<div>
+<span class="font-medium text-slate-900 block">Weekly performance telemetry digest</span>
+<span class="text-[11px] text-slate-500">Summary of score shifts across competency pillars</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Card 4: Security & Privacy -->
+<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+<div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+<span class="material-symbols-outlined text-[20px] text-slate-800">shield</span>
+<h3 class="font-headline font-bold text-sm text-slate-950">Security &amp; Privacy</h3>
+</div>
+<div class="space-y-2.5 text-xs">
+<div class="flex items-center justify-between py-1">
+<div>
+<span class="font-medium text-slate-900 block">Two-Factor Authentication (2FA)</span>
+<span class="text-[11px] text-slate-500">Hardware token or Authenticator app</span>
+</div>
+<button class="px-2.5 py-1 rounded border border-slate-200 text-slate-800 hover:bg-slate-50 text-[11px] font-semibold">Enable</button>
+</div>
+<div class="flex items-center justify-between py-1 border-t border-slate-100">
+<div>
+<span class="font-medium text-slate-900 block">Export Parsed Candidate Dossier</span>
+<span class="text-[11px] text-slate-500">Download complete parsed JSON schema</span>
+</div>
+<button class="px-2.5 py-1 rounded border border-slate-200 text-slate-800 hover:bg-slate-50 text-[11px] font-semibold" onclick="alert('Exporting verified candidate JSON dossier...')">Download</button>
+</div>
+<div class="flex items-center justify-between py-1 border-t border-slate-100">
+<div>
+<span class="font-medium text-red-600 block">Delete Account &amp; History</span>
+<span class="text-[11px] text-slate-500">Irreversible erasure of all evaluations</span>
+</div>
+<button class="px-2.5 py-1 rounded border border-red-200 text-red-600 hover:bg-red-50 text-[11px] font-semibold" onclick="confirm('Are you sure you want to delete all interview data?')">Delete</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Settings Action Bar -->
+<div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-200">
+<button class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors" onclick="alert('Changes discarded.')">
+            Discard
+          </button>
+<button class="px-5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold transition-colors shadow-2xs" onclick="saveSettings()">
+            Save Changes
+          </button>
+</div>
+</section>
+</main>
+</div>
+<!-- ========================================================================= -->
+<!-- MODAL: ZARUN AI INTERVIEW REVIEW & REPORT DRAWER -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs hidden items-center justify-center p-4" id="reviewModal">
+<div class="bg-white border border-slate-200 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-xl p-6 sm:p-8 space-y-6">
+<div class="flex items-center justify-between border-b border-slate-100 pb-4">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-100 text-emerald-800">SESSION COMPLETED</span>
+<span class="font-mono text-xs text-slate-400">#ZV-4091</span>
+</div>
+<h3 class="font-headline font-bold text-xl text-slate-950 mt-1" id="modalRoleTitle">Principal AI Systems Architect</h3>
+<p class="text-xs text-slate-500" id="modalMeta">Interviewed with Zarun • Session duration 45 mins</p>
+</div>
+<button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors" onclick="closeReviewModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Pillar Breakdown -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+<span class="font-mono text-[10px] uppercase text-slate-400 block">Overall Score</span>
+<span class="font-headline font-bold text-lg text-slate-950" id="modalScore">94%</span>
+<span class="text-[10px] text-emerald-600 font-medium block">Benchmark Cleared</span>
+</div>
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+<span class="font-mono text-[10px] uppercase text-slate-400 block">Technical Depth</span>
+<span class="font-headline font-bold text-lg text-slate-950">96%</span>
+<span class="text-[10px] text-slate-500 block">Exemplary</span>
+</div>
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+<span class="font-mono text-[10px] uppercase text-slate-400 block">Problem Solving</span>
+<span class="font-headline font-bold text-lg text-slate-950">92%</span>
+<span class="text-[10px] text-slate-500 block">Strong</span>
+</div>
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+<span class="font-mono text-[10px] uppercase text-slate-400 block">Role Fit</span>
+<span class="font-headline font-bold text-lg text-slate-950">95%</span>
+<span class="text-[10px] text-emerald-600 font-medium block">High Match</span>
+</div>
+</div>
+<!-- Qualitative Feedback Section -->
+<div class="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+<span class="font-headline font-bold text-xs text-slate-950 uppercase tracking-wider block">Zarun AI Telemetry Feedback</span>
+<p class="text-xs text-slate-700 leading-relaxed">
+          The candidate articulated multi-agent consensus trade-offs with exceptional clarity. Responses demonstrated deep hands-on familiarity with p99 distributed latency optimization under heavy GPU cluster loads. Recommendations: Continue leading architectural discussions by explicitly outlining initial constraints and token budgets before describing system components.
+        </p>
+</div>
+<div class="flex items-center justify-end gap-3 pt-2">
+<button class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold" onclick="closeReviewModal()">Close</button>
+<button class="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5" onclick="alert('Full transcript downloaded in PDF format.')">
+<span class="material-symbols-outlined text-[16px]">download</span>
+          Download Full Report
+        </button>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- MODAL: EDIT PROFILE -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs hidden items-center justify-center p-4" id="editProfileModal">
+<div class="bg-white border border-slate-200 rounded-2xl max-w-lg w-full shadow-xl p-6 space-y-4">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<h3 class="font-headline font-bold text-base text-slate-950">Edit Profile Information</h3>
+<button class="text-slate-400 hover:text-slate-700" onclick="toggleEditProfileModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="space-y-3 text-xs">
+<div>
+<label class="block font-medium text-slate-700 mb-1">Full Name</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" id="inputEditName" type="text" value="Dileep Sai">
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Headline</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" id="inputEditHeadline" type="text" value="Senior AI &amp; Systems Engineer">
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Location</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" id="inputEditLocation" type="text" value="San Francisco, CA">
+</div>
+<div>
+<label class="block font-medium text-slate-700 mb-1">Contact Email</label>
+<input class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-slate-950" id="inputEditEmail" type="email" value="dileep.sai@zaveran.ai">
+</div>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+<button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50" onclick="toggleEditProfileModal()">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold" onclick="saveProfileModal()">Save Profile</button>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- VANILLA JS SCRIPT FOR SEAMLESS TAB SWITCHING & INTERACTION -->
+<!-- ========================================================================= -->
+<script>
+    // Tab switching controller
+    const tabs = ['dashboard', 'history', 'profile', 'settings'];
+
+    function switchTab(targetTab) {
+      tabs.forEach(tab => {
+        const viewEl = document.getElementById('view-' + tab);
+        const navBtn = document.getElementById('nav-' + tab);
+
+        if (viewEl) {
+          if (tab === targetTab) {
+            viewEl.classList.remove('hidden');
+          } else {
+            viewEl.classList.add('hidden');
+          }
+        }
+
+        if (navBtn) {
+          if (tab === targetTab) {
+            navBtn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-950 text-white shadow-xs";
+          } else {
+            navBtn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50";
+          }
+        }
+      });
+
+      // Update header subtitle according to tab
+      const headerTitle = document.getElementById('headerTitle');
+      const headerSubtitle = document.getElementById('headerSubtitle');
+
+      if (targetTab === 'dashboard') {
+        headerTitle.innerText = "Candidate Workspace";
+        headerSubtitle.innerText = "Track interview performance, review AI feedback, and manage your credentials.";
+      } else if (targetTab === 'history') {
+        headerTitle.innerText = "Interview History Archive";
+        headerSubtitle.innerText = "Historical telemetry, question recordings, and evaluator diagnostics.";
+      } else if (targetTab === 'profile') {
+        headerTitle.innerText = "Candidate Profile & Dossier";
+        headerSubtitle.innerText = "Resume-driven single source of truth parsed directly for interview simulations.";
+      } else if (targetTab === 'settings') {
+        headerTitle.innerText = "Preferences & Security";
+        headerSubtitle.innerText = "Audio/video parameters, notifications, and candidate account settings.";
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Filter History Table
+    function filterHistoryTable() {
+      const searchVal = document.getElementById('historyFilterSearch').value.toLowerCase();
+      const statusVal = document.getElementById('historyFilterStatus').value;
+      const rows = document.querySelectorAll('.history-row');
+
+      rows.forEach(row => {
+        const rowText = row.getAttribute('data-text') || '';
+        const rowStatus = row.getAttribute('data-status') || '';
+
+        const matchesSearch = rowText.toLowerCase().includes(searchVal);
+        const matchesStatus = (statusVal === 'All' || rowStatus === statusVal);
+
+        if (matchesSearch && matchesStatus) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Modal controllers
+    function openReviewModal(role, date, score) {
+      document.getElementById('modalRoleTitle').innerText = role;
+      document.getElementById('modalMeta').innerText = `Interviewed with Zarun • Completed ${date}`;
+      document.getElementById('modalScore').innerText = score;
+      const modal = document.getElementById('reviewModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeReviewModal() {
+      const modal = document.getElementById('reviewModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function toggleEditProfileModal() {
+      const modal = document.getElementById('editProfileModal');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function saveProfileModal() {
+      const newName = document.getElementById('inputEditName').value;
+      if (newName.trim()) {
+        document.getElementById('profileNameDisplay').innerText = newName;
+      }
+      toggleEditProfileModal();
+      alert('Profile details updated.');
+    }
+
+    function handleResumeFileChange(event) {
+      if (event.target.files && event.target.files[0]) {
+        const file = event.target.files[0];
+        document.getElementById('resumeFileName').innerText = file.name;
+        alert(`Resume file "${file.name}" uploaded. Parsing 7 dynamic sections now.`);
+      }
+    }
+
+    function reparseResume() {
+      alert("Triggered dynamic re-parse on active dossier. 7 sections refreshed from file.");
+    }
+
+    function saveSettings() {
+      alert("Preferences successfully saved to candidate profile.");
+    }
+
+    function exportHistoryCsv() {
+      alert("Exporting interview history (.csv)...");
+    }
+  </script>
+
+
+</body></html>

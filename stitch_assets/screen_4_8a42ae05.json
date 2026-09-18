@@ -1,0 +1,366 @@
+{
+  "screenshot": {
+    "name": "projects/17666376722118671793/files/6772859711830338709",
+    "downloadUrl": "https://lh3.googleusercontent.com/aida/AEtjO1VcsjZcgbC_A0CpXf8EK0cqsH3RKD0KrSbGT0m0aVZfn8XgdJxMc3rwAq_IW9wNvk5mSLwjWINj8QZG-dILRGEXEAFiO2t9TEdBs_wuDL5wapaBKfAL27eM8fII5Eo8yBkxQtr7D5c43P4CvTSwbKb2fLMhREBxeQFt_iRgor7LerDsnGlfpZaPSA2fUwKyYWCDm0P5eS0eb93K_vwRKzvQP63vA0ixm7QQdZj4cpMil44g11bO4dKVNeWh"
+  },
+  "htmlCode": {
+    "name": "projects/17666376722118671793/files/14887135225611785142",
+    "downloadUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzAwMDY1YmI5N2EyM2QxZWIwMzZjN2ZhM2RiMDVkZDcxEgsSBxD26brz3gcYAZIBJAoKcHJvamVjdF9pZBIWQhQxNzY2NjM3NjcyMjExODY3MTc5Mw&filename=&opi=89354086",
+    "mimeType": "text/html"
+  },
+  "id": "8a42ae05d53448ea9fe11c364fa795a3",
+  "generatedBy": "figaro_agent",
+  "width": "2560",
+  "height": "2944",
+  "title": "Zavran Hiring \u2014 Hire Candidates & Directory",
+  "prompt": "Build the dedicated Hire Page for Zavran Hiring ATS.\nPure white background, clean border-slate-200 styling.\n\n1. Header:\n- Title: \"Hire Candidates\"\n- Subtitle: \"Review candidates, compare AI interview calibrations, and make hiring decisions.\"\n- Right side: \"+ Create Job\" button, \"Bulk Actions\" button.\n\n2. Search and Multi-filter Controls Bar:\n- Large search bar: \"Search candidates by name, skills, location, or keywords...\" with keyboard shortcut (\u2318K).\n- Filter Dropdowns:\n  - Role: [All Roles (Selected), AI Engineer, ML Engineer, Software Engineer, Backend Developer, Frontend Developer, Full Stack Developer]\n  - Status: [All, Applied, Interview, Under Review, Hired, Rejected]\n  - Experience: [All, 0\u20131 years, 1\u20133 years, 3\u20135 years, 5+ years]\n  - Score Threshold slider or pill filters: [85%+ High Match, 70-84%, Below 70%]\n- Layout toggles: [Grid View (Active), Table View] and candidate count indicator: \"Showing 24 Candidates\".\n\n3. Candidate Cards (Responsive Grid):\nEach card with modern enterprise ATS card layout:\n- Card 1 (Arjun Kumar):\n  - Avatar, Name: \"Arjun Kumar\", Role: \"AI Engineer\", Location: \"Hyderabad, India\"\n  - Experience: 2 Years | Applied: Sep 17, 2026\n  - Skills chips: Python \u00b7 LangChain \u00b7 FastAPI \u00b7 AWS \u00b7 Docker\n  - AI Interview Score circular progress / badge: \"87 / 100\" with \"Strong Match\"\n  - Interview status: \"Interview Completed\"\n  - Status pill: \"Under Review\"\n  - Primary CTA: \"View Candidate\" (links to candidate details) | Secondary: \"\u2022\u2022\u2022\" dropdown (Move to Next Round, Hire, Reject)\n- Card 2 (Priya Sharma \u2014 Interview Scheduled variation):\n  - Avatar, Name: \"Priya Sharma\", Role: \"Backend Developer\", Location: \"Bengaluru, India\"\n  - Experience: 4 Years | Applied: Sep 16, 2026\n  - Skills chips: Java \u00b7 Spring Boot \u00b7 Microservices \u00b7 Kubernetes \u00b7 Kafka\n  - Scheduled alert box: \"Interview Scheduled \u2022 Today \u00b7 3:00 PM (Zaroon AI)\"\n  - Status pill: \"In Interview\"\n  - Primary CTA: \"View Interview Room\" | Secondary: \"\u2022\u2022\u2022\"\n- Card 3 (Ananya Iyer \u2014 Hired variation):\n  - Avatar, Name: \"Ananya Iyer\", Role: \"ML Engineer\", Location: \"Pune, India\"\n  - Experience: 3.5 Years | Applied: Sep 14, 2026\n  - Skills chips: PyTorch \u00b7 Transformers \u00b7 MLOps \u00b7 CUDA \u00b7 Triton\n  - Score: \"92 / 100\" with \"Top 1% Calibration\"\n  - Status: \"Hired\" (subtle emerald success status)\n  - Primary CTA: \"View Profile\"\n- Card 4 (Rohan Mehta \u2014 Rejected variation):\n  - Avatar, Name: \"Rohan Mehta\", Role: \"Frontend Developer\", Location: \"Mumbai, India\"\n  - Experience: 1 Year | Applied: Sep 12, 2026\n  - Skills chips: React \u00b7 TypeScript \u00b7 CSS \u00b7 Next.js\n  - Status: \"Rejected\" (clean neutral badge)\n  - Primary CTA: \"View Profile\"\n- Card 5 (Siddharth Nair \u2014 Technical Review variation):\n  - Avatar, Name: \"Siddharth Nair\", Role: \"Software Engineer\", Location: \"Chennai, India\"\n  - Experience: 3 Years | Applied: Sep 15, 2026\n  - Skills chips: Go \u00b7 Distributed Systems \u00b7 gRPC \u00b7 PostgreSQL\n  - Score: \"84 / 100\" (\"Solid Match\")\n  - Status: \"Under Review\"\n  - Primary CTA: \"Review Candidate\"\n- Card 6 (Neha Kapoor \u2014 Final Round variation):\n  - Avatar, Name: \"Neha Kapoor\", Role: \"AI Engineer\", Location: \"Gurugram, India\"\n  - Experience: 5+ Years | Applied: Sep 11, 2026\n  - Skills chips: LLMs \u00b7 Agentic Workflows \u00b7 Vector DBs \u00b7 Azure AI\n  - Score: \"89 / 100\" (\"Strong Match\")\n  - Status: \"Final Round\"\n  - Primary CTA: \"View Candidate\"\n\nInclude interactive toggle to view the Empty State (\"No candidates yet - Candidates will appear here once they apply to your jobs\" with \"+ Create Job\" button) and Skeleton loading placeholders.",
+  "name": "projects/17666376722118671793/screens/8a42ae05d53448ea9fe11c364fa795a3",
+  "theme": {
+    "colorMode": "LIGHT",
+    "font": "PLUS_JAKARTA_SANS",
+    "roundness": "ROUND_EIGHT",
+    "customColor": "#6366f1",
+    "headlineFont": "PLUS_JAKARTA_SANS",
+    "bodyFont": "INTER",
+    "labelFont": "INTER",
+    "namedColors": {
+      "surface_container_highest": "#dfe2ef",
+      "on_tertiary_container": "#fffbff",
+      "surface_container_lowest": "#ffffff",
+      "primary_fixed_dim": "#c0c1ff",
+      "on_tertiary": "#ffffff",
+      "on_error": "#ffffff",
+      "on_secondary_fixed": "#001d31",
+      "tertiary_container": "#8a4cfc",
+      "secondary_fixed": "#cce5ff",
+      "on_secondary_container": "#00476e",
+      "secondary_container": "#5bb8fe",
+      "surface_container_low": "#f1f3ff",
+      "inverse_surface": "#2c303a",
+      "inverse_on_surface": "#eef0fe",
+      "on_tertiary_fixed": "#25005a",
+      "surface_dim": "#d7d9e7",
+      "background": "#faf9ff",
+      "tertiary": "#712ae2",
+      "surface_container": "#ebedfb",
+      "on_secondary_fixed_variant": "#004b73",
+      "primary_fixed": "#e1e0ff",
+      "primary_container": "#6063ee",
+      "surface": "#faf9ff",
+      "outline_variant": "#c7c4d7",
+      "on_error_container": "#93000a",
+      "surface_variant": "#dfe2ef",
+      "on_tertiary_fixed_variant": "#5a00c6",
+      "primary": "#4648d4",
+      "error_container": "#ffdad6",
+      "tertiary_fixed": "#eaddff",
+      "on_surface_variant": "#464554",
+      "on_primary_fixed_variant": "#2f2ebe",
+      "on_primary_container": "#fffbff",
+      "tertiary_fixed_dim": "#d2bbff",
+      "error": "#ba1a1a",
+      "on_secondary": "#ffffff",
+      "on_surface": "#181b25",
+      "surface_bright": "#faf9ff",
+      "secondary": "#006398",
+      "inverse_primary": "#c0c1ff",
+      "on_primary_fixed": "#07006c",
+      "outline": "#767586",
+      "surface_tint": "#494bd6",
+      "surface_container_high": "#e5e8f5",
+      "on_primary": "#ffffff",
+      "on_background": "#181b25",
+      "secondary_fixed_dim": "#93ccff"
+    },
+    "colorVariant": "FIDELITY",
+    "overridePrimaryColor": "#6366f1",
+    "overrideSecondaryColor": "#0284c7",
+    "overrideTertiaryColor": "#7c3aed",
+    "overrideNeutralColor": "#090d16",
+    "spacingScale": 2,
+    "typography": {
+      "label-mono": {
+        "fontFamily": "JetBrains Mono",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "lineHeight": "14px",
+        "letterSpacing": "0.04em"
+      },
+      "headline-lg": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "lineHeight": "44px",
+        "letterSpacing": "-0.02em"
+      },
+      "body-md": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "22px",
+        "letterSpacing": "0em"
+      },
+      "body-sm": {
+        "fontFamily": "Inter",
+        "fontSize": "13px",
+        "fontWeight": "400",
+        "lineHeight": "18px",
+        "letterSpacing": "0em"
+      },
+      "display-xl": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": "56px",
+        "fontWeight": "700",
+        "lineHeight": "64px",
+        "letterSpacing": "-0.03em"
+      },
+      "headline-md": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": "24px",
+        "fontWeight": "600",
+        "lineHeight": "32px",
+        "letterSpacing": "-0.015em"
+      },
+      "headline-lg-mobile": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": "28px",
+        "fontWeight": "600",
+        "lineHeight": "36px",
+        "letterSpacing": "-0.02em"
+      },
+      "body-lg": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "26px",
+        "letterSpacing": "-0.005em"
+      },
+      "label-md": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": "500",
+        "lineHeight": "16px",
+        "letterSpacing": "0.015em"
+      },
+      "headline-sm": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": "18px",
+        "fontWeight": "600",
+        "lineHeight": "26px",
+        "letterSpacing": "-0.01em"
+      },
+      "display-xl-mobile": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": "36px",
+        "fontWeight": "700",
+        "lineHeight": "44px",
+        "letterSpacing": "-0.025em"
+      },
+      "label-lg": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": "500",
+        "lineHeight": "20px",
+        "letterSpacing": "0.01em"
+      }
+    },
+    "spacing": {
+      "margin-tablet": "2rem",
+      "gutter-tablet": "1.25rem",
+      "space-xl": "2.5rem",
+      "space-lg": "1.5rem",
+      "gutter": "1.5rem",
+      "space-md": "1rem",
+      "margin": "4rem",
+      "space-sm": "0.5rem",
+      "margin-mobile": "1.25rem",
+      "space-xs": "0.25rem",
+      "gutter-mobile": "1rem"
+    },
+    "headlineFontFamily": "Plus Jakarta Sans",
+    "bodyFontFamily": "Inter",
+    "labelFontFamily": "Inter"
+  },
+  "deviceType": "DESKTOP",
+  "screenType": "DESIGN",
+  "screenMetadata": {
+    "agentType": "PRO_AGENT",
+    "status": "COMPLETE",
+    "displayMode": "HTML"
+  },
+  "designSystem": {
+    "name": "assets/cbe771f6889d4891af89a5ae395831ee",
+    "designSystem": {
+      "displayName": "Hyper-Refined Precision Light",
+      "styleGuidelines": "## Brand & Style\n\nThe design system embodies the calculated authority of enterprise AI crossed with the refined, tactile restraint of high-end editorial product design. Built for an elite mock interview and candidate assessment platform, the interface projects composure, intellectual rigor, and absolute technical reliability. Candidates and talent evaluators encounter an environment that treats interview synthesis as high-stakes analysis rather than casual gamification.\n\nThe aesthetic fuses **Minimalism** and controlled **Glassmorphism** with the razor-sharp mechanical polish of modern Silicon Valley craft. It balances pristine spatial composition with high-density data visualization, subtle ambient glow, and micro-calibrated state transitions.\n\n### Emotional Targets\n- **Executive Composure:** Generous whitespace, disciplined contrast, and no decorative noise.\n- **Analytical Precision:** Tabular metrics, crisp hairline dividers, and exact baseline alignment.\n- **Dynamic Intelligence:** Focused chromatic accents transitioning between electric violet and cerulean blue, signaling real-time cognitive processing and evaluation accuracy.\n\n## Layout & Spacing\n\nThe system enforces a flexible 12-column grid system resting within a maximum container width of `1440px`. Layouts exploit deliberate asymmetry: analytical dashboards allocate 8 columns for primary audio/video transcription and live response generation, balanced against a sticky 4-column column for real-time telemetry, scoring telemetry, and rubric alignment.\n\n### Responsive Breakpoints\n- **Desktop (>= 1200px):** 12 columns, `1.5rem` gutters, `4rem` outer margin. Multi-column analytics remain uncollapsed.\n- **Tablet (768px \u2013 1199px):** 8 columns, `1.25rem` gutters, `2rem` outer margin. Sidebar panels collapse into contextual bottom sheets or tabbed rails.\n- **Mobile (< 768px):** 4 columns, `1rem` gutters, `1.25rem` outer margin. Stacks vertically; tables convert to progressive disclosure cards.\n\nSpacing rhythms derive from an uncompromising 4px base increment (`0.25rem`), prioritizing internal component breathing room to retain an open, editorial feel.\n\n## Elevation & Depth\n\nVisual hierarchy uses atmospheric lightness rather than heavy drop shadows. Surfaces employ a triple-tiered glass and ambient wash strategy that maintains spatial separation on bright displays.\n\n### Layer Hierarchy\n1. **Canvas (Ground Zero):** Natural background `#FAFAFA` with optional vector dot matrix at 4% opacity.\n2. **Elevated Surface (Cards, Modules):** `#FFFFFF` backed by an ultra-diffused drop shadow:\n   `0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -4px rgba(15, 23, 42, 0.04)` combined with an intentional perimeter border: `1px solid #E2E8F0`.\n3. **Glass Panels (Floating Toolbars, Sticky HUDs, Modal Overlays):**\n   `background: rgba(255, 255, 255, 0.82);`\n   `backdrop-filter: blur(16px);`\n   `border: 1px solid rgba(255, 255, 255, 0.7);`\n   `box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.07);`\n4. **Accent Glow (Active AI Inference & Live Transcribing):**\n   A soft dual-color radial shadow placed strictly under active AI modules:\n   `box-shadow: 0 0 32px -4px rgba(99, 102, 241, 0.12), 0 0 20px -2px rgba(2, 132, 199, 0.08);`\n\n## Components\n\n### Buttons\n- **Primary Gradient Button:**\n  Background: Linear gradient `135deg, #7c3aed 0%, #6366f1 50%, #0284c7 100%`. Color: `#FFFFFF`. Radius: `0.5rem`. Subtle inset highlight `box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25)`. On hover: `filter: brightness(1.06); transform: translateY(-1px);` with `0 6px 20px rgba(99, 102, 241, 0.25)`. Active: `transform: translateY(0)`.\n- **Secondary (Crisp White):**\n  Background: `#FFFFFF`. Border: `1px solid #E2E8F0`. Typography: `#090D16`, `label-lg`. Hover: Border color `#CBD5E1`, background `#F8FAFC`.\n- **Ghost/Tertiary:**\n  Transparent base. Text color `#475569`. Hover: Text `#090D16`, background `rgba(226, 232, 240, 0.4)`.\n\n### Input Fields\n- Container height: `44px`. Background: `#FFFFFF`. Border: `1px solid #E2E8F0`. Border-radius: `0.5rem`. Padding: `0 1rem`. Typography: `body-md` in `#090D16`. Placeholder: `#94A3B8`.\n- **Focus State:** Border transitions to `#6366F1`, paired with a double ring: `box-shadow: 0 0 0 1px #6366F1, 0 0 0 4px rgba(99, 102, 241, 0.12)`.\n\n### Chips & Score Badges\n- Border radius: `9999px` (pill). Padding: `0.25rem 0.75rem`. Typography: `label-mono`.\n- Evaluative Tier Colors:\n  - High Match: Surface `rgba(5, 150, 105, 0.08)`, border `rgba(5, 150, 105, 0.2)`, text `#059669`.\n  - In-Progress AI State: Surface `rgba(99, 102, 241, 0.08)`, border `rgba(99, 102, 241, 0.25)`, text `#6366F1`. Includes an integrated `6px` pulsing chromatic indicator.\n\n### Checkboxes & Radios\n- Size: `18px x 18px`. Border: `1.5px solid #CBD5E1`. Radius: `4px` (checkbox), `50%` (radio).\n- Checked: Background set to primary indigo (`#6366F1`), icon white, ring shadow `0 0 0 3px rgba(99, 102, 241, 0.15)`.\n\n### Cards & Analytical Containers\n- Background: `#FFFFFF`. Border: `1px solid #E2E8F0`. Border-radius: `1rem`. Padding: `1.5rem`.\n- Interactive cards feature a subtle hover elevation shift: Border becomes `#CBD5E1`, and shadow expands smoothly over `200ms ease-out`.\n\n### Platform-Specific Components\n- **Live Waveform & Confidence Track:**\n  A continuous audio-reactive SVG visualizer with an inline dual-gradient stroke (`#7C3AED` to `#0284C7`), paired with fractional scoring overlays updated via monospaced metadata counters.\n- **Rubric Competency Matrix:**\n  Segmented progress tracks rendered with 4px step bars in `#F1F5F9`, filling progressively with gradient stops based on real-time candidate answer completeness.",
+      "theme": {
+        "colorMode": "LIGHT",
+        "font": "PLUS_JAKARTA_SANS",
+        "roundness": "ROUND_EIGHT",
+        "customColor": "#6366f1",
+        "headlineFont": "PLUS_JAKARTA_SANS",
+        "bodyFont": "INTER",
+        "labelFont": "INTER",
+        "namedColors": {
+          "surface_variant": "#dfe2ef",
+          "surface_container_low": "#f1f3ff",
+          "error_container": "#ffdad6",
+          "on_primary_fixed": "#07006c",
+          "on_secondary_fixed_variant": "#004b73",
+          "inverse_on_surface": "#eef0fe",
+          "surface_dim": "#d7d9e7",
+          "primary_fixed_dim": "#c0c1ff",
+          "surface_container_highest": "#dfe2ef",
+          "on_tertiary_container": "#fffbff",
+          "surface": "#faf9ff",
+          "on_secondary_fixed": "#001d31",
+          "tertiary_container": "#8a4cfc",
+          "inverse_primary": "#c0c1ff",
+          "on_secondary_container": "#00476e",
+          "primary_container": "#6063ee",
+          "on_background": "#181b25",
+          "surface_container": "#ebedfb",
+          "secondary": "#006398",
+          "on_primary_fixed_variant": "#2f2ebe",
+          "on_tertiary_fixed": "#25005a",
+          "background": "#faf9ff",
+          "on_tertiary": "#ffffff",
+          "secondary_fixed_dim": "#93ccff",
+          "tertiary_fixed": "#eaddff",
+          "surface_container_high": "#e5e8f5",
+          "on_tertiary_fixed_variant": "#5a00c6",
+          "secondary_container": "#5bb8fe",
+          "primary": "#4648d4",
+          "secondary_fixed": "#cce5ff",
+          "inverse_surface": "#2c303a",
+          "tertiary_fixed_dim": "#d2bbff",
+          "on_error": "#ffffff",
+          "on_primary_container": "#fffbff",
+          "surface_bright": "#faf9ff",
+          "on_primary": "#ffffff",
+          "primary_fixed": "#e1e0ff",
+          "surface_container_lowest": "#ffffff",
+          "error": "#ba1a1a",
+          "surface_tint": "#494bd6",
+          "outline": "#767586",
+          "on_surface": "#181b25",
+          "on_surface_variant": "#464554",
+          "on_error_container": "#93000a",
+          "outline_variant": "#c7c4d7",
+          "tertiary": "#712ae2",
+          "on_secondary": "#ffffff"
+        },
+        "designMd": "---\nname: Hyper-Refined Precision Light\ncolors:\n  surface: '#faf9ff'\n  surface-dim: '#d7d9e7'\n  surface-bright: '#faf9ff'\n  surface-container-lowest: '#ffffff'\n  surface-container-low: '#f1f3ff'\n  surface-container: '#ebedfb'\n  surface-container-high: '#e5e8f5'\n  surface-container-highest: '#dfe2ef'\n  on-surface: '#181b25'\n  on-surface-variant: '#464554'\n  inverse-surface: '#2c303a'\n  inverse-on-surface: '#eef0fe'\n  outline: '#767586'\n  outline-variant: '#c7c4d7'\n  surface-tint: '#494bd6'\n  primary: '#4648d4'\n  on-primary: '#ffffff'\n  primary-container: '#6063ee'\n  on-primary-container: '#fffbff'\n  inverse-primary: '#c0c1ff'\n  secondary: '#006398'\n  on-secondary: '#ffffff'\n  secondary-container: '#5bb8fe'\n  on-secondary-container: '#00476e'\n  tertiary: '#712ae2'\n  on-tertiary: '#ffffff'\n  tertiary-container: '#8a4cfc'\n  on-tertiary-container: '#fffbff'\n  error: '#ba1a1a'\n  on-error: '#ffffff'\n  error-container: '#ffdad6'\n  on-error-container: '#93000a'\n  primary-fixed: '#e1e0ff'\n  primary-fixed-dim: '#c0c1ff'\n  on-primary-fixed: '#07006c'\n  on-primary-fixed-variant: '#2f2ebe'\n  secondary-fixed: '#cce5ff'\n  secondary-fixed-dim: '#93ccff'\n  on-secondary-fixed: '#001d31'\n  on-secondary-fixed-variant: '#004b73'\n  tertiary-fixed: '#eaddff'\n  tertiary-fixed-dim: '#d2bbff'\n  on-tertiary-fixed: '#25005a'\n  on-tertiary-fixed-variant: '#5a00c6'\n  background: '#faf9ff'\n  on-background: '#181b25'\n  surface-variant: '#dfe2ef'\ntypography:\n  display-xl:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 56px\n    fontWeight: '700'\n    lineHeight: 64px\n    letterSpacing: -0.03em\n  display-xl-mobile:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 36px\n    fontWeight: '700'\n    lineHeight: 44px\n    letterSpacing: -0.025em\n  headline-lg:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 36px\n    fontWeight: '600'\n    lineHeight: 44px\n    letterSpacing: -0.02em\n  headline-lg-mobile:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 28px\n    fontWeight: '600'\n    lineHeight: 36px\n    letterSpacing: -0.02em\n  headline-md:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 24px\n    fontWeight: '600'\n    lineHeight: 32px\n    letterSpacing: -0.015em\n  headline-sm:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 18px\n    fontWeight: '600'\n    lineHeight: 26px\n    letterSpacing: -0.01em\n  body-lg:\n    fontFamily: Inter\n    fontSize: 16px\n    fontWeight: '400'\n    lineHeight: 26px\n    letterSpacing: -0.005em\n  body-md:\n    fontFamily: Inter\n    fontSize: 14px\n    fontWeight: '400'\n    lineHeight: 22px\n    letterSpacing: 0em\n  body-sm:\n    fontFamily: Inter\n    fontSize: 13px\n    fontWeight: '400'\n    lineHeight: 18px\n    letterSpacing: 0em\n  label-lg:\n    fontFamily: Inter\n    fontSize: 14px\n    fontWeight: '500'\n    lineHeight: 20px\n    letterSpacing: 0.01em\n  label-md:\n    fontFamily: Inter\n    fontSize: 12px\n    fontWeight: '500'\n    lineHeight: 16px\n    letterSpacing: 0.015em\n  label-mono:\n    fontFamily: JetBrains Mono\n    fontSize: 11px\n    fontWeight: '500'\n    lineHeight: 14px\n    letterSpacing: 0.04em\nrounded:\n  sm: 0.25rem\n  DEFAULT: 0.5rem\n  md: 0.75rem\n  lg: 1rem\n  xl: 1.5rem\n  full: 9999px\nspacing:\n  gutter: 1.5rem\n  gutter-tablet: 1.25rem\n  gutter-mobile: 1rem\n  margin: 4rem\n  margin-tablet: 2rem\n  margin-mobile: 1.25rem\n  space-xs: 0.25rem\n  space-sm: 0.5rem\n  space-md: 1rem\n  space-lg: 1.5rem\n  space-xl: 2.5rem\n---\n\n## Brand & Style\n\nThe design system embodies the calculated authority of enterprise AI crossed with the refined, tactile restraint of high-end editorial product design. Built for an elite mock interview and candidate assessment platform, the interface projects composure, intellectual rigor, and absolute technical reliability. Candidates and talent evaluators encounter an environment that treats interview synthesis as high-stakes analysis rather than casual gamification.\n\nThe aesthetic fuses **Minimalism** and controlled **Glassmorphism** with the razor-sharp mechanical polish of modern Silicon Valley craft. It balances pristine spatial composition with high-density data visualization, subtle ambient glow, and micro-calibrated state transitions.\n\n### Emotional Targets\n- **Executive Composure:** Generous whitespace, disciplined contrast, and no decorative noise.\n- **Analytical Precision:** Tabular metrics, crisp hairline dividers, and exact baseline alignment.\n- **Dynamic Intelligence:** Focused chromatic accents transitioning between electric violet and cerulean blue, signaling real-time cognitive processing and evaluation accuracy.\n\n## Colors\n\nThe palette operates on an ultra-light tonal hierarchy. Deep contrast comes from near-black typography resting atop layered architectural whites, while an optical gradient of deep violet into radiant cerulean denotes active computation, score indexes, and primary actions.\n\n### Surface Architecture\n- **Base Canvas:** `#FAFAFA` with deliberate sections stepped down to `#F8F9FC` for contextual grounding.\n- **Surface Elevation (Cards & Panels):** `#FFFFFF` layered with translucent overlays (`rgba(255, 255, 255, 0.85)`).\n- **Structural Lines & Haired Borders:** `#E2E8F0` for primary module boundaries; `#F1F5F9` for secondary cell divisions.\n\n### Typography & Content Grayscale\n- **High Emphasis (Headings & Metric Displays):** `#090D16`\n- **Mid Emphasis (Body Copy, Secondary Data):** `#1E293B`\n- **Low Emphasis (Captions, Metadata, Muted Icons):** `#475569`\n- **Ghost/Placeholder:** `#94A3B8`\n\n### Chromatic Accents & Gradients\n- **Primary Brand Gradient:** Linear `135deg`, originating at `#7C3AED` (Royal Violet), passing through `#6366F1` (Indigo Primary), terminating at `#0284C7` (Vibrant Cerulean).\n- **Secondary Interaction Accent:** `#2563EB` reserved for link interactions and precise analytical focus rings.\n- **Signal Statuses:**\n  - Success / Match High: `#059669` (surface fill: `#ECFDF5`)\n  - Warning / Delta Neutral: `#D97706` (surface fill: `#FFFBEB`)\n  - Critical / Low Assessment: `#E11D48` (surface fill: `#FFF1F2`)\n\n## Typography\n\nTypography establishes an authoritative editorial rhythm. **Plus Jakarta Sans** provides structural geometry for all structural headlines and evaluative metric scores, capturing modern technological leadership. **Inter** ensures uninterrupted clarity across dense feedback reports, real-time interview transcripts, and performance tables.\n\n### Rules of Typesetting\n- Use negative tracking on headlines (`display-xl` down to `headline-md`) to ensure dense optical cohesion.\n- Body copy must maintain strict 1.5\u20131.6x line-height ratios to safeguard readability in extended assessment dossiers.\n- Utilize `label-mono` (via `JetBrains Mono`) for real-time latency indicators, model token outputs, timestamp logging, and benchmark percentile flags.\n\n## Layout & Spacing\n\nThe system enforces a flexible 12-column grid system resting within a maximum container width of `1440px`. Layouts exploit deliberate asymmetry: analytical dashboards allocate 8 columns for primary audio/video transcription and live response generation, balanced against a sticky 4-column column for real-time telemetry, scoring telemetry, and rubric alignment.\n\n### Responsive Breakpoints\n- **Desktop (>= 1200px):** 12 columns, `1.5rem` gutters, `4rem` outer margin. Multi-column analytics remain uncollapsed.\n- **Tablet (768px \u2013 1199px):** 8 columns, `1.25rem` gutters, `2rem` outer margin. Sidebar panels collapse into contextual bottom sheets or tabbed rails.\n- **Mobile (< 768px):** 4 columns, `1rem` gutters, `1.25rem` outer margin. Stacks vertically; tables convert to progressive disclosure cards.\n\nSpacing rhythms derive from an uncompromising 4px base increment (`0.25rem`), prioritizing internal component breathing room to retain an open, editorial feel.\n\n## Elevation & Depth\n\nVisual hierarchy uses atmospheric lightness rather than heavy drop shadows. Surfaces employ a triple-tiered glass and ambient wash strategy that maintains spatial separation on bright displays.\n\n### Layer Hierarchy\n1. **Canvas (Ground Zero):** Natural background `#FAFAFA` with optional vector dot matrix at 4% opacity.\n2. **Elevated Surface (Cards, Modules):** `#FFFFFF` backed by an ultra-diffused drop shadow:\n   `0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -4px rgba(15, 23, 42, 0.04)` combined with an intentional perimeter border: `1px solid #E2E8F0`.\n3. **Glass Panels (Floating Toolbars, Sticky HUDs, Modal Overlays):**\n   `background: rgba(255, 255, 255, 0.82);`\n   `backdrop-filter: blur(16px);`\n   `border: 1px solid rgba(255, 255, 255, 0.7);`\n   `box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.07);`\n4. **Accent Glow (Active AI Inference & Live Transcribing):**\n   A soft dual-color radial shadow placed strictly under active AI modules:\n   `box-shadow: 0 0 32px -4px rgba(99, 102, 241, 0.12), 0 0 20px -2px rgba(2, 132, 199, 0.08);`\n\n## Shapes\n\nThe design system standardizes on calibrated geometric curves that avoid both aggressive brutalist corners and toy-like circularity. \n\n### Geometric Rules\n- **Base Components (Inputs, Buttons, Badges):** `rounded` (`0.5rem` / 8px).\n- **Cards & Data Modules:** `rounded-lg` (`1rem` / 16px).\n- **Modal Dialogs & Floating Shells:** `rounded-xl` (`1.5rem` / 24px).\n- **Strict Caps:** Metric tags and state badges maintain pill status (`rounded-full`) exclusively when representing continuous numerical percentiles or active status loops.\n\n## Components\n\n### Buttons\n- **Primary Gradient Button:**\n  Background: Linear gradient `135deg, #7c3aed 0%, #6366f1 50%, #0284c7 100%`. Color: `#FFFFFF`. Radius: `0.5rem`. Subtle inset highlight `box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25)`. On hover: `filter: brightness(1.06); transform: translateY(-1px);` with `0 6px 20px rgba(99, 102, 241, 0.25)`. Active: `transform: translateY(0)`.\n- **Secondary (Crisp White):**\n  Background: `#FFFFFF`. Border: `1px solid #E2E8F0`. Typography: `#090D16`, `label-lg`. Hover: Border color `#CBD5E1`, background `#F8FAFC`.\n- **Ghost/Tertiary:**\n  Transparent base. Text color `#475569`. Hover: Text `#090D16`, background `rgba(226, 232, 240, 0.4)`.\n\n### Input Fields\n- Container height: `44px`. Background: `#FFFFFF`. Border: `1px solid #E2E8F0`. Border-radius: `0.5rem`. Padding: `0 1rem`. Typography: `body-md` in `#090D16`. Placeholder: `#94A3B8`.\n- **Focus State:** Border transitions to `#6366F1`, paired with a double ring: `box-shadow: 0 0 0 1px #6366F1, 0 0 0 4px rgba(99, 102, 241, 0.12)`.\n\n### Chips & Score Badges\n- Border radius: `9999px` (pill). Padding: `0.25rem 0.75rem`. Typography: `label-mono`.\n- Evaluative Tier Colors:\n  - High Match: Surface `rgba(5, 150, 105, 0.08)`, border `rgba(5, 150, 105, 0.2)`, text `#059669`.\n  - In-Progress AI State: Surface `rgba(99, 102, 241, 0.08)`, border `rgba(99, 102, 241, 0.25)`, text `#6366F1`. Includes an integrated `6px` pulsing chromatic indicator.\n\n### Checkboxes & Radios\n- Size: `18px x 18px`. Border: `1.5px solid #CBD5E1`. Radius: `4px` (checkbox), `50%` (radio).\n- Checked: Background set to primary indigo (`#6366F1`), icon white, ring shadow `0 0 0 3px rgba(99, 102, 241, 0.15)`.\n\n### Cards & Analytical Containers\n- Background: `#FFFFFF`. Border: `1px solid #E2E8F0`. Border-radius: `1rem`. Padding: `1.5rem`.\n- Interactive cards feature a subtle hover elevation shift: Border becomes `#CBD5E1`, and shadow expands smoothly over `200ms ease-out`.\n\n### Platform-Specific Components\n- **Live Waveform & Confidence Track:**\n  A continuous audio-reactive SVG visualizer with an inline dual-gradient stroke (`#7C3AED` to `#0284C7`), paired with fractional scoring overlays updated via monospaced metadata counters.\n- **Rubric Competency Matrix:**\n  Segmented progress tracks rendered with 4px step bars in `#F1F5F9`, filling progressively with gradient stops based on real-time candidate answer completeness.",
+        "colorVariant": "FIDELITY",
+        "overridePrimaryColor": "#6366f1",
+        "overrideSecondaryColor": "#0284c7",
+        "overrideTertiaryColor": "#7c3aed",
+        "overrideNeutralColor": "#090d16",
+        "spacingScale": 2,
+        "typography": {
+          "display-xl-mobile": {
+            "fontFamily": "Plus Jakarta Sans",
+            "fontSize": "36px",
+            "fontWeight": "700",
+            "lineHeight": "44px",
+            "letterSpacing": "-0.025em"
+          },
+          "display-xl": {
+            "fontFamily": "Plus Jakarta Sans",
+            "fontSize": "56px",
+            "fontWeight": "700",
+            "lineHeight": "64px",
+            "letterSpacing": "-0.03em"
+          },
+          "headline-lg": {
+            "fontFamily": "Plus Jakarta Sans",
+            "fontSize": "36px",
+            "fontWeight": "600",
+            "lineHeight": "44px",
+            "letterSpacing": "-0.02em"
+          },
+          "body-sm": {
+            "fontFamily": "Inter",
+            "fontSize": "13px",
+            "fontWeight": "400",
+            "lineHeight": "18px",
+            "letterSpacing": "0em"
+          },
+          "body-md": {
+            "fontFamily": "Inter",
+            "fontSize": "14px",
+            "fontWeight": "400",
+            "lineHeight": "22px",
+            "letterSpacing": "0em"
+          },
+          "headline-lg-mobile": {
+            "fontFamily": "Plus Jakarta Sans",
+            "fontSize": "28px",
+            "fontWeight": "600",
+            "lineHeight": "36px",
+            "letterSpacing": "-0.02em"
+          },
+          "headline-md": {
+            "fontFamily": "Plus Jakarta Sans",
+            "fontSize": "24px",
+            "fontWeight": "600",
+            "lineHeight": "32px",
+            "letterSpacing": "-0.015em"
+          },
+          "label-mono": {
+            "fontFamily": "JetBrains Mono",
+            "fontSize": "11px",
+            "fontWeight": "500",
+            "lineHeight": "14px",
+            "letterSpacing": "0.04em"
+          },
+          "label-md": {
+            "fontFamily": "Inter",
+            "fontSize": "12px",
+            "fontWeight": "500",
+            "lineHeight": "16px",
+            "letterSpacing": "0.015em"
+          },
+          "body-lg": {
+            "fontFamily": "Inter",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "26px",
+            "letterSpacing": "-0.005em"
+          },
+          "headline-sm": {
+            "fontFamily": "Plus Jakarta Sans",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px",
+            "letterSpacing": "-0.01em"
+          },
+          "label-lg": {
+            "fontFamily": "Inter",
+            "fontSize": "14px",
+            "fontWeight": "500",
+            "lineHeight": "20px",
+            "letterSpacing": "0.01em"
+          }
+        },
+        "spacing": {
+          "space-md": "1rem",
+          "margin-mobile": "1.25rem",
+          "margin": "4rem",
+          "gutter-mobile": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-xl": "2.5rem",
+          "space-lg": "1.5rem",
+          "margin-tablet": "2rem",
+          "gutter": "1.5rem",
+          "gutter-tablet": "1.25rem"
+        },
+        "headlineFontFamily": "Plus Jakarta Sans",
+        "bodyFontFamily": "Inter",
+        "labelFontFamily": "Inter"
+      }
+    },
+    "version": "1"
+  }
+}

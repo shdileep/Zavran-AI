@@ -1,0 +1,1218 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<title>Zavran AI</title>
+<link rel="icon" type="image/png" href="zevaro.png">
+<link rel="shortcut icon" type="image/png" href="zevaro.png">
+<link rel="apple-touch-icon" href="zevaro.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head><body class="bg-transparent font-body-md text-body-md text-on-surface antialiased relative min-h-screen selection:bg-slate-950-fixed-dim selection:text-slate-900"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+  @layer base {
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y proximity;
+      scroll-padding-top: 5rem;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    input:focus::placeholder, textarea:focus::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+    main > :first-child {
+      margin-top: 0 !important;
+    }
+    main > :last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  
+  .snap-section {
+    scroll-snap-align: start;
+    min-height: calc(100vh - 5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  footer {
+    scroll-snap-align: end;
+  }
+
+  /* Bi-directional Scroll Reveal Styles */
+  .scroll-reveal {
+    opacity: 0;
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  /* When moving down (top to bottom): elements enter from bottom */
+  body.scroll-down .scroll-reveal {
+    transform: translateY(40px);
+  }
+
+  /* When moving up (bottom to top): elements enter from top */
+  body.scroll-up .scroll-reveal {
+    transform: translateY(-40px);
+  }
+
+  /* Active visible state: perfectly positioned */
+  .scroll-reveal.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+  }
+
+  /* Stagger Delays */
+  .stagger-1 { transition-delay: 0.08s; }
+  .stagger-2 { transition-delay: 0.18s; }
+  .stagger-3 { transition-delay: 0.28s; }
+  .stagger-4 { transition-delay: 0.38s; }
+  .stagger-5 { transition-delay: 0.48s; }
+  .stagger-6 { transition-delay: 0.58s; }
+
+  @keyframes floatSlow {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes floatMedium {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .animate-float-slow {
+    animation: floatSlow 4s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: floatMedium 3.5s ease-in-out infinite;
+  }
+
+  .animate-float-card {
+    animation: floatCard 3s ease-in-out infinite;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+  }
+</style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed-dim": "#c0c1ff",
+            "on-tertiary": "#ffffff",
+            "surface": "#faf9ff",
+            "on-primary-container": "#fffbff",
+            "outline-variant": "#c7c4d7",
+            "tertiary": "#712ae2",
+            "tertiary-fixed-dim": "#d2bbff",
+            "on-error": "#ffffff",
+            "secondary": "#006398",
+            "inverse-primary": "#c0c1ff",
+            "surface-dim": "#d7d9e7",
+            "surface-bright": "#faf9ff",
+            "on-secondary-fixed-variant": "#004b73",
+            "surface-tint": "#494bd6",
+            "error": "#ba1a1a",
+            "surface-container-high": "#e5e8f5",
+            "primary": "#4648d4",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#464554",
+            "on-secondary-container": "#00476e",
+            "inverse-surface": "#2c303a",
+            "surface-variant": "#dfe2ef",
+            "on-primary": "#ffffff",
+            "surface-container": "#ebedfb",
+            "surface-container-highest": "#dfe2ef",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed": "#25005a",
+            "on-tertiary-container": "#fffbff",
+            "on-error-container": "#93000a",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#93ccff",
+            "inverse-on-surface": "#eef0fe",
+            "surface-container-low": "#f1f3ff",
+            "on-surface": "#181b25",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-background": "#181b25",
+            "background": "#faf9ff",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#cce5ff",
+            "secondary-container": "#5bb8fe",
+            "primary-fixed": "#e1e0ff",
+            "on-tertiary-fixed-variant": "#5a00c6",
+            "tertiary-fixed": "#eaddff",
+            "primary-container": "#6063ee",
+            "tertiary-container": "#8a4cfc",
+            "outline": "#767586",
+            "on-secondary-fixed": "#001d31"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "4rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "margin-mobile": "1.25rem",
+            "space-xl": "2.5rem",
+            "gutter-tablet": "1.25rem",
+            "space-lg": "1.5rem",
+            "gutter": "1.5rem",
+            "margin-tablet": "2rem",
+            "gutter-mobile": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "label-lg": ["Inter"],
+            "label-mono": ["JetBrains Mono"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Inter"],
+            "display-xl-mobile": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Inter"],
+            "display-xl": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "body-sm": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "label-mono": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "display-xl-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.015em", "fontWeight": "500" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-xl": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+
+
+<!-- Interactive Dynamic Living WebGL Shader Background -->
+<!-- Clean Minimal Background -->
+<!-- Sticky Frosted Glass Navigation Header -->
+<header class="fixed top-0 left-0 right-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-slate-900/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.03)] transition-all">
+<div class="h-20 w-full px-gutter md:px-margin-tablet lg:px-margin flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<a class="flex items-center gap-space-sm group" data-path="product" href="#product">
+<img alt="Zavran AI Logo" class="w-8 h-8 rounded-lg object-contain transition-transform group-hover:scale-105" src="zevaro.png">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-slate-900 transition-colors">Zavran AI</span>
+
+</a>
+
+</div>
+<nav class="hidden lg:flex items-center gap-space-lg" id="desktop-nav">
+<a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all duration-200" data-section="how-it-works" href="#how-it-works">How It Works</a>
+<a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all duration-200" data-section="for-candidates" href="#for-candidates">For Candidates</a>
+<a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all duration-200" data-section="for-companies" href="#for-companies">For Companies</a>
+<a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all duration-200" data-section="intelligence" href="#intelligence">Intelligence</a>
+</nav>
+<div class="hidden md:flex items-center gap-space-md">
+<a class="inline-flex items-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-slate-950 text-white font-label-lg text-label-lg shadow-sm hover:bg-slate-900 hover:-translate-y-0.5 transition-all duration-200" data-path="get-started" href="role-selection.html">
+<span class="">Get Started</span>
+<span class="material-symbols-outlined text-sm leading-none">arrow_forward</span>
+</a>
+</div>
+<div class="flex items-center gap-space-sm lg:hidden">
+<a class="hidden sm:inline-flex items-center px-space-md py-space-sm rounded-lg bg-slate-950 text-white font-label-md text-label-md shadow-sm" href="role-selection.html">Get Started</a>
+<button id="mobile-menu-btn" aria-label="Toggle Navigation" class="p-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-slate-100 transition-colors focus:outline-none" type="button">
+<span class="material-symbols-outlined" id="mobile-menu-icon">menu</span>
+</button>
+</div>
+</div>
+<!-- Mobile Dropdown Menu -->
+<div id="mobile-menu-dropdown" class="hidden lg:hidden w-full bg-white/95 backdrop-blur-xl border-b border-slate-900/[0.08] shadow-lg px-gutter py-4 flex-col gap-3">
+  <a class="mobile-nav-link py-2 font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface" href="#how-it-works">How It Works</a>
+  <a class="mobile-nav-link py-2 font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface" href="#for-candidates">For Candidates</a>
+  <a class="mobile-nav-link py-2 font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface" href="#for-companies">For Companies</a>
+  <a class="mobile-nav-link py-2 font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface" href="#intelligence">Intelligence</a>
+  <div class="pt-2 border-t border-slate-100 flex gap-2">
+    <a class="w-full text-center py-2.5 rounded-lg bg-slate-950 text-white font-label-md text-label-md shadow-sm" href="role-selection.html">Get Started</a>
+  </div>
+</div>
+</header>
+<main class="w-full pt-20 bg-transparent min-h-screen relative z-10">
+<div class="flex flex-col w-full">
+<!-- SECTION 1: HERO (Living Viewport Masterpiece) -->
+<section class="snap-section relative w-full min-h-[calc(100vh-5rem)] px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12 flex flex-col justify-center overflow-hidden" id="product">
+<!-- Soft localized highlight lenses complementing WebGL canvas -->
+
+
+<div class="max-w-[1440px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center relative z-10">
+<!-- Left Hero Column -->
+<div class="lg:col-span-6 flex flex-col gap-space-lg">
+<!-- H1 Headline -->
+<h1 class="font-display-xl text-display-xl tracking-tight text-on-surface drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
+  Master the <span class="text-slate-950 underline decoration-slate-300 underline-offset-4">interview</span> before it happens.
+</h1>
+<!-- Subhead -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
+  Simulate high-stakes technical, behavioral, and leadership interviews with dynamic AI evaluation tuned strictly to top-tier technology and Fortune 500 calibration standards.
+</p>
+<!-- CTA Cluster -->
+<div class="flex flex-wrap items-center gap-space-md pt-space-xs">
+<a class="inline-flex items-center gap-space-sm px-space-xl py-space-md rounded-xl bg-slate-950 text-white font-label-lg text-label-lg shadow-sm hover:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" data-path="get-started" href="role-selection.html">
+  <span>Get Started</span>
+  <span class="material-symbols-outlined text-sm leading-none">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-space-sm px-space-lg py-space-md rounded-xl bg-white/80 backdrop-blur-md text-on-surface border border-slate-900/[0.08] hover:bg-white shadow-sm transition-all duration-200" href="#how-it-works">
+  <span class="material-symbols-outlined text-slate-800" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+  <span class="font-label-lg text-label-lg">How It Works</span>
+</a>
+</div>
+</div>
+
+<!-- Right Hero Column: Ultra-Clean Silicon Valley Visual (Image 2 style with mock.png) -->
+<div class="lg:col-span-6 relative flex items-center justify-center pt-6 lg:pt-0">
+  <div class="relative w-full max-w-[480px] flex items-center justify-center">
+    
+    <!-- Warm Background Sun Halo (Matching Image 2 Backdrop) -->
+    <div class="absolute w-72 h-72 sm:w-80 sm:h-80 md:w-92 md:h-92 rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 -top-2 left-4 sm:left-8 -z-10 opacity-90"></div>
+
+    <!-- Floating Top-Left Question Thought Bubble -->
+    <div class="absolute -top-6 left-2 sm:-top-8 sm:left-4 z-20 animate-float-slow">
+      <div class="relative bg-slate-900 text-white rounded-2xl px-3.5 py-2 shadow-lg flex items-center gap-2 border border-slate-700">
+        <span class="font-display-xl text-base font-bold text-amber-400 leading-none">?</span>
+        <span class="font-label-mono text-xs font-semibold text-slate-100" id="hero-bubble-text">System Design</span>
+        <!-- Speech bubble arrow -->
+        <div class="absolute -bottom-1.5 left-4 w-3 h-3 bg-slate-900 rotate-45 border-r border-b border-slate-700"></div>
+      </div>
+    </div>
+
+    <!-- Floating Top-Right AI Badge -->
+    <div class="absolute -top-4 right-2 sm:-top-6 sm:right-4 z-20 animate-float-medium">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg flex items-center justify-center border-2 border-white">
+        <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">smart_toy</span>
+      </div>
+    </div>
+
+    <!-- Central Hero Character Image (mock.png) -->
+    <div class="relative z-10 w-full max-w-[380px] sm:max-w-[420px]">
+      <img alt="Interactive Candidate Mockup" class="w-full h-auto object-contain drop-shadow-xl" src="mock.png">
+    </div>
+
+    <!-- Floating Sparkle Element -->
+    <div class="absolute top-1/2 -right-2 z-20 text-amber-500 select-none animate-float-slow">
+      <span class="text-2xl font-bold"></span>
+    </div>
+
+    <!-- Floating Bottom-Right Rating / Evaluation Card (Clean, Zero Emojis) -->
+    <div class="absolute -bottom-4 right-0 sm:-bottom-6 sm:-right-2 z-20 w-[280px] sm:w-[310px] animate-float-card">
+      <div class="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-slate-200/90 flex flex-col gap-3">
+        
+        <!-- Header row -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <span class="font-label-mono text-[10px] uppercase font-bold text-slate-500">Live AI Evaluation</span>
+          <span class="font-label-mono text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Active</span>
+        </div>
+
+        <!-- Rating Item 1 -->
+        <div class="flex items-center justify-between gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
+          <div class="flex items-center gap-2 flex-1">
+            <span class="w-5 h-5 rounded-full bg-slate-950 text-white flex items-center justify-center font-bold text-[10px] shrink-0">1</span>
+            <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+              <div class="h-full bg-slate-950 rounded-full" style="width: 96%"></div>
+            </div>
+          </div>
+          <span class="font-label-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0" id="metric-score-1">96% Pass</span>
+        </div>
+
+        <!-- Rating Item 2 -->
+        <div class="flex items-center justify-between gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
+          <div class="flex items-center gap-2 flex-1">
+            <span class="w-5 h-5 rounded-full bg-slate-950 text-white flex items-center justify-center font-bold text-[10px] shrink-0">2</span>
+            <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+              <div class="h-full bg-slate-800 rounded-full" style="width: 92%"></div>
+            </div>
+          </div>
+          <span class="font-label-mono text-xs font-bold text-slate-900 bg-slate-200/80 px-2 py-0.5 rounded shrink-0" id="metric-score-2">92% Clarity</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: THE PROBLEM -->
+<section class="snap-section w-full px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12 bg-white/50 backdrop-blur-lg border-y border-slate-900/[0.05]" id="problem">
+<div class="max-w-[1440px] mx-auto w-full flex flex-col gap-space-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md border-b border-slate-900/[0.08] pb-space-lg">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+
+<h2 class="font-headline-lg text-headline-lg text-on-surface">The Broken Feedback Loop of Modern Interviews</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md leading-relaxed">
+              Conventional preparation leaves elite candidates operating in the dark, leading to erratic performance spikes and critical evaluation misalignments.
+            </p>
+</div>
+<!-- Asymmetrical 4-Card Narrative Breakdown -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1 -->
+<div class="p-space-lg rounded-2xl bg-white/75 scroll-reveal  stagger-1 backdrop-blur-md border border-slate-900/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 scroll-reveal stagger-1">
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-mono text-label-mono text-slate-800 font-bold"></span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Fragile Confidence</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Rehearsing static prompts without high-pressure cognitive interrupts produces a deceptive veneer of readiness that collapses under real interviewer cross-examination.
+                </p>
+</div>
+<div class="pt-space-md mt-space-sm border-t border-slate-900/[0.06] flex items-center text-outline font-label-mono text-label-mono">
+<span class="">Synthetic Bias</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="p-space-lg rounded-2xl bg-white/75 scroll-reveal  stagger-2 backdrop-blur-md border border-slate-900/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 scroll-reveal stagger-1">
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-mono text-label-mono text-slate-900 font-bold"></span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Inflexible Question Banks</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Fixed question scripts fail to follow unexpected design tangents or probe anomalous edge cases, leaving technical blindspots completely unexamined.
+                </p>
+</div>
+<div class="pt-space-md mt-space-sm border-t border-slate-900/[0.06] flex items-center text-outline font-label-mono text-label-mono">
+<span class="">Branching Failure</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-space-lg rounded-2xl bg-white/75 scroll-reveal  stagger-3 backdrop-blur-md border border-slate-900/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 scroll-reveal stagger-1">
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-mono text-label-mono text-slate-800 font-bold"></span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Polite Human Feedback</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Human peer mocks suffer from social pleasantry decay. Assessors deliver polite, generalized reassurance rather than line-level, uncomfortable technical dissection.
+                </p>
+</div>
+<div class="pt-space-md mt-space-sm border-t border-slate-900/[0.06] flex items-center text-outline font-label-mono text-label-mono">
+<span class="">Social Friction</span>
+</div>
+</div>
+<!-- Card 4 (Highlighted) -->
+<div class="p-space-lg rounded-2xl bg-gradient-to-b scroll-reveal  stagger-4 from-white/90 to-white/70 backdrop-blur-md border border-slate-700/25 shadow-[0_4px_20px_rgba(113,42,226,0.06)] flex flex-col justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-mono text-label-mono text-error font-bold"></span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">300+ Lost Eng Hours</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Enterprise engineering teams burn over 300 senior engineering hours per single hire on inconclusive early-stage screens that neural automation solves instantly.
+                </p>
+</div>
+<div class="pt-space-md mt-space-sm border-t border-slate-900/[0.06] flex items-center justify-between text-error font-label-mono text-label-mono">
+<span class="">Pipeline Friction</span>
+<span class="material-symbols-outlined text-sm">trending_down</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: THE ZAVERAN AI SOLUTION -->
+<section class="snap-section w-full px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12" id="solution">
+<div class="max-w-[1440px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left Editorial Pitch -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+
+<h2 class="font-headline-lg text-headline-lg text-on-surface">
+              Multidimensional Neural Evaluation
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              Zavran deconstructs candidate interaction across four real-time cognitive dimensions, replacing gut instinct with mathematical precision.
+            </p>
+
+<!-- Metric Highlight Card -->
+<div class="p-space-md rounded-xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] shadow-sm flex items-center gap-space-md hover:border-slate-900/[0.14] transition-all scroll-reveal stagger-1">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high/80 flex items-center justify-center text-slate-800 shadow-xs">
+<span class="material-symbols-outlined text-2xl">analytics</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">0.02s Sub-Word Inference</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Continuous acoustic frequency &amp; reasoning vector analysis.</div>
+</div>
+</div>
+</div>
+<!-- Right Interactive Dynamic Dimension Meters -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Dimension 1 -->
+<div class="p-space-md rounded-xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] shadow-sm flex flex-col gap-space-xs hover:border-slate-900/[0.14] hover:shadow-md transition-all scroll-reveal stagger-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-slate-800">terminal</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Technical Rigor</span>
+</div>
+<span class="font-label-mono text-label-mono text-slate-800 font-bold score-val" data-target="96">96%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Analyzes algorithmic complexity, boundary invariants, lockless concurrency primitives, and edge-case mitigation.
+              </p>
+<div class="w-full h-2 bg-slate-900/[0.06] rounded-full overflow-hidden mt-1">
+<div class="h-full bg-slate-800 rounded-full dynamic-bar transition-all duration-1000 ease-out" data-width="96%" style="width: 96%;"></div>
+</div>
+</div>
+<!-- Dimension 2 -->
+<div class="p-space-md rounded-xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] shadow-sm flex flex-col gap-space-xs hover:border-slate-900/[0.14] hover:shadow-md transition-all scroll-reveal stagger-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-slate-900">account_tree</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">System Architecture &amp; Trade-Offs</span>
+</div>
+<span class="font-label-mono text-label-mono text-slate-900 font-bold score-val" data-target="93">93%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Evaluates distributed partitioning, consensus isolation, database sharding strategies, and asynchronous queues.
+              </p>
+<div class="w-full h-2 bg-slate-900/[0.06] rounded-full overflow-hidden mt-1">
+<div class="h-full bg-slate-950 rounded-full dynamic-bar transition-all duration-1000 ease-out" data-width="93%" style="width: 93%;"></div>
+</div>
+</div>
+<!-- Dimension 3 -->
+<div class="p-space-md rounded-xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] shadow-sm flex flex-col gap-space-xs hover:border-slate-900/[0.14] hover:shadow-md transition-all scroll-reveal stagger-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-slate-800">graphic_eq</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Acoustic &amp; Vocal Presence</span>
+</div>
+<span class="font-label-mono text-label-mono text-slate-800 font-bold score-val" data-target="88">88%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Quantifies filler word density, vocal cadence stability, pause intentionality, and executive pitch resonance.
+              </p>
+<div class="w-full h-2 bg-slate-900/[0.06] rounded-full overflow-hidden mt-1">
+<div class="h-full bg-slate-900 rounded-full dynamic-bar transition-all duration-1000 ease-out" data-width="88%" style="width: 88%;"></div>
+</div>
+</div>
+<!-- Dimension 4 -->
+<div class="p-space-md rounded-xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] shadow-sm flex flex-col gap-space-xs hover:border-slate-900/[0.14] hover:shadow-md transition-all scroll-reveal stagger-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-on-surface">dynamic_feed</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Adaptive Stress Resistance</span>
+</div>
+<span class="font-label-mono text-label-mono text-on-surface font-bold score-val" data-target="91">91%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Injects emergent architectural failure scenarios dynamically to probe pivot speed and logical resilience under duress.
+              </p>
+<div class="w-full h-2 bg-slate-900/[0.06] rounded-full overflow-hidden mt-1">
+<div class="h-full bg-gradient-to-r from-tertiary to-secondary rounded-full dynamic-bar transition-all duration-1000 ease-out" data-width="91%" style="width: 91%;"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 4: HOW IT WORKS -->
+<section class="snap-section w-full px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12 bg-white/50 backdrop-blur-lg border-y border-slate-900/[0.05]" id="how-it-works">
+<div class="max-w-[1440px] mx-auto w-full flex flex-col gap-space-xl">
+<div class="flex flex-col gap-space-xs text-center items-center max-w-2xl mx-auto">
+
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Precision Synthesis Architecture</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              From first role calibration to iterative benchmark telemetry, every stage mirrors elite executive hiring loops.
+            </p>
+</div>
+<!-- 6-Step Matrix -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+<!-- Step 1 -->
+<div class="step-card group scroll-reveal  stagger-1 p-space-lg rounded-2xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] hover:border-slate-700/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-reveal stagger-2">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.06]">
+<span class="font-label-mono text-label-mono text-slate-800 font-bold"></span>
+<span class="material-symbols-outlined text-slate-800 text-xl group-hover:scale-110 transition-transform">tune</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface pt-space-sm">Calibrate Seniority Level</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+                Tune target expectations from L4 senior individual contributor to Staff+, Director, or VP of Engineering benchmarks.
+              </p>
+</div>
+<!-- Step 2 -->
+<div class="step-card group scroll-reveal  stagger-1 p-space-lg rounded-2xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] hover:border-slate-900/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-reveal stagger-2">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.06]">
+<span class="font-label-mono text-label-mono text-slate-900 font-bold"></span>
+<span class="material-symbols-outlined text-slate-900 text-xl group-hover:scale-110 transition-transform">schema</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface pt-space-sm">Adaptive Interrogation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+                The AI morphs subsequent questions in real-time, actively pressing the boundaries of your previous architectural claims.
+              </p>
+</div>
+<!-- Step 3 -->
+<div class="step-card group scroll-reveal  stagger-1 p-space-lg rounded-2xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] hover:border-slate-800/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-reveal stagger-2">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.06]">
+<span class="font-label-mono text-label-mono text-slate-800 font-bold"></span>
+<span class="material-symbols-outlined text-slate-800 text-xl group-hover:scale-110 transition-transform">mic_none</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface pt-space-sm">Multimodal Telemetry</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+                Real-time ingestion captures verbal pacing, visual diagram whiteboard construction, code syntax, and hesitation spikes.
+              </p>
+</div>
+<!-- Step 4 -->
+<div class="step-card group scroll-reveal  stagger-1 p-space-lg rounded-2xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] hover:border-slate-700/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-reveal stagger-2">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.06]">
+<span class="font-label-mono text-label-mono text-slate-800 font-bold"></span>
+<span class="material-symbols-outlined text-slate-800 text-xl group-hover:scale-110 transition-transform">speed</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface pt-space-sm">Cognitive Latency Audit</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+                Measures response formation duration, conceptual structuring speed, and avoidance markers when handling ambiguity.
+              </p>
+</div>
+<!-- Step 5 -->
+<div class="step-card group scroll-reveal  stagger-1 p-space-lg rounded-2xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] hover:border-slate-900/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-reveal stagger-2">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.06]">
+<span class="font-label-mono text-label-mono text-slate-900 font-bold"></span>
+<span class="material-symbols-outlined text-slate-900 text-xl group-hover:scale-110 transition-transform">difference</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface pt-space-sm">Line-by-Line Synthesis</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+                Review detailed algorithmic diffs comparing your live responses with canonical FAANG Staff-level reference architectures.
+              </p>
+</div>
+<!-- Step 6 -->
+<div class="step-card group scroll-reveal  stagger-1 p-space-lg rounded-2xl bg-white/75 backdrop-blur-md border border-slate-900/[0.08] hover:border-slate-800/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-reveal stagger-2">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.06]">
+<span class="font-label-mono text-label-mono text-slate-800 font-bold"></span>
+<span class="material-symbols-outlined text-slate-800 text-xl group-hover:scale-110 transition-transform">show_chart</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface pt-space-sm">Trajectory Benchmarking</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+                Track multi-session skill convergence, pinpointing exact moment you cross into top-5% candidate percentile distributions.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: CANDIDATE EVALUATION SUITE (High-End Technical Calibration) -->
+<section class="snap-section w-full px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12" id="for-candidates">
+<div class="max-w-[1440px] mx-auto w-full flex flex-col gap-space-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md border-b border-slate-900/[0.08] pb-space-lg scroll-reveal ">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<span class="font-label-mono text-label-mono uppercase text-slate-800 font-semibold tracking-wider">Instant Rubric Analytics</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Candidate Evaluation &amp; Hiring Readiness Suite</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md leading-relaxed">
+  Comprehensive multi-dimensional evaluation delivering line-level technical feedback, cognitive latency audits, and mathematically verified calibration to secure unanimous hire decisions.
+</p>
+</div>
+
+<!-- Candidate Analytics Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Overall Composite Score Card -->
+<div class="lg:col-span-4 p-space-xl rounded-2xl bg-white/80 backdrop-blur-xl border border-slate-900/[0.08] flex flex-col items-center justify-center text-center gap-space-md shadow-sm scroll-reveal  stagger-1">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider font-semibold">Composite Rubric Score</span>
+
+<!-- Circular Score Display -->
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+<circle class="text-slate-900/[0.08] fill-none" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-slate-900 fill-none transition-all duration-1000" cx="50" cy="50" r="42" stroke="currentColor" stroke-dasharray="264" stroke-dashoffset="24" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center">
+<span class="font-display-xl text-display-xl text-on-surface font-bold">92</span>
+<span class="font-label-mono text-label-mono text-outline">OUT OF 100</span>
+</div>
+</div>
+
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-slate-950/10 text-slate-900 font-label-mono text-label-mono font-semibold border border-slate-900/20">
+<span class="material-symbols-outlined text-xs">verified</span>
+<span class="">Senior Staff Ready</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs leading-relaxed">
+  Performance registers in the 96th percentile of recent FAANG &amp; Fortune 500 systems design candidate cohorts.
+</p>
+</div>
+
+<!-- Granular Score Breakdown & Interactive Tabs -->
+<div class="lg:col-span-8 p-space-xl rounded-2xl bg-white/80 backdrop-blur-xl border border-slate-900/[0.08] flex flex-col justify-between gap-space-lg shadow-sm scroll-reveal  stagger-2">
+<!-- Real-Time Animated Score Bars -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="font-semibold text-on-surface">Technical Rigor &amp; Concurrency</span>
+<span class="font-label-mono text-slate-800 font-bold">96%</span>
+</div>
+<div class="w-full h-2.5 bg-slate-900/[0.06] rounded-full overflow-hidden">
+<div class="h-full bg-slate-800 rounded-full dynamic-bar transition-all duration-1000" style="width: 96%"></div>
+</div>
+</div>
+
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="font-semibold text-on-surface">Communication Precision</span>
+<span class="font-label-mono text-slate-900 font-bold">94%</span>
+</div>
+<div class="w-full h-2.5 bg-slate-900/[0.06] rounded-full overflow-hidden">
+<div class="h-full bg-slate-950 rounded-full dynamic-bar transition-all duration-1000" style="width: 94%"></div>
+</div>
+</div>
+
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="font-semibold text-on-surface">System Architecture &amp; Trade-offs</span>
+<span class="font-label-mono text-slate-800 font-bold">95%</span>
+</div>
+<div class="w-full h-2.5 bg-slate-900/[0.06] rounded-full overflow-hidden">
+<div class="h-full bg-slate-900 rounded-full dynamic-bar transition-all duration-1000" style="width: 95%"></div>
+</div>
+</div>
+
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="font-semibold text-on-surface">Executive Composure Under Stress</span>
+<span class="font-label-mono text-slate-900 font-bold">91%</span>
+</div>
+<div class="w-full h-2.5 bg-slate-900/[0.06] rounded-full overflow-hidden">
+<div class="h-full bg-slate-800 rounded-full dynamic-bar transition-all duration-1000" style="width: 91%"></div>
+</div>
+</div>
+</div>
+
+<!-- Interactive Tabbed Feedback HUD -->
+<div class="flex flex-col gap-space-sm pt-space-md border-t border-slate-900/[0.08]">
+<div class="flex gap-space-sm border-b border-slate-900/[0.08] pb-space-xs" id="eval-tab-triggers">
+<button class="eval-tab-btn active font-label-md text-label-md text-slate-900 font-semibold border-b-2 border-slate-900 pb-1" data-eval="strengths" type="button">Key Strengths</button>
+<button class="eval-tab-btn font-label-md text-label-md text-on-surface-variant hover:text-on-surface pb-1" data-eval="flags" type="button">Red Flags Avoided</button>
+<button class="eval-tab-btn font-label-md text-label-md text-on-surface-variant hover:text-on-surface pb-1" data-eval="drills" type="button">Recommended Drills</button>
+</div>
+
+<!-- Tab 1: Strengths -->
+<div class="eval-content flex flex-col gap-space-xs pt-space-xs" id="eval-content-strengths">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-sm text-slate-800 pt-0.5">check_circle</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Exemplary Partition Isolation:</strong> Clearly reasoned through consistent hashing with virtual nodes to prevent catastrophic hotspot allocation.
+</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-sm text-slate-800 pt-0.5">check_circle</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Cadence Control:</strong> Maintained an even 135 wpm vocal tempo under intentional interviewer interruptions at minute 14:20.
+</p>
+</div>
+</div>
+
+<!-- Tab 2: Red Flags Avoided -->
+<div class="eval-content hidden flex-col gap-space-xs pt-space-xs" id="eval-content-flags">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-sm text-slate-800 pt-0.5">shield</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Avoided Premature Optimization:</strong> Explicitly confirmed throughput constraints before locking in a distributed cache layer.
+</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-sm text-slate-800 pt-0.5">shield</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Zero Circular Reasoning:</strong> Pivoted gracefully without defensiveness when probed on distributed transaction isolation limits.
+</p>
+</div>
+</div>
+
+<!-- Tab 3: Recommended Drills -->
+<div class="eval-content hidden flex-col gap-space-xs pt-space-xs" id="eval-content-drills">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-sm text-slate-900 pt-0.5">bolt</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Drill 402: Cross-DC Split Brain Recovery:</strong> Deepen precision around Raft term epoch increments during network partition reconciliation.
+</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-sm text-slate-900 pt-0.5">bolt</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Drill 108: Executive Conciseness:</strong> Practice tightening architectural framing down to 45 seconds using the Pyramid Principle.
+</p>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 6: CANDIDATE TRAJECTORY & RETENTION GRAPH -->
+<section class="snap-section w-full px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12 bg-white/50 backdrop-blur-lg border-y border-slate-900/[0.05]" id="intelligence">
+<div class="max-w-[1440px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+
+<h2 class="font-headline-lg text-headline-lg text-on-surface">
+              Practice shouldn’t just repeat interviews. It should measurably make you better.
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              Zavran’s progression graph logs empirical compounding. In four targeted simulations, candidates jump from inconclusive screens to unanimous hire recommendations.
+            </p>
+
+<!-- Dynamic Milestone Trigger -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="prog-btn active-prog px-space-md py-space-xs rounded-lg font-label-md text-label-md bg-white text-slate-900 shadow-sm border border-slate-900/[0.08]" data-session="4" type="button">
+                Session 04 (88 Score)
+              </button>
+<button class="prog-btn px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface bg-white/40" data-session="1" type="button">
+                Session 01 (62 Score)
+              </button>
+</div>
+</div>
+<!-- Right Progression Graph Card -->
+<div class="lg:col-span-7 p-space-xl rounded-2xl bg-white/80 backdrop-blur-xl border border-slate-900/[0.08] shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-slate-900/[0.08]">
+<span class="font-label-mono text-label-mono text-outline uppercase tracking-wider">Cohort Trajectory Telemetry</span>
+<span class="font-label-mono text-label-mono text-slate-800 font-bold">+26 PT COMPOUND GAIN</span>
+</div>
+<!-- SVG Progression Visualization -->
+<div class="w-full h-64 relative flex items-center justify-center">
+<svg class="w-full h-full" fill="none" viewBox="0 0 500 200">
+<!-- Grid Lines -->
+<line class="text-slate-900/[0.08]" stroke="currentColor" stroke-dasharray="4 4" x1="40" x2="460" y1="30" y2="30"></line>
+<line class="text-slate-900/[0.08]" stroke="currentColor" stroke-dasharray="4 4" x1="40" x2="460" y1="80" y2="80"></line>
+<line class="text-slate-900/[0.08]" stroke="currentColor" stroke-dasharray="4 4" x1="40" x2="460" y1="130" y2="130"></line>
+<line class="text-slate-900/[0.14]" stroke="currentColor" x1="40" x2="460" y1="180" y2="180"></line>
+<!-- Trajectory Area Gradient Fill -->
+<defs>
+<linearGradient id="chartGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4648d4" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#4648d4" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<path d="M 60 145 C 130 135, 170 115, 200 105 C 270 85, 300 70, 340 55 C 390 40, 420 30, 440 25 L 440 180 L 60 180 Z" fill="url(#chartGrad)"></path>
+<!-- Main Trend Line -->
+<path d="M 60 145 C 130 135, 170 115, 200 105 C 270 85, 300 70, 340 55 C 390 40, 420 30, 440 25" id="trajectory-line" stroke="url(#lineGrad)" stroke-linecap="round" stroke-width="4"></path>
+<defs>
+<linearGradient id="lineGrad" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0%" stop-color="#712ae2"></stop>
+<stop offset="50%" stop-color="#4648d4"></stop>
+<stop offset="100%" stop-color="#006398"></stop>
+</linearGradient>
+</defs>
+<!-- Data Point Nodes -->
+<circle class="fill-white stroke-tertiary stroke-[3]" cx="60" cy="145" r="6"></circle>
+<circle class="fill-white stroke-primary stroke-[3]" cx="200" cy="105" r="6"></circle>
+<circle class="fill-white stroke-primary stroke-[3]" cx="340" cy="55" r="6"></circle>
+<circle class="fill-secondary stroke-white stroke-[3]" cx="440" cy="25" r="7"></circle>
+</svg>
+</div>
+<!-- Metric Node Badges -->
+<div class="grid grid-cols-4 gap-space-xs text-center">
+<div class="p-2 rounded-lg bg-white/70 backdrop-blur-sm border border-slate-900/[0.08]">
+<div class="font-label-mono text-label-mono text-outline"></div>
+<div class="font-headline-sm text-headline-sm text-on-surface">62</div>
+<div class="font-label-mono text-[10px] text-error">Needs Polish</div>
+</div>
+<div class="p-2 rounded-lg bg-white/70 backdrop-blur-sm border border-slate-900/[0.08]">
+<div class="font-label-mono text-label-mono text-outline"></div>
+<div class="font-headline-sm text-headline-sm text-on-surface">71</div>
+<div class="font-label-mono text-[10px] text-on-surface-variant">+9 Delta</div>
+</div>
+<div class="p-2 rounded-lg bg-white/70 backdrop-blur-sm border border-slate-900/[0.08]">
+<div class="font-label-mono text-label-mono text-outline"></div>
+<div class="font-headline-sm text-headline-sm text-on-surface">79</div>
+<div class="font-label-mono text-[10px] text-on-surface-variant">+8 Delta</div>
+</div>
+<div class="p-2 rounded-lg bg-slate-900/15 backdrop-blur-sm border border-slate-800/30">
+<div class="font-label-mono text-label-mono text-slate-800"></div>
+<div class="font-headline-sm text-headline-sm text-slate-800 font-bold">88</div>
+<div class="font-label-mono text-[10px] text-slate-800 font-bold">Offer Ready</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 7: CANDIDATE IMMERSION & VOICE SIMULATION -->
+
+<!-- SECTION 8: FOR COMPANIES (Hire Elite Engineers) -->
+<section class="snap-section w-full px-gutter md:px-margin-tablet lg:px-margin py-8 md:py-12 bg-white/50 backdrop-blur-lg border-y border-slate-900/[0.05]" id="for-companies">
+<div class="max-w-[1440px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left Enterprise Pitch -->
+<div class="lg:col-span-6 flex flex-col gap-space-lg scroll-reveal  stagger-1">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-mono text-label-mono uppercase text-slate-700 font-semibold tracking-wider">For Hiring Teams &amp; Leaders</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+  Hire elite engineers with total confidence.
+</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+  Automate first-round technical screens with adaptive, realistic AI interviews. Identify top-tier engineers in hours while saving over 300 engineering hours per hire.
+</p>
+
+<!-- Sleek Feature Cards -->
+<div class="flex flex-col gap-3">
+<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-slate-400 hover:shadow-sm transition-all flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-xl">psychology</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-sm font-bold text-slate-900">Adaptive Technical Screens</h3>
+<p class="font-body-sm text-xs text-slate-600 leading-relaxed">AI conducts in-depth system architecture and live coding evaluations calibrated strictly to your team's benchmarks.</p>
+</div>
+</div>
+
+<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-slate-400 hover:shadow-sm transition-all flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-xl">person_search</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-sm font-bold text-slate-900">Pre-Calibrated Talent Discovery</h3>
+<p class="font-body-sm text-xs text-slate-600 leading-relaxed">Directly access a vetted pipeline of top 5% engineering candidates who have demonstrated proven problem-solving mastery.</p>
+</div>
+</div>
+
+<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-slate-400 hover:shadow-sm transition-all flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-xl">sync_alt</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-sm font-bold text-slate-900">Instant ATS Sync &amp; Scorecards</h3>
+<p class="font-body-sm text-xs text-slate-600 leading-relaxed">One-click integrations with Greenhouse, Lever, and Ashby with detailed candidate scorecards and hiring committee packets.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Right Enterprise Candidate Analytics Showcase -->
+<div class="lg:col-span-6 p-7 rounded-3xl bg-slate-50 border border-slate-200 shadow-sm flex flex-col gap-5 scroll-reveal  stagger-2">
+  <div class="flex items-center justify-between pb-3.5 border-b border-slate-200">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-slate-900 text-lg">fact_check</span>
+      <span class="font-headline-sm text-sm font-bold text-slate-900">Candidate Evaluation Packet</span>
+    </div>
+    <span class="font-label-mono text-xs text-slate-700 bg-white px-3 py-1 rounded-full border border-slate-200 font-semibold">Senior Staff Benchmark</span>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <div class="p-4 rounded-2xl bg-white border border-slate-200 flex items-center justify-between shadow-xs">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-900 text-xl">architecture</span>
+        <div>
+          <div class="font-headline-sm text-xs font-bold text-slate-900">Distributed Systems &amp; Concurrency</div>
+          <div class="font-body-sm text-[11px] text-slate-500">Mastered Raft consensus &amp; partition isolation</div>
+        </div>
+      </div>
+      <span class="font-label-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">96% Pass</span>
+    </div>
+
+    <div class="p-4 rounded-2xl bg-white border border-slate-200 flex items-center justify-between shadow-xs">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-900 text-xl">speed</span>
+        <div>
+          <div class="font-headline-sm text-xs font-bold text-slate-900">Comprehensive Synthesis Ready</div>
+          <div class="font-body-sm text-[11px] text-slate-500">Full behavioral telemetry &amp; code review packet</div>
+        </div>
+      </div>
+      <span class="font-label-mono text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">Instant</span>
+    </div>
+  </div>
+
+  <div class="p-4 rounded-2xl bg-white border border-slate-200 flex items-center justify-around text-center shadow-xs">
+    <div>
+      <div class="font-headline-sm text-xl font-bold text-slate-950">80%</div>
+      <div class="font-label-mono text-[10px] text-slate-500 font-semibold uppercase">Faster Hiring</div>
+    </div>
+    <div class="w-px h-8 bg-slate-200"></div>
+    <div>
+      <div class="font-headline-sm text-xl font-bold text-slate-950">300+</div>
+      <div class="font-label-mono text-[10px] text-slate-500 font-semibold uppercase">Eng Hours Saved</div>
+    </div>
+    <div class="w-px h-8 bg-slate-200"></div>
+    <div>
+      <div class="font-headline-sm text-xl font-bold text-slate-950">100%</div>
+      <div class="font-label-mono text-[10px] text-slate-500 font-semibold uppercase">Standardized</div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 8: DRAMATIC FINAL CTA -->
+<section class="snap-section relative w-full px-gutter md:px-margin-tablet lg:px-margin py-space-xl bg-white/65 backdrop-blur-xl border-t border-slate-900/[0.08] overflow-hidden flex flex-col justify-center items-center text-center" id="get-started">
+<div class="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[48rem] h-[24rem] rounded-full bg-gradient-to-r from-tertiary/20 via-primary/20 to-secondary/20 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center text-center gap-space-lg">
+<h2 class="font-display-xl text-display-xl tracking-tight text-on-surface">
+  Your next interview shouldn’t be your first real practice.
+</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+  Practice in a realistic, pressure-tested environment. Understand your blindspots before the hiring committee does, and step into the room with unshakeable conviction.
+</p>
+<div class="flex flex-wrap items-center justify-center gap-space-md pt-space-sm">
+<a class="inline-flex items-center gap-space-sm px-space-xl py-space-md rounded-xl bg-slate-950 text-white font-label-lg text-label-lg shadow-sm hover:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" data-path="get-started" href="role-selection.html">
+  <span>Get Started</span>
+  <span class="material-symbols-outlined text-sm leading-none">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-space-sm px-space-lg py-space-md rounded-xl bg-white/80 backdrop-blur-md text-on-surface border border-slate-900/[0.08] hover:bg-white shadow-sm transition-all duration-200" data-path="for-companies" href="#for-companies">
+  <span class="font-label-lg text-label-lg">Schedule Enterprise Demo</span>
+  <span class="material-symbols-outlined text-sm leading-none">corporate_fare</span>
+</a>
+</div>
+<div class="flex items-center gap-space-lg pt-space-sm text-outline font-label-mono text-label-mono text-xs">
+  <span>NO CREDIT CARD REQUIRED</span>
+  <span class="text-slate-300">|</span>
+  <span>3 FREE NEURAL SESSIONS</span>
+  <span class="text-slate-300">|</span>
+  <span>INSTANT DETAILED RUBRIC DIFF</span>
+</div>
+</div>
+</section>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // 1. Bi-Directional Scroll Animation Engine (Top-to-Bottom & Bottom-to-Top)
+          let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+          let scrollDirection = 'down';
+          document.body.classList.add('scroll-down');
+
+          function updateScrollDirection() {
+            const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScrollY > lastScrollY) {
+              if (scrollDirection !== 'down') {
+                scrollDirection = 'down';
+                document.body.classList.remove('scroll-up');
+                document.body.classList.add('scroll-down');
+              }
+            } else if (currentScrollY < lastScrollY) {
+              if (scrollDirection !== 'up') {
+                scrollDirection = 'up';
+                document.body.classList.remove('scroll-down');
+                document.body.classList.add('scroll-up');
+              }
+            }
+            lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+          }
+
+          window.addEventListener('scroll', updateScrollDirection, { passive: true });
+
+          // IntersectionObserver: Triggers EVERY time entering viewport from top or bottom
+          const revealElements = document.querySelectorAll('.scroll-reveal');
+          const dynamicBars = document.querySelectorAll('.dynamic-bar');
+
+          // Store initial widths for bars
+          dynamicBars.forEach(bar => {
+            const targetWidth = bar.getAttribute('data-width') || bar.style.width || '90%';
+            bar.setAttribute('data-target-width', targetWidth);
+          });
+
+          const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                
+                // Animate child dynamic meter bars
+                const childBars = entry.target.querySelectorAll('.dynamic-bar');
+                childBars.forEach(bar => {
+                  const targetWidth = bar.getAttribute('data-target-width');
+                  bar.style.width = '0%';
+                  requestAnimationFrame(() => {
+                    setTimeout(() => { bar.style.width = targetWidth; }, 120);
+                  });
+                });
+              } else {
+                // When scrolling away, reset so it animates again on next scroll pass
+                entry.target.classList.remove('is-visible');
+                const childBars = entry.target.querySelectorAll('.dynamic-bar');
+                childBars.forEach(bar => {
+                  bar.style.width = '0%';
+                });
+              }
+            });
+          }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+          });
+
+          revealElements.forEach(el => revealObserver.observe(el));
+
+          // Also observe individual dynamic bars
+          dynamicBars.forEach(bar => {
+            const barObserver = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const targetWidth = bar.getAttribute('data-target-width');
+                  bar.style.width = targetWidth;
+                } else {
+                  bar.style.width = '0%';
+                }
+              });
+            }, { threshold: 0.2 });
+            barObserver.observe(bar);
+          });
+
+          // 2. Smooth Navigation & ScrollSpy
+          const navLinks = document.querySelectorAll('#desktop-nav .nav-link');
+          const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+          const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+          const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+          const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+          // Toggle Mobile Menu
+          if (mobileMenuBtn && mobileMenuDropdown) {
+            mobileMenuBtn.addEventListener('click', () => {
+              const isClosed = mobileMenuDropdown.classList.contains('hidden');
+              if (isClosed) {
+                mobileMenuDropdown.classList.remove('hidden');
+                mobileMenuDropdown.classList.add('flex');
+                mobileMenuIcon.textContent = 'close';
+              } else {
+                mobileMenuDropdown.classList.add('hidden');
+                mobileMenuDropdown.classList.remove('flex');
+                mobileMenuIcon.textContent = 'menu';
+              }
+            });
+
+            mobileLinks.forEach(link => {
+              link.addEventListener('click', () => {
+                mobileMenuDropdown.classList.add('hidden');
+                mobileMenuDropdown.classList.remove('flex');
+                mobileMenuIcon.textContent = 'menu';
+              });
+            });
+          }
+
+          // Active Section ScrollSpy
+          const sectionsToTrack = [
+            { id: 'how-it-works', nav: 'how-it-works' },
+            { id: 'for-candidates', nav: 'for-candidates' },
+            { id: 'for-companies', nav: 'for-companies' },
+            { id: 'intelligence', nav: 'intelligence' }
+          ];
+
+          const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const currentId = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                  if (link.getAttribute('data-section') === currentId) {
+                    link.classList.add('text-slate-950', 'font-bold');
+                    link.classList.remove('text-on-surface-variant');
+                  } else {
+                    link.classList.remove('text-slate-950', 'font-bold');
+                    link.classList.add('text-on-surface-variant');
+                  }
+                });
+              }
+            });
+          }, { threshold: 0.35 });
+
+          sectionsToTrack.forEach(item => {
+            const el = document.getElementById(item.id);
+            if (el) sectionObserver.observe(el);
+          });
+
+          // 3. Evaluation Tab HUD Switcher
+          const evalTabs = document.querySelectorAll('#eval-tab-triggers .eval-tab-btn');
+          const evalContents = {
+            strengths: document.getElementById('eval-content-strengths'),
+            flags: document.getElementById('eval-content-flags'),
+            drills: document.getElementById('eval-content-drills')
+          };
+
+          evalTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+              evalTabs.forEach(t => {
+                t.classList.remove('text-slate-900', 'font-semibold', 'border-b-2', 'border-slate-900');
+                t.classList.add('text-on-surface-variant');
+              });
+              tab.classList.add('text-slate-900', 'font-semibold', 'border-b-2', 'border-slate-900');
+              tab.classList.remove('text-on-surface-variant');
+
+              const activeKey = tab.getAttribute('data-eval');
+              Object.keys(evalContents).forEach(key => {
+                if (key === activeKey) {
+                  evalContents[key].classList.remove('hidden');
+                  evalContents[key].classList.add('flex');
+                } else {
+                  evalContents[key].classList.add('hidden');
+                  evalContents[key].classList.remove('flex');
+                }
+              });
+            });
+          });
+
+          
+
+        });
+      </script>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-white/80 backdrop-blur-xl border-t border-slate-900/[0.08] relative z-10">
+<div class="w-full px-gutter md:px-margin-tablet lg:px-margin py-space-xl">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-space-xl">
+<div class="lg:col-span-2 flex flex-col gap-space-md">
+<div class="flex items-center gap-space-sm">
+<img alt="Zavran AI Logo" class="w-8 h-8 rounded-lg object-contain" src="zevaro.png">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">Zavran AI</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm leading-relaxed">High-fidelity cognitive synthesis and real-time candidate assessment platform built for enterprise talent intelligence and executive-tier evaluation.</p>
+</div>
+<div class="flex flex-col gap-space-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Product</h4>
+<div class="flex flex-col gap-space-xs">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Simulation Engine</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Adaptive Rubrics</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Real-time Telemetry</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Integrations</a>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Resources</h4>
+<div class="flex flex-col gap-space-xs">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#intelligence">Intelligence Whitepapers</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#how-it-works">Methodology &amp; Bias Audit</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#intelligence">API Documentation</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#intelligence">Customer Stories</a>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Company</h4>
+<div class="flex flex-col gap-space-xs">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">About Us</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="for-candidates" href="#for-candidates">Careers</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#intelligence">Security &amp; Privacy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Press Kit</a>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Legal</h4>
+<div class="flex flex-col gap-space-xs">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Sub-processors</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#product">Candidate Data Rights</a>
+</div>
+</div>
+</div>
+<div class="mt-space-xl pt-space-lg border-t border-slate-900/[0.08] flex flex-col md:flex-row items-center justify-between gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant">© 2026 Zavran AI Inc. All rights reserved.</span>
+</div>
+
+</div>
+</footer>
+
+</body></html>
