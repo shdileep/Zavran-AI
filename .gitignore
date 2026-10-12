@@ -24,3 +24,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Large generated RAG datasets and binary embeddings (>100MB GitHub limit)
+backend/data/*.npy
+backend/data/*.db
+backend/data/bank_rag_chunks.json
+backend/data/users.db
+

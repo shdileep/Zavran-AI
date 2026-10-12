@@ -257,10 +257,13 @@
 <!-- ========================================================================= -->
 <!-- 1. BRANDING & SIDEBAR -->
 <!-- ========================================================================= -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-40 flex flex-col justify-between" id="mainSidebar">
+<!-- Backdrop overlay for mobile / minimized screens -->
+<div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="hidden fixed inset-0 bg-slate-900/50 z-30 lg:hidden backdrop-blur-xs transition-opacity duration-300"></div>
+
+<aside class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-40 flex flex-col justify-between -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none" id="mainSidebar">
 <div class="flex flex-col">
 <!-- Brand & Badge -->
-<div class="h-20 px-6 flex items-center border-b border-slate-100">
+<div class="h-20 px-6 flex items-center justify-between border-b border-slate-100">
 <a href="javascript:void(0)" onclick="switchTab('dashboard')" class="flex items-center gap-3.5 group cursor-pointer" title="Zavran AI Dashboard">
 <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-xs">
 <img alt="Zavran AI Logo" class="w-full h-full object-contain" src="zevaro.png">
@@ -274,38 +277,42 @@
           </span>
 </div>
 </a>
+<!-- Mobile Close Button -->
+<button type="button" onclick="closeMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors" title="Close menu">
+  <span class="material-symbols-outlined text-[20px]">close</span>
+</button>
 </div>
 <!-- Navigation Tabs -->
 <nav class="px-3.5 py-6 space-y-1">
-<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-dashboard" onclick="switchTab('dashboard')">
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50 cursor-pointer" id="nav-dashboard" onclick="switchTab('dashboard')">
 <span class="material-symbols-outlined text-[20px]">grid_view</span>
 <span class="">Dashboard</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-schedule" onclick="switchTab('schedule')">
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50 cursor-pointer" id="nav-schedule" onclick="switchTab('schedule')">
 <span class="material-symbols-outlined text-[20px]">calendar_add_on</span>
 <span class="">Schedule Interview</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-history" onclick="switchTab('history')">
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50 cursor-pointer" id="nav-history" onclick="switchTab('history')">
 <span class="material-symbols-outlined text-[20px]">history_edu</span>
 <span class="">Interview History</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-950 text-white shadow-xs" id="nav-profile" onclick="switchTab('profile')">
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-950 text-white shadow-xs cursor-pointer" id="nav-profile" onclick="switchTab('profile')">
 <span class="material-symbols-outlined text-[20px]">badge</span>
 <span class="">Profile</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50" id="nav-settings" onclick="switchTab('settings')">
+<button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50 cursor-pointer" id="nav-settings" onclick="switchTab('settings')">
 <span class="material-symbols-outlined text-[20px]">tune</span>
 <span class="">Settings</span>
 </button>
 </nav>
 </div>
 <!-- Candidate Mini-Card Footer with Tap-to-Logout Popup -->
-<div class="relative p-3 m-3.5 rounded-xl bg-slate-50 border border-slate-200" id="sidebarProfileContainer">
+<div class="relative p-3 m-3.5 rounded-xl bg-slate-50 border border-slate-200 select-none" id="sidebarProfileContainer">
   <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSidebarProfileMenu(event)">
     <div class="flex items-center gap-2.5 overflow-hidden">
       <!-- Dynamic Avatar Initials (or photo if uploaded) -->
-      <div class="w-9 h-9 rounded-xl bg-slate-950 text-white font-headline font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs" id="sidebarAvatarContainer">
-        <span id="sidebarAvatarInitials">DS</span>
+      <div class="w-9 h-9 rounded-xl bg-slate-950 text-white font-headline font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs overflow-hidden" id="sidebarAvatarContainer">
+        <span id="sidebarAvatarInitials">--</span>
         <img id="sidebarAvatarImg" class="hidden w-full h-full object-cover rounded-xl" src="" alt="Profile">
       </div>
       <div class="flex flex-col truncate">
@@ -316,15 +323,23 @@
         </div>
       </div>
     </div>
-    <button type="button" class="p-1 text-slate-400 hover:text-slate-700 rounded-md hover:bg-white transition-colors" title="Account Actions">
+    <button type="button" class="p-1 text-slate-400 hover:text-slate-700 rounded-md hover:bg-white transition-colors cursor-pointer" onclick="toggleSidebarProfileMenu(event)" title="Account Actions">
       <span class="material-symbols-outlined text-[18px]">more_vert</span>
     </button>
   </div>
 
   <!-- Sidebar Popup Menu -->
-  <div id="sidebarProfileDropdown" class="hidden absolute bottom-full left-0 mb-2 w-full bg-white rounded-xl border border-slate-200 shadow-xl py-1 z-50 overflow-hidden">
-    <button type="button" onclick="logoutCandidate()" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 text-left transition-colors cursor-pointer">
-      <span class="material-symbols-outlined text-[18px] text-rose-500">logout</span>
+  <div id="sidebarProfileDropdown" class="hidden absolute bottom-full left-0 mb-2 w-full bg-white rounded-xl border border-slate-200 shadow-xl py-1.5 z-50 overflow-hidden">
+    <div class="px-3 py-2 border-b border-slate-100 bg-slate-50/50 mb-1">
+      <p class="text-xs font-bold text-slate-900 truncate" id="dropdownSidebarUserName">Candidate</p>
+      <p class="text-[11px] text-slate-500 truncate" id="dropdownSidebarUserEmail"></p>
+    </div>
+    <button type="button" onclick="switchTab('profile'); closeAllProfileDropdowns();" class="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 text-left transition-colors cursor-pointer">
+      <span class="material-symbols-outlined text-[16px] text-slate-500">person</span>
+      <span>View Profile</span>
+    </button>
+    <button type="button" onclick="logoutCandidate()" class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 text-left transition-colors cursor-pointer border-t border-slate-100 mt-1">
+      <span class="material-symbols-outlined text-[16px] text-rose-500">logout</span>
       <span>Logout</span>
     </button>
   </div>
@@ -333,46 +348,56 @@
 <!-- ========================================================================= -->
 <!-- MAIN WORKSPACE CONTENT -->
 <!-- ========================================================================= -->
-<div class="pl-64 flex flex-col flex-1 min-h-screen bg-white">
+<div class="pl-0 lg:pl-64 flex flex-col flex-1 min-h-screen bg-white transition-all w-full">
 <!-- TOP HEADER -->
-<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 h-20 px-8 flex items-center justify-between">
-<div>
-<div class="flex items-center gap-3">
-<h1 class="font-headline font-bold text-xl text-slate-950 tracking-tight" id="headerTitle">Candidate Profile &amp; Dossier</h1>
-
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 min-h-[4.5rem] h-auto px-4 sm:px-8 py-3 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0 flex-1">
+<button id="mobileSidebarToggle" onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 hover:text-slate-950 transition-colors focus:outline-none shrink-0 cursor-pointer" type="button" aria-label="Toggle navigation">
+  <span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<div class="min-w-0">
+  <h1 class="font-headline font-bold text-lg sm:text-xl text-slate-950 tracking-tight truncate" id="headerTitle">Candidate Profile &amp; Dossier</h1>
+  <p class="text-xs text-slate-500 mt-0.5 truncate hidden sm:block" id="headerSubtitle">Resume-driven single source of truth parsed directly for interview simulations.</p>
 </div>
-<p class="text-xs text-slate-500 mt-0.5" id="headerSubtitle">Resume-driven single source of truth parsed directly for interview simulations.</p>
 </div>
 <!-- Top Right Controls -->
-<div class="flex items-center gap-3.5">
+<div class="flex items-center gap-3 shrink-0">
 <!-- Search bar input -->
-<div class="relative hidden sm:block w-64">
+<div class="relative hidden md:block w-48 lg:w-64">
 <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-slate-400">search</span>
 <input class="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-950 focus:border-slate-950 transition-all" placeholder="Search sessions, roles..." type="text">
 </div>
-<button class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-all relative">
+<button class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-all relative cursor-pointer" title="Notifications">
 <span class="material-symbols-outlined text-[19px]">notifications</span>
 <span class="w-1.5 h-1.5 rounded-full bg-slate-950 absolute top-2 right-2"></span>
 </button>
-<div class="h-6 w-px bg-slate-200"></div>
+<div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
 <!-- Candidate Profile Chip & Dropdown -->
-<div class="relative" id="headerProfileContainer">
-  <button id="headerProfileBtn" type="button" class="flex items-center gap-2.5 pl-1.5 py-1 pr-2 rounded-xl hover:bg-slate-100 transition-all text-left focus:outline-none cursor-pointer group select-none" onclick="toggleHeaderProfileMenu(event)">
-    <div class="w-8 h-8 rounded-lg bg-slate-950 text-white font-headline font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs" id="headerAvatarContainer">
-      <span id="headerAvatarInitials">DS</span>
+<div class="relative select-none" id="headerProfileContainer">
+  <button id="headerProfileBtn" type="button" class="flex items-center gap-2.5 pl-1.5 py-1 pr-2 rounded-xl hover:bg-slate-100 transition-all text-left focus:outline-none cursor-pointer group" onclick="toggleHeaderProfileMenu(event)">
+    <div class="w-8 h-8 rounded-lg bg-slate-950 text-white font-headline font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs overflow-hidden" id="headerAvatarContainer">
+      <span id="headerAvatarInitials">--</span>
       <img id="headerAvatarImg" class="hidden w-full h-full object-cover rounded-lg" src="" alt="Profile">
     </div>
-    <div class="hidden md:flex flex-col">
-      <span class="font-headline font-semibold text-xs text-slate-900" id="headerCandidateName">Candidate</span>
-      <span class="font-sans text-[10px] text-slate-500" id="headerCandidateRole"></span>
+    <div class="hidden sm:flex flex-col">
+      <span class="font-headline font-semibold text-xs text-slate-900 max-w-[120px] truncate" id="headerCandidateName">Candidate</span>
+      <span class="font-sans text-[10px] text-slate-500 max-w-[120px] truncate" id="headerCandidateRole"></span>
     </div>
     <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-slate-700 transition-transform" id="headerProfileChevron">expand_more</span>
   </button>
 
   <!-- Top Right Dropdown Popover -->
-  <div id="headerProfileDropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-white rounded-xl border border-slate-200 shadow-xl py-1 z-50 overflow-hidden">
-    <button type="button" onclick="logoutCandidate()" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 text-left transition-colors cursor-pointer">
-      <span class="material-symbols-outlined text-[18px] text-rose-500">logout</span>
+  <div id="headerProfileDropdown" class="hidden absolute right-0 top-full mt-2 w-52 bg-white rounded-xl border border-slate-200 shadow-xl py-1.5 z-50 overflow-hidden">
+    <div class="px-3.5 py-2 border-b border-slate-100 bg-slate-50/50 mb-1">
+      <p class="text-xs font-bold text-slate-900 truncate" id="dropdownHeaderUserName">Candidate</p>
+      <p class="text-[11px] text-slate-500 truncate" id="dropdownHeaderUserEmail"></p>
+    </div>
+    <button type="button" onclick="switchTab('profile'); closeAllProfileDropdowns();" class="w-full flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 text-left transition-colors cursor-pointer">
+      <span class="material-symbols-outlined text-[16px] text-slate-500">person</span>
+      <span>View Profile</span>
+    </button>
+    <button type="button" onclick="logoutCandidate()" class="w-full flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 text-left transition-colors cursor-pointer border-t border-slate-100 mt-1">
+      <span class="material-symbols-outlined text-[16px] text-rose-500">logout</span>
       <span>Logout</span>
     </button>
   </div>
@@ -380,12 +405,12 @@
 </div>
 </header>
 <!-- CONTENT BODY VIEW CONTAINER -->
-<main class="flex-1 p-8 bg-white max-w-6xl w-full mx-auto">
+<main class="flex-1 p-4 sm:p-8 bg-white max-w-6xl w-full mx-auto">
 <!-- ===================================================================== -->
 <!-- TAB 1: CANDIDATE DASHBOARD SECTION (#view-dashboard) -->
 <!-- ===================================================================== -->
 <section class="space-y-8 hidden" id="view-dashboard">
-<!-- Top Hero Card: Zarun AI Interview Reviewer -->
+<!-- Top Hero Card: Zaroon AI Interview Reviewer -->
 <div class="rounded-2xl border border-slate-200 bg-white p-7 relative overflow-hidden shadow-xs hover:border-slate-300 transition-all">
 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
 <div class="space-y-2 max-w-2xl">
@@ -541,7 +566,7 @@
               <div>
                 <div class="flex items-center gap-2">
                   <span class="font-headline font-bold text-xs sm:text-sm text-slate-900" id="step1FileName">Resume.pdf</span>
-                  <span class="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-100 text-emerald-800">UPLOADED &amp; CALIBRATED</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-100 text-emerald-800">UPLOADED</span>
                 </div>
                 <p class="text-[11px] text-slate-500 font-sans mt-0.5" id="step1FileMeta">Ready for interview calibration</p>
               </div>
@@ -567,29 +592,45 @@
           </div>
 
           <!-- Searchable Applying Role  -->
-          <div class="space-y-1.5">
+          <div class="space-y-2">
             <label class="block font-headline font-bold text-xs sm:text-sm text-slate-900">
               Target Applying Role <span class="text-rose-500">*</span>
             </label>
+            
             <div class="relative">
               <span class="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-slate-400">search</span>
-              <input type="text" id="scheduleRoleSearchInput" oninput="filterScheduleRoles()" onkeydown="handleRoleSearchKeyDown(event)" placeholder="Search target role (e.g. AI Systems Architect, Full Stack Engineer, SRE...)" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:border-slate-950 transition-all">
+              <input type="text" id="scheduleRoleSearchInput" oninput="filterScheduleRoles()" onkeydown="handleRoleSearchKeyDown(event)" placeholder="Search target role (e.g. Full Stack AI Engineer, ML Engineer, Product Manager...)" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:border-slate-950 transition-all">
             </div>
 
-            <!-- Selected Role Badge -->
+            <!-- Selected Role Confirmation Badge -->
             <div id="selectedRoleBadgeContainer" class="hidden pt-1">
               <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-semibold">
                 <span class="material-symbols-outlined text-[15px] text-emerald-400">check_circle</span>
                 <span id="selectedRoleText">Selected Role</span>
-                <button type="button" onclick="clearSelectedRole()" class="text-slate-400 hover:text-white ml-1">
+                <button type="button" onclick="clearSelectedRole()" class="text-slate-400 hover:text-white ml-1 cursor-pointer">
                   <span class="material-symbols-outlined text-[14px]">close</span>
                 </button>
               </span>
             </div>
 
             <!-- Search Dropdown with Role Categories -->
-            <div id="rolesDropdownList" class="hidden max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-lg p-2 space-y-1 divide-y divide-slate-100 text-xs">
+            <div id="rolesDropdownList" class="hidden max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-xl p-1.5 space-y-0.5 text-xs z-20">
               <!-- Rendered via JavaScript on Search -->
+            </div>
+
+            <!-- Popular Quick Selection Roles -->
+            <div class="pt-2 space-y-2">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Popular Roles</span>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="selectScheduleRole('Full Stack AI Engineer')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Full Stack AI Engineer</button>
+                <button type="button" onclick="selectScheduleRole('Machine Learning Engineer')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Machine Learning Engineer</button>
+                <button type="button" onclick="selectScheduleRole('Backend Engineer')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Backend Engineer</button>
+                <button type="button" onclick="selectScheduleRole('Frontend Developer')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Frontend Developer</button>
+                <button type="button" onclick="selectScheduleRole('Data Scientist')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Data Scientist</button>
+                <button type="button" onclick="selectScheduleRole('DevOps / SRE')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">DevOps / SRE</button>
+                <button type="button" onclick="selectScheduleRole('Product Manager')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Product Manager</button>
+                <button type="button" onclick="selectScheduleRole('Cybersecurity Engineer')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition-colors cursor-pointer">Cybersecurity Engineer</button>
+              </div>
             </div>
           </div>
         </div>
@@ -790,7 +831,7 @@
             <div class="flex items-center justify-between pb-2 border-b border-slate-200/70">
               <span class="text-slate-500">Interviewer</span>
               <span class="font-headline font-bold text-slate-900 flex items-center gap-1.5" id="confirmInterviewer">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Zarun
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Zaroon
               </span>
             </div>
             <div class="flex items-center justify-between pb-2 border-b border-slate-200/70">
@@ -913,7 +954,7 @@
 </section>
 <!-- ===================================================================== -->
 <!-- TAB 3: PROFILE SECTION (#view-profile) — UNIFIED RICH RESUME ARCHITECTURE -->
-<section class="space-y-6" id="view-profile">
+<section class="space-y-6 hidden" id="view-profile">
 
   <!-- Top Candidate Card (Real Candidate Profile Information) -->
   <div class="rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-7 shadow-xs">
@@ -921,7 +962,7 @@
       <div class="flex items-center gap-4 sm:gap-5">
         <div class="relative group cursor-pointer" onclick="triggerProfilePhotoUpload()" title="Click to upload profile photo">
           <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-950 text-white font-headline font-bold text-xl sm:text-2xl flex items-center justify-center ring-2 ring-slate-100 shadow-sm transition-transform overflow-hidden" id="profileAvatarContainer">
-            <span id="profileAvatarInitials">DS</span>
+            <span id="profileAvatarInitials">--</span>
             <img id="profileAvatarImg" class="hidden w-full h-full object-cover rounded-2xl" src="" alt="Profile Picture">
           </div>
           <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white" id="onlineIndicator"></span>
@@ -937,7 +978,7 @@
           <div class="text-xs text-slate-600 flex items-center gap-3 flex-wrap pt-0.5 font-sans">
             <span class="inline-flex items-center gap-1.5" id="profileEmailContainer">
               <span class="material-symbols-outlined text-[15px] text-slate-400">mail</span>
-              <span id="profileEmailDisplay">candidate@zaveran.ai</span>
+              <span id="profileEmailDisplay"></span>
             </span>
             <span class="hidden inline-flex items-center gap-1.5" id="profilePhoneContainer">
               <span class="material-symbols-outlined text-[15px] text-slate-400">phone</span>
@@ -1129,7 +1170,7 @@
 <input checked="" class="mt-0.5 rounded border-slate-300 text-slate-950 focus:ring-slate-950" type="checkbox">
 <div>
 <span class="font-medium text-slate-900 block">Email alerts for completed evaluations</span>
-<span class="text-[11px] text-slate-500">Receive comprehensive Zarun scorecard within 3 minutes</span>
+<span class="text-[11px] text-slate-500">Receive comprehensive Zaroon scorecard within 3 minutes</span>
 </div>
 </label>
 <label class="flex items-start gap-2.5 cursor-pointer">
@@ -1192,7 +1233,7 @@
 </main>
 </div>
 <!-- ========================================================================= -->
-<!-- MODAL: ZARUN AI INTERVIEW REVIEW & REPORT DRAWER -->
+<!-- MODAL: ZAROON AI INTERVIEW REVIEW & REPORT DRAWER -->
 <!-- ========================================================================= -->
 <div class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs hidden items-center justify-center p-4" id="reviewModal">
 <div class="bg-white border border-slate-200 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-xl p-6 sm:p-8 space-y-6">
@@ -1200,12 +1241,12 @@
 <div>
 <div class="flex items-center gap-2">
 <span class="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-100 text-emerald-800">SESSION COMPLETED</span>
-<span class="font-sans text-xs text-slate-400">#ZV-4091</span>
+<span class="font-sans text-xs text-slate-400" id="modalCode">#ZV-4091</span>
 </div>
 <h3 class="font-headline font-bold text-xl text-slate-950 mt-1" id="modalRoleTitle">Principal AI Systems Architect</h3>
-<p class="text-xs text-slate-500" id="modalMeta">Interviewed with Zarun • Session duration 45 mins</p>
+<p class="text-xs text-slate-500" id="modalMeta">Interviewed with Zaroon AI • Session duration 30 mins</p>
 </div>
-<button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors" onclick="closeReviewModal()">
+<button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer" onclick="closeReviewModal()">
 <span class="material-symbols-outlined text-[18px]">close</span>
 </button>
 </div>
@@ -1214,29 +1255,29 @@
 <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
 <span class="font-sans text-[10px] uppercase text-slate-400 block">Overall Score</span>
 <span class="font-headline font-bold text-lg text-slate-950" id="modalScore">94%</span>
-<span class="text-[10px] text-emerald-600 font-medium block">Benchmark Cleared</span>
+<span class="text-[10px] text-emerald-600 font-medium block" id="modalScoreStatus">Evaluated</span>
 </div>
 <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
 <span class="font-sans text-[10px] uppercase text-slate-400 block">Technical Depth</span>
-<span class="font-headline font-bold text-lg text-slate-950">96%</span>
-<span class="text-[10px] text-slate-500 block">Exemplary</span>
+<span class="font-headline font-bold text-lg text-slate-950" id="modalTechnicalScore">92%</span>
+<span class="text-[10px] text-slate-500 block">Demonstrated</span>
 </div>
 <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
 <span class="font-sans text-[10px] uppercase text-slate-400 block">Problem Solving</span>
-<span class="font-headline font-bold text-lg text-slate-950">92%</span>
-<span class="text-[10px] text-slate-500 block">Strong</span>
+<span class="font-headline font-bold text-lg text-slate-950" id="modalProblemScore">90%</span>
+<span class="text-[10px] text-slate-500 block">Applied</span>
 </div>
 <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
 <span class="font-sans text-[10px] uppercase text-slate-400 block">Role Fit</span>
-<span class="font-headline font-bold text-lg text-slate-950">95%</span>
-<span class="text-[10px] text-emerald-600 font-medium block">High Match</span>
+<span class="font-headline font-bold text-lg text-slate-950" id="modalFitScore">94%</span>
+<span class="text-[10px] text-emerald-600 font-medium block">Calibrated</span>
 </div>
 </div>
 <!-- Qualitative Feedback Section -->
 <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-<span class="font-headline font-bold text-xs text-slate-950 uppercase tracking-wider block">Zarun AI Telemetry Feedback</span>
-<p class="text-xs text-slate-700 leading-relaxed">
-          The candidate articulated multi-agent consensus trade-offs with exceptional clarity. Responses demonstrated deep hands-on familiarity with p99 distributed latency optimization under heavy GPU cluster loads. Recommendations: Continue leading architectural discussions by explicitly outlining initial constraints and token budgets before describing system components.
+<span class="font-headline font-bold text-xs text-slate-950 uppercase tracking-wider block">Zavran AI Telemetry Feedback</span>
+<p class="text-xs text-slate-700 leading-relaxed" id="modalFeedbackText">
+          The candidate articulated core concepts with clarity. Responses demonstrated hands-on familiarity with practical engineering and system reliability under real-world constraints.
         </p>
 </div>
 <div class="flex items-center justify-end gap-3 pt-2">
@@ -1375,26 +1416,51 @@
       authUser = null;
     }
 
-    const currentCandidateId = (authUser && (authUser.id || authUser.userId)) || '';
-    const currentCandidateEmail = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '') || '';
-    const userProfileKey = currentCandidateId ? ('zaveran_profile_' + encodeURIComponent(currentCandidateId)) : (currentCandidateEmail ? ('zaveran_profile_' + encodeURIComponent(currentCandidateEmail)) : 'zaveran_profile_anon');
-    const userDossierKey = currentCandidateId ? ('zaveran_dossier_' + encodeURIComponent(currentCandidateId)) : (currentCandidateEmail ? ('zaveran_dossier_' + encodeURIComponent(currentCandidateEmail)) : 'zaveran_dossier_anon');
-    const userInterviewsKey = currentCandidateId ? ('zaveran_interviews_' + encodeURIComponent(currentCandidateId)) : 'zaveran_interviews_anon';
+    // Hydrate active auth user if an active session is present
+    if (authUser && authUser.email && localStorage.getItem('zaveran_users')) {
+      try {
+        let usersDb = JSON.parse(localStorage.getItem('zaveran_users')) || [];
+        if (usersDb.length > 0) {
+          let matched = usersDb.find(u => u.email && u.email.toLowerCase() === authUser.email.toLowerCase());
+          if (matched) {
+            authUser.name = authUser.name && authUser.name !== 'Candidate' ? authUser.name : matched.name;
+            authUser.id = matched.id || authUser.id;
+            authUser.avatarUrl = authUser.avatarUrl || matched.avatarUrl || '';
+            localStorage.setItem('zaveran_auth_user', JSON.stringify(authUser));
+          }
+        }
+      } catch(e) {}
+    }
+
+    function getUserProfileKey() {
+      const currentId = (authUser && (authUser.id || authUser.userId)) || '';
+      const currentEm = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '') || '';
+      return currentId ? ('zaveran_profile_' + encodeURIComponent(currentId)) : (currentEm ? ('zaveran_profile_' + encodeURIComponent(currentEm)) : 'zaveran_profile_anon');
+    }
+
+    function getUserDossierKey() {
+      const currentId = (authUser && (authUser.id || authUser.userId)) || '';
+      const currentEm = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '') || '';
+      return currentId ? ('zaveran_dossier_' + encodeURIComponent(currentId)) : (currentEm ? ('zaveran_dossier_' + encodeURIComponent(currentEm)) : 'zaveran_dossier_anon');
+    }
+
+    function getUserInterviewsKey() {
+      const currentId = (authUser && (authUser.id || authUser.userId)) || '';
+      return currentId ? ('zaveran_interviews_' + encodeURIComponent(currentId)) : 'zaveran_interviews_anon';
+    }
 
     let candidateProfile = null;
     try {
-      if (currentCandidateId || currentCandidateEmail) {
-        candidateProfile = JSON.parse(localStorage.getItem(userProfileKey)) || null;
-      }
+      candidateProfile = JSON.parse(localStorage.getItem(getUserProfileKey())) || null;
     } catch(e) {
       candidateProfile = null;
     }
 
     if (!candidateProfile) {
       candidateProfile = {
-        name: (authUser && authUser.name) || "Candidate",
+        name: (authUser && authUser.name && authUser.name !== 'Candidate') ? authUser.name : "Candidate",
         role: "",
-        email: currentCandidateEmail,
+        email: (authUser && authUser.email) || "",
         location: "",
         phone: "",
         avatarUrl: (authUser && authUser.avatarUrl) || "",
@@ -1407,22 +1473,64 @@
     if (candidateProfile.role) {
       candidateProfile.role = cleanRoleTitle(candidateProfile.role);
     }
-    if (!candidateProfile.name && authUser && authUser.name) candidateProfile.name = authUser.name;
-    if (!candidateProfile.email && authUser && authUser.email) candidateProfile.email = authUser.email;
-    if (!candidateProfile.avatarUrl && authUser && authUser.avatarUrl) candidateProfile.avatarUrl = authUser.avatarUrl;
-
-    if (currentCandidateId || currentCandidateEmail) {
-      try {
-        localStorage.setItem(userProfileKey, JSON.stringify(candidateProfile));
-      } catch(e) {}
+    if ((!candidateProfile.name || candidateProfile.name === 'Candidate') && authUser && authUser.name && authUser.name !== 'Candidate') {
+      candidateProfile.name = authUser.name;
+    }
+    if ((!candidateProfile.email || candidateProfile.email === 'candidate@zaveran.ai') && authUser && authUser.email) {
+      candidateProfile.email = authUser.email;
+    }
+    if (!candidateProfile.avatarUrl && authUser && authUser.avatarUrl) {
+      candidateProfile.avatarUrl = authUser.avatarUrl;
     }
 
+    try {
+      localStorage.setItem(getUserProfileKey(), JSON.stringify(candidateProfile));
+    } catch(e) {}
+
     // -------------------------------------------------------------------------
-    // 1. TAB SWITCHING CONTROLLER (UPDATED WITH SCHEDULE INTERVIEW)
+    // 1. TAB SWITCHING CONTROLLER (INSTANT REFRESH & PERSISTENT ROUTING)
     // -------------------------------------------------------------------------
     const tabs = ['dashboard', 'schedule', 'history', 'profile', 'settings'];
 
+    function getInitialActiveTab() {
+      const hash = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+      if (tabs.includes(hash)) return hash;
+      const saved = (localStorage.getItem('zaveran_active_tab') || '').trim().toLowerCase();
+      if (tabs.includes(saved)) return saved;
+      return 'dashboard';
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!sidebar) return;
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        if (backdrop) backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
+      }
+    }
+    window.toggleMobileSidebar = toggleMobileSidebar;
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.add('-translate-x-full');
+      }
+      if (backdrop && !backdrop.classList.contains('hidden')) {
+        backdrop.classList.add('hidden');
+      }
+    }
+    window.closeMobileSidebar = closeMobileSidebar;
+
     function switchTab(targetTab) {
+      if (!tabs.includes(targetTab)) {
+        targetTab = getInitialActiveTab();
+      }
       tabs.forEach(tab => {
         const viewEl = document.getElementById('view-' + tab);
         const navBtn = document.getElementById('nav-' + tab);
@@ -1437,9 +1545,9 @@
 
         if (navBtn) {
           if (tab === targetTab) {
-            navBtn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-950 text-white shadow-xs";
+            navBtn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-950 text-white shadow-xs cursor-pointer";
           } else {
-            navBtn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50";
+            navBtn.className = "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:text-slate-950 hover:bg-slate-50 cursor-pointer";
           }
         }
       });
@@ -1450,6 +1558,11 @@
       if (targetTab === 'dashboard') {
         if (headerTitle) headerTitle.innerText = "Candidate Workspace";
         if (headerSubtitle) headerSubtitle.innerText = "Track interview performance, review AI feedback, and manage your credentials.";
+        try {
+          if (typeof renderScheduledInterviewsInHistory === 'function') renderScheduledInterviewsInHistory();
+        } catch (err) {
+          console.warn("dashboard history render notice:", err);
+        }
       } else if (targetTab === 'schedule') {
         if (headerTitle) headerTitle.innerText = "Schedule AI Interview";
         if (headerSubtitle) headerSubtitle.innerText = "Book a real-time AI interview simulation calibrated to your target role, resume, and JD.";
@@ -1480,15 +1593,33 @@
         if (headerSubtitle) headerSubtitle.innerText = "Audio/video parameters, notifications, and candidate account settings.";
       }
 
+      closeMobileSidebar();
+
       try {
         localStorage.setItem('zaveran_active_tab', targetTab);
         if (window.location.hash !== '#' + targetTab) {
           history.replaceState(null, null, '#' + targetTab);
         }
       } catch (e) {}
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    window.switchTab = switchTab;
+
+    // Immediately synchronize and render active tab without waiting
+    (function initImmediateActiveTab() {
+      const initTab = getInitialActiveTab();
+      switchTab(initTab);
+    })();
+
+    // Listen to browser navigation and URL hash changes
+    window.addEventListener('hashchange', () => {
+      const h = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+      if (tabs.includes(h)) switchTab(h);
+    });
+
+    window.addEventListener('popstate', () => {
+      const h = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+      if (tabs.includes(h)) switchTab(h);
+    });
 
     // -------------------------------------------------------------------------
     // 1B. 200+ COMPREHENSIVE JOB ROLES DATASET
@@ -1753,16 +1884,35 @@
     }
 
     // --- STEP 1: RESUME UPLOAD LOGIC ---
-    function handleScheduleResumeUpload(event) {
+    async function handleScheduleResumeUpload(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
 
       scheduleData.resumeFile = file;
       scheduleData.resumeName = file.name;
       
-      const meta = `${(file.size / 1024).toFixed(1)} KB • Uploaded just now`;
+      const meta = `${(file.size / 1024).toFixed(1)} KB • Processing resume...`;
       showStep1Success(file.name, meta);
       checkAndShowNextButton();
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/rag/upload-resume', {
+          method: 'POST',
+          body: formData
+        });
+        if (res.ok) {
+          const data = await res.json();
+          scheduleData.resumeText = data.extracted_text || '';
+          scheduleData.extractedSkills = data.extracted_skills || [];
+          
+          document.getElementById('step1FileMeta').innerText = `${data.size_kb || (file.size / 1024).toFixed(1)} KB • Resume parsed & calibrated`;
+        }
+      } catch (err) {
+        document.getElementById('step1FileMeta').innerText = `${(file.size / 1024).toFixed(1)} KB • Resume ready`;
+      }
     }
 
     function showStep1Success(name, meta) {
@@ -1773,31 +1923,44 @@
       checkAndShowNextButton();
     }
 
-    // --- STEP 2: ORG & 200+ ROLES LOGIC WITH INSTANT CLICK-TO-ADD ---
+    // --- STEP 2: ORG & 200+ ROLES LOGIC ---
     function populateScheduleRoles(roles, rawQuery = "") {
       const container = document.getElementById('rolesDropdownList');
       if (!container) return;
 
-      if (!roles || roles.length === 0) {
-        if (rawQuery.trim()) {
-          container.innerHTML = `
-            <button type="button" onclick="selectScheduleRole('${rawQuery.replace(/'/g, "\\'")}')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-slate-900 hover:bg-slate-100 flex items-center justify-between group transition-colors cursor-pointer font-medium">
-              <span>Use custom role: <strong class="text-blue-600">"${rawQuery}"</strong></span>
-              <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-slate-900">add_circle</span>
-            </button>
-          `;
-        } else {
-          container.innerHTML = '';
-        }
+      const query = (rawQuery || "").trim();
+      if (!query) {
+        container.innerHTML = '';
+        container.classList.add('hidden');
         return;
       }
 
-      container.innerHTML = roles.map(role => `
-        <button type="button" onclick="selectScheduleRole('${role.replace(/'/g, "\\'")}')" class="w-full text-left px-3.5 py-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 flex items-center justify-between group transition-colors cursor-pointer">
-          <span>${role}</span>
-          <span class="material-symbols-outlined text-[15px] opacity-0 group-hover:opacity-100 text-slate-400">arrow_forward</span>
-        </button>
-      `).join('');
+      const safeQuery = query.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      let html = '';
+
+      const matchedRoles = (roles || []).slice(0, 10);
+      const isExactMatch = matchedRoles.some(r => r.toLowerCase() === query.toLowerCase());
+
+      matchedRoles.forEach(role => {
+        html += `
+          <button type="button" onclick="selectScheduleRole('${role.replace(/'/g, "\\'")}')" class="w-full text-left px-3.5 py-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 flex items-center justify-between group transition-colors cursor-pointer text-xs">
+            <span>${role}</span>
+            <span class="material-symbols-outlined text-[15px] opacity-0 group-hover:opacity-100 text-slate-400">arrow_forward</span>
+          </button>
+        `;
+      });
+
+      if (!isExactMatch) {
+        html += `
+          <button type="button" onclick="selectScheduleRole('${safeQuery}')" class="w-full text-left px-3.5 py-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 flex items-center justify-between group transition-colors cursor-pointer text-xs ${matchedRoles.length > 0 ? 'border-t border-slate-100 mt-1 pt-1.5' : ''}">
+            <span>${query}</span>
+            <span class="text-[11px] text-slate-400 font-normal">Press Enter to select</span>
+          </button>
+        `;
+      }
+
+      container.innerHTML = html;
+      container.classList.remove('hidden');
     }
 
     function filterScheduleRoles() {
@@ -1825,18 +1988,18 @@
       if (event.key === 'Enter') {
         event.preventDefault();
         const inputVal = document.getElementById('scheduleRoleSearchInput').value.trim();
-        const firstBtn = document.querySelector('#rolesDropdownList button');
-        if (firstBtn && firstBtn.innerText.trim()) {
-          const roleText = firstBtn.innerText.split('\n')[0].trim();
-          selectScheduleRole(roleText.startsWith('Use custom role:') ? inputVal : roleText);
-        } else if (inputVal.length > 0) {
+        if (inputVal.length > 0) {
           selectScheduleRole(inputVal);
         }
       }
     }
 
     function selectScheduleRole(roleName) {
+      if (!roleName) return;
       scheduleData.targetRole = roleName;
+      if (Array.isArray(ALL_JOB_ROLES) && !ALL_JOB_ROLES.includes(roleName)) {
+        ALL_JOB_ROLES.unshift(roleName);
+      }
       document.getElementById('selectedRoleText').innerText = roleName;
       document.getElementById('selectedRoleBadgeContainer').classList.remove('hidden');
       document.getElementById('scheduleRoleSearchInput').value = roleName;
@@ -1856,6 +2019,48 @@
       const org = document.getElementById('scheduleOrgInput').value.trim();
       scheduleData.organization = org;
       checkAndShowNextButton();
+    }
+
+    // --- REAL-TIME INLINE BANK SEARCH HANDLER ---
+    let bankSearchDebounce = null;
+    function handleBankInlineSearch(event) {
+      const q = event.target.value.trim();
+      const resultsEl = document.getElementById('bankInlineSearchResults');
+      if (!resultsEl) return;
+
+      if (!q || q.length < 2) {
+        resultsEl.classList.add('hidden');
+        resultsEl.innerHTML = '';
+        return;
+      }
+
+      clearTimeout(bankSearchDebounce);
+      bankSearchDebounce = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/rag/search?q=${encodeURIComponent(q)}&limit=4`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.results && data.results.length > 0) {
+              resultsEl.classList.remove('hidden');
+              resultsEl.innerHTML = data.results.map(r => `
+                <div class="p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs space-y-1">
+                  <div class="flex items-center justify-between text-[10px] text-slate-400">
+                    <span class="font-semibold text-cyan-300">${r.role || r.category}</span>
+                    <span class="font-mono">${r.doc_name} • p.${r.page}</span>
+                  </div>
+                  <p class="text-slate-200 text-[11px]">${r.question}</p>
+                  ${r.answer ? `<p class="text-[10px] text-slate-400 line-clamp-2"><strong>Ans:</strong> ${r.answer}</p>` : ''}
+                </div>
+              `).join('');
+            } else {
+              resultsEl.classList.remove('hidden');
+              resultsEl.innerHTML = `<div class="p-2 text-center text-[11px] text-slate-500">No direct matches found in 22,677 Bank Q&As.</div>`;
+            }
+          }
+        } catch (e) {
+          console.warn('Bank inline search error:', e);
+        }
+      }, 250);
     }
 
     // --- STEP 3: JOB DESCRIPTION LOGIC ---
@@ -2154,7 +2359,12 @@ Requirements:
     }
 
     // --- STEP 6: BOOKING CONFIRMATION & USER-SCOPED PERSISTENCE ---
+    let isBookingInProgress = false;
+
     async function completeScheduleBooking() {
+      if (isBookingInProgress) return;
+      isBookingInProgress = true;
+
       const candidateName = candidateProfile.name || "Candidate";
       const candidateEmail = candidateProfile.email || "";
 
@@ -2197,18 +2407,35 @@ Requirements:
             interviewer: scheduleData.interviewer,
             date: scheduleData.date,
             time: scheduleData.timeSlot,
-            candidate_name: candidateName
+            candidate_name: candidateName,
+            email: candidateEmail
           })
         });
+
+        // Pre-initialize session with extracted resume & role
+        fetch('/api/interview/prepare', {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({
+            interview_id: randomCode,
+            candidate_name: candidateName,
+            target_role: scheduleData.targetRole,
+            interviewer_name: scheduleData.interviewer,
+            org_name: scheduleData.organization,
+            resume_text: scheduleData.resumeText || "",
+            jd_text: scheduleData.jobDescription || ""
+          })
+        }).catch(err => console.warn('Interview prep notice:', err));
       } catch (e) {
         console.warn('Backend interview scheduling note:', e);
       }
 
       try {
-        let scheduledDb = JSON.parse(localStorage.getItem(userInterviewsKey)) || [];
+        let scheduledDb = JSON.parse(localStorage.getItem(getUserInterviewsKey())) || [];
+        // Strict deduplication by roomCode and id
         scheduledDb = scheduledDb.filter(b => (b.roomCode !== randomCode && b.id !== randomCode));
         scheduledDb.unshift(newBooking);
-        localStorage.setItem(userInterviewsKey, JSON.stringify(scheduledDb));
+        localStorage.setItem(getUserInterviewsKey(), JSON.stringify(scheduledDb));
       } catch (e) {}
 
       // Dispatch branded Interview Scheduled email
@@ -2230,6 +2457,7 @@ Requirements:
 
       await renderScheduledInterviewsInHistory();
       goToScheduleStep(6);
+      setTimeout(() => { isBookingInProgress = false; }, 1000);
     }
 
     let latestUserInterview = null;
@@ -2372,7 +2600,7 @@ Requirements:
               </td>
               <td class="py-3.5 px-6 text-right">
                 ${isFinished ? `
-                  <button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors cursor-pointer" onclick="openReviewModal('${escapeHtml(booking.role || 'Role').replace(/'/g, "\\'")}', '${escapeHtml(booking.date || 'Recent').replace(/'/g, "\\'")}', '${booking.score ? booking.score + "%" : "Evaluated"}')">
+                  <button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 hover:bg-slate-100 font-semibold text-xs transition-colors cursor-pointer" onclick="openReviewModal('${escapeHtml(booking.role || 'Role').replace(/'/g, "\\'")}', '${escapeHtml(booking.date || 'Recent').replace(/'/g, "\\'")}', '${booking.score ? booking.score + "%" : "Evaluated"}', '${booking.roomCode || booking.id || ''}')">
                     Review
                   </button>
                 ` : isInProgress ? `
@@ -2398,30 +2626,53 @@ Requirements:
       const historyTableBody = document.getElementById('historyTableBody');
       if (!historyTableBody) return;
 
-      let scheduledDb = [];
-      const token = getAuthToken();
-      if (token) {
+      let candidateEmail = (candidateProfile && candidateProfile.email) || (authUser && authUser.email) || '';
+      if (!candidateEmail) {
         try {
-          const res = await fetch('/api/user/interviews', {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
+          const st = JSON.parse(localStorage.getItem('zaveran_auth_user') || '{}');
+          candidateEmail = st.email || '';
+        } catch (e) {}
+      }
+      let scheduledDb = [];
+
+      try {
+        let url = '/api/user/interviews';
+        if (candidateEmail) {
+          url += '?email=' + encodeURIComponent(candidateEmail.toLowerCase().trim());
+        }
+        const res = await fetch(url);
+        if (res.ok) {
           const data = await res.json();
           if (data && data.success && Array.isArray(data.interviews)) {
             scheduledDb = data.interviews;
-            localStorage.setItem(userInterviewsKey, JSON.stringify(scheduledDb));
-          } else {
-            scheduledDb = JSON.parse(localStorage.getItem(userInterviewsKey)) || [];
           }
-        } catch (e) {
-          try {
-            scheduledDb = JSON.parse(localStorage.getItem(userInterviewsKey)) || [];
-          } catch (err) {}
         }
-      } else {
-        try {
-          scheduledDb = JSON.parse(localStorage.getItem(userInterviewsKey)) || [];
-        } catch (e) {}
+      } catch (e) {
+        console.warn('Backend interview fetch note:', e);
       }
+
+      // Merge with local storage cache with strict deduplication
+      try {
+        const localDb = JSON.parse(localStorage.getItem(getUserInterviewsKey())) || [];
+        const merged = [...scheduledDb];
+        localDb.forEach(item => {
+          const code = item.roomCode || item.id || item.room_code;
+          if (code && !merged.some(m => (m.roomCode === code || m.id === code || m.room_code === code))) {
+            merged.push(item);
+          }
+        });
+        scheduledDb = merged;
+        localStorage.setItem(getUserInterviewsKey(), JSON.stringify(scheduledDb));
+      } catch (e) {}
+
+      // Strict deduplication by roomCode and id to prevent duplicate records
+      const seenCodes = new Set();
+      scheduledDb = scheduledDb.filter(b => {
+        const code = b.roomCode || b.id || b.room_code;
+        if (!code || seenCodes.has(code)) return false;
+        seenCodes.add(code);
+        return true;
+      });
 
       // Update both Dashboard Metrics & History Table
       renderDashboardStats(scheduledDb);
@@ -2448,6 +2699,7 @@ Requirements:
         const isCancelled = s === 'cancelled' || s === 'unsuccessful';
         const isScheduled = s === 'scheduled';
         const readyToJoin = isMeetingReadyToJoin(booking, new Date());
+        const code = booking.roomCode || booking.id || booking.room_code || '';
         
         return `
           <tr class="history-row hover:bg-slate-50 transition-colors ${isInProgress ? 'bg-blue-50/20' : ''}" data-status="${isFinished ? 'Completed' : (isInProgress ? 'In Progress' : (isCancelled ? 'Cancelled' : 'Scheduled'))}" data-text="${escapeHtml(booking.role || '')} ${escapeHtml(booking.interviewer || '')} ${escapeHtml(booking.company || booking.org || '')}">
@@ -2458,9 +2710,9 @@ Requirements:
             </td>
             <td class="py-3.5 px-6">
               <span class="text-slate-800 font-medium block">${escapeHtml(booking.interviewer || booking.interviewer_name || 'Zaroon')} (AI Evaluator)</span>
-              <span class="text-[11px] text-indigo-600 font-sans font-semibold">${escapeHtml(booking.roomCode || booking.id || '')}</span>
+              <span class="text-[11px] text-indigo-600 font-sans font-semibold">${escapeHtml(code)}</span>
             </td>
-            <td class="py-3.5 px-6 font-sans text-slate-600">${escapeHtml((booking.time || 'Upcoming').split('–')[0].trim())} (30m)</td>
+            <td class="py-3.5 px-6 font-sans text-slate-600">${escapeHtml((booking.time || booking.timeSlot || 'Upcoming').split('–')[0].trim())} (30m)</td>
             <td class="py-3.5 px-6">
               ${isFinished ? `
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -2485,26 +2737,35 @@ Requirements:
               `}
             </td>
             <td class="py-3.5 px-6 text-right">
-              <div class="flex items-center justify-end gap-2">
+              <div class="flex items-center justify-end gap-1.5">
                 ${isFinished ? `
-                  <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition-colors cursor-pointer" onclick="openReviewModal('${escapeHtml(booking.role || 'Role').replace(/'/g, "\\'")}', '${escapeHtml(booking.date || 'Today').replace(/'/g, "\\'")}', '${booking.score ? booking.score + "%" : "Evaluated"}')">
+                  <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition-colors cursor-pointer" onclick="openReviewModal('${escapeHtml(booking.role || 'Role').replace(/'/g, "\\'")}', '${escapeHtml(booking.date || 'Today').replace(/'/g, "\\'")}', '${booking.score ? booking.score + "%" : "Evaluated"}', '${code}')">
                     Review Report
                   </button>
+                  <button class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" onclick="deleteScheduledInterview('${code}')" title="Delete interview permanently">
+                    <span class="material-symbols-outlined text-[16px] block">delete</span>
+                  </button>
                 ` : isInProgress ? `
-                  <button class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer flex items-center gap-1" onclick="launchInterviewRoom('${booking.roomCode || booking.id}', '${escapeHtml(booking.role || 'Full Stack AI Engineer').replace(/'/g, "\\'")}', '${escapeHtml(booking.interviewer || 'Zaroon').replace(/'/g, "\\'")}', '${escapeHtml(booking.company || booking.org || 'Zavran AI Partner').replace(/'/g, "\\'")}')">
+                  <button class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer flex items-center gap-1" onclick="launchInterviewRoom('${code}', '${escapeHtml(booking.role || 'Full Stack AI Engineer').replace(/'/g, "\\'")}', '${escapeHtml(booking.interviewer || 'Zaroon').replace(/'/g, "\\'")}', '${escapeHtml(booking.company || booking.org || 'Zavran AI Partner').replace(/'/g, "\\'")}')">
                     <span class="material-symbols-outlined text-[14px]">videocam</span>
                     Resume
                   </button>
                 ` : isScheduled ? `
-                  <button class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer flex items-center gap-1" onclick="launchInterviewRoom('${booking.roomCode || booking.id}', '${escapeHtml(booking.role || 'Full Stack AI Engineer').replace(/'/g, "\\'")}', '${escapeHtml(booking.interviewer || 'Zaroon').replace(/'/g, "\\'")}', '${escapeHtml(booking.company || booking.org || 'Zavran AI Partner').replace(/'/g, "\\'")}')">
+                  <button class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer flex items-center gap-1" onclick="launchInterviewRoom('${code}', '${escapeHtml(booking.role || 'Full Stack AI Engineer').replace(/'/g, "\\'")}', '${escapeHtml(booking.interviewer || 'Zaroon').replace(/'/g, "\\'")}', '${escapeHtml(booking.company || booking.org || 'Zavran AI Partner').replace(/'/g, "\\'")}')">
                     <span class="material-symbols-outlined text-[14px]">videocam</span>
                     Join Room
                   </button>
-                  <button class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-slate-500 font-medium text-xs transition-colors cursor-pointer" onclick="cancelScheduledInterview('${booking.roomCode || booking.id}')" title="Cancel this scheduled interview">
+                  <button class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-slate-500 font-medium text-xs transition-colors cursor-pointer" onclick="cancelScheduledInterview('${code}')" title="Cancel this scheduled interview">
                     Cancel
+                  </button>
+                  <button class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" onclick="deleteScheduledInterview('${code}')" title="Delete interview permanently">
+                    <span class="material-symbols-outlined text-[16px] block">delete</span>
                   </button>
                 ` : `
                   <span class="text-xs text-slate-400">Cancelled</span>
+                  <button class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" onclick="deleteScheduledInterview('${code}')" title="Delete record permanently">
+                    <span class="material-symbols-outlined text-[16px] block">delete</span>
+                  </button>
                 `}
               </div>
             </td>
@@ -2517,27 +2778,42 @@ Requirements:
 
     async function cancelScheduledInterview(roomCode) {
       if (confirm(`Are you sure you want to cancel interview room ${roomCode}?`)) {
-        const token = getAuthToken();
-        if (token) {
-          try {
-            await fetch(`/api/user/interviews/${roomCode}/cancel`, {
-              method: 'POST',
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-          } catch (e) {}
-        }
+        const candidateEmail = (candidateProfile && candidateProfile.email) || (authUser && authUser.email) || '';
         try {
-          let scheduledDb = JSON.parse(localStorage.getItem(userInterviewsKey)) || [];
+          let cancelUrl = `/api/user/interviews/${roomCode}/cancel`;
+          if (candidateEmail) cancelUrl += '?email=' + encodeURIComponent(candidateEmail);
+          await fetch(cancelUrl, { method: 'POST' });
+        } catch (e) {}
+
+        try {
+          let scheduledDb = JSON.parse(localStorage.getItem(getUserInterviewsKey())) || [];
           scheduledDb = scheduledDb.map(b => {
-            if (b.roomCode === roomCode || b.id === roomCode) {
+            if (b.roomCode === roomCode || b.id === roomCode || b.room_code === roomCode) {
               return { ...b, status: 'cancelled' };
             }
             return b;
           });
-          localStorage.setItem(userInterviewsKey, JSON.stringify(scheduledDb));
+          localStorage.setItem(getUserInterviewsKey(), JSON.stringify(scheduledDb));
         } catch (e) {}
         await renderScheduledInterviewsInHistory();
       }
+    }
+
+    async function deleteScheduledInterview(roomCode) {
+      if (!confirm(`Are you sure you want to permanently delete interview ${roomCode}?`)) return;
+      const candidateEmail = (candidateProfile && candidateProfile.email) || (authUser && authUser.email) || '';
+      try {
+        let delUrl = `/api/user/interviews/${roomCode}`;
+        if (candidateEmail) delUrl += '?email=' + encodeURIComponent(candidateEmail);
+        await fetch(delUrl, { method: 'DELETE' });
+      } catch (e) {}
+
+      try {
+        let scheduledDb = JSON.parse(localStorage.getItem(getUserInterviewsKey())) || [];
+        scheduledDb = scheduledDb.filter(b => (b.roomCode !== roomCode && b.id !== roomCode && b.room_code !== roomCode));
+        localStorage.setItem(getUserInterviewsKey(), JSON.stringify(scheduledDb));
+      } catch (e) {}
+      await renderScheduledInterviewsInHistory();
     }
 
     function isMeetingReadyToJoin(booking, now) {
@@ -2565,7 +2841,7 @@ Requirements:
 
       let scheduledDb = [];
       try {
-        scheduledDb = JSON.parse(localStorage.getItem(userInterviewsKey)) || [];
+        scheduledDb = JSON.parse(localStorage.getItem(getUserInterviewsKey())) || [];
       } catch (e) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
@@ -2668,7 +2944,7 @@ Requirements:
     function resetScheduleFlow() {
       initScheduleFlow();
     }
-function toggleHeaderProfileMenu(event) {
+    function toggleHeaderProfileMenu(event) {
       if (event) event.stopPropagation();
       const dropdown = document.getElementById('headerProfileDropdown');
       const sidebarDropdown = document.getElementById('sidebarProfileDropdown');
@@ -2678,6 +2954,7 @@ function toggleHeaderProfileMenu(event) {
         dropdown.classList.toggle('hidden');
       }
     }
+    window.toggleHeaderProfileMenu = toggleHeaderProfileMenu;
 
     function toggleSidebarProfileMenu(event) {
       if (event) event.stopPropagation();
@@ -2689,6 +2966,7 @@ function toggleHeaderProfileMenu(event) {
         dropdown.classList.toggle('hidden');
       }
     }
+    window.toggleSidebarProfileMenu = toggleSidebarProfileMenu;
 
     function closeAllProfileDropdowns() {
       const headerDropdown = document.getElementById('headerProfileDropdown');
@@ -2696,6 +2974,7 @@ function toggleHeaderProfileMenu(event) {
       if (headerDropdown) headerDropdown.classList.add('hidden');
       if (sidebarDropdown) sidebarDropdown.classList.add('hidden');
     }
+    window.closeAllProfileDropdowns = closeAllProfileDropdowns;
 
     document.addEventListener('click', function(e) {
       const headerContainer = document.getElementById('headerProfileContainer');
@@ -2735,10 +3014,38 @@ function toggleHeaderProfileMenu(event) {
       });
     }
 
-    function openReviewModal(role, date, score) {
-      document.getElementById('modalRoleTitle').innerText = role;
-      document.getElementById('modalMeta').innerText = `Interviewed with Zarun • Completed ${date}`;
-      document.getElementById('modalScore').innerText = score;
+    function openReviewModal(role, date, score, roomCode) {
+      document.getElementById('modalRoleTitle').innerText = role || 'Technical Assessment';
+      document.getElementById('modalMeta').innerText = `Interviewed with Zaroon AI • Completed ${date || 'Recent'}`;
+      document.getElementById('modalScore').innerText = score || 'Evaluated';
+      if (document.getElementById('modalCode')) {
+        document.getElementById('modalCode').innerText = roomCode ? `#${roomCode}` : '#ZV-EVAL';
+      }
+
+      // Check if full dynamic report is stored in localStorage or cache
+      let reportData = null;
+      if (roomCode) {
+        try {
+          reportData = JSON.parse(localStorage.getItem('zaveran_report_' + encodeURIComponent(roomCode)));
+        } catch (e) {}
+      }
+
+      if (reportData) {
+        if (reportData.overall_score !== undefined && document.getElementById('modalScore')) {
+          document.getElementById('modalScore').innerText = `${reportData.overall_score}%`;
+        }
+        if (reportData.status && document.getElementById('modalScoreStatus')) {
+          document.getElementById('modalScoreStatus').innerText = reportData.status;
+        }
+        if (reportData.summary && document.getElementById('modalFeedbackText')) {
+          document.getElementById('modalFeedbackText').innerText = reportData.summary;
+        }
+        if (reportData.depth_analysis?.overall_depth_level && document.getElementById('modalTechnicalScore')) {
+          const depthPct = Math.min(98, 70 + reportData.depth_analysis.overall_depth_level * 6);
+          document.getElementById('modalTechnicalScore').innerText = `${depthPct}%`;
+        }
+      }
+
       const modal = document.getElementById('reviewModal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -2881,9 +3188,7 @@ function toggleHeaderProfileMenu(event) {
 
     let candidateDossier = [];
     try {
-      if (currentCandidateId || currentCandidateEmail) {
-        candidateDossier = JSON.parse(localStorage.getItem(userDossierKey)) || [];
-      }
+      candidateDossier = JSON.parse(localStorage.getItem(getUserDossierKey())) || [];
     } catch(e) {
       candidateDossier = [];
     }
@@ -2891,8 +3196,8 @@ function toggleHeaderProfileMenu(event) {
     function saveDossierToStorage() {
       try {
         const token = getAuthToken();
-        const activeProfKey = currentCandidateId ? ('zaveran_profile_' + encodeURIComponent(currentCandidateId)) : (currentCandidateEmail ? ('zaveran_profile_' + encodeURIComponent(currentCandidateEmail)) : userProfileKey);
-        const activeDosKey = currentCandidateId ? ('zaveran_dossier_' + encodeURIComponent(currentCandidateId)) : (currentCandidateEmail ? ('zaveran_dossier_' + encodeURIComponent(currentCandidateEmail)) : userDossierKey);
+        const activeProfKey = getUserProfileKey();
+        const activeDosKey = getUserDossierKey();
 
         localStorage.setItem(activeProfKey, JSON.stringify(candidateProfile));
         localStorage.setItem(activeDosKey, JSON.stringify(candidateDossier));
@@ -2957,8 +3262,8 @@ function toggleHeaderProfileMenu(event) {
     // 6. RENDER CANDIDATE HEADER
     // -------------------------------------------------------------------------
     function renderCandidateHeader() {
-      const name = (candidateProfile && candidateProfile.name) || (authUser && authUser.name) || 'Candidate';
-      const email = (candidateProfile && candidateProfile.email) || (authUser && authUser.email) || '';
+      let name = (candidateProfile && candidateProfile.name && candidateProfile.name !== 'Candidate') ? candidateProfile.name : ((authUser && authUser.name) || 'Candidate');
+      let email = (candidateProfile && candidateProfile.email && candidateProfile.email !== 'candidate@zaveran.ai') ? candidateProfile.email : ((authUser && authUser.email) || '');
       const role = cleanRoleTitle(candidateProfile ? candidateProfile.role : '') || '';
       const location = (candidateProfile && candidateProfile.location) || '';
       const phone = (candidateProfile && candidateProfile.phone) || '';
@@ -2971,9 +3276,7 @@ function toggleHeaderProfileMenu(event) {
       const emailEl = document.getElementById('profileEmailDisplay');
       if (emailEl) emailEl.innerText = email || 'No email provided';
 
-      // 2. Role (Role badge next to name removed as requested)
-
-      // 3. Location & Phone (Only show if available)
+      // 2. Location & Phone (Only show if available)
       const locContainer = document.getElementById('profileLocationContainer');
       const locEl = document.getElementById('profileLocationDisplay');
       if (locContainer && locEl) {
@@ -2996,12 +3299,12 @@ function toggleHeaderProfileMenu(event) {
         }
       }
 
-      // 4. Avatars (Initials vs Uploaded Image)
+      // 3. Avatars (Initials vs Uploaded Image / Google Avatar)
       renderAvatarElements('profileAvatarInitials', 'profileAvatarImg', initials);
       renderAvatarElements('sidebarAvatarInitials', 'sidebarAvatarImg', initials);
       renderAvatarElements('headerAvatarInitials', 'headerAvatarImg', initials);
 
-      // 5. Header & Sidebar Text
+      // 4. Header & Sidebar Text
       const headerName = document.getElementById('headerCandidateName');
       if (headerName) headerName.innerText = name;
 
@@ -3012,7 +3315,18 @@ function toggleHeaderProfileMenu(event) {
       if (sidebarName) sidebarName.innerText = name;
 
       const sidebarRole = document.getElementById('sidebarCandidateRole');
-      if (sidebarRole) sidebarRole.innerText = role || 'Candidate Active';
+      if (sidebarRole) sidebarRole.innerText = role || 'Active Session';
+
+      // 5. Dropdown Menu Headers
+      const dropSideName = document.getElementById('dropdownSidebarUserName');
+      if (dropSideName) dropSideName.innerText = name;
+      const dropSideEmail = document.getElementById('dropdownSidebarUserEmail');
+      if (dropSideEmail) dropSideEmail.innerText = email;
+
+      const dropHeadName = document.getElementById('dropdownHeaderUserName');
+      if (dropHeadName) dropHeadName.innerText = name;
+      const dropHeadEmail = document.getElementById('dropdownHeaderUserEmail');
+      if (dropHeadEmail) dropHeadEmail.innerText = email;
 
       // 6. Active Resume Banner
       const activeResumeBanner = document.getElementById('activeResumeBanner');
@@ -3876,22 +4190,45 @@ function toggleHeaderProfileMenu(event) {
 
     const CLERK_PK = "pk_test_ZW5hYmxpbmctbGFicmFkb3ItOTYwMC5jbGVyay5hY2NvdW50cy5kZXYk";
 
-    async function getClerkInstance(timeoutMs = 5000) {
+    let clerkInitPromise = null;
+
+    async function getClerkInstance(timeoutMs = 6000) {
       if (window.Clerk && window.Clerk.loaded) return window.Clerk;
+      if (!clerkInitPromise) {
+        clerkInitPromise = new Promise((resolve) => {
+          const startTime = Date.now();
+          const check = async () => {
+            if (window.Clerk) {
+              try {
+                if (!window.Clerk.loaded) {
+                  await window.Clerk.load({ publishableKey: CLERK_PK });
+                }
+                return resolve(window.Clerk);
+              } catch (err) {
+                console.warn("Clerk load notice:", err);
+                return resolve(window.Clerk);
+              }
+            }
+            if (Date.now() - startTime > timeoutMs) return resolve(null);
+            setTimeout(check, 60);
+          };
+          check();
+        });
+      }
+      return clerkInitPromise;
+    }
+
+    async function waitForClerkUser(timeoutMs = 6000) {
+      const clerk = await getClerkInstance(timeoutMs);
+      if (!clerk) return null;
+      if (clerk.user) return clerk.user;
+      if (clerk.session && clerk.session.user) return clerk.session.user;
+
       const startTime = Date.now();
       return new Promise((resolve) => {
-        const check = async () => {
-          if (window.Clerk) {
-            try {
-              if (!window.Clerk.loaded) {
-                await window.Clerk.load({ publishableKey: CLERK_PK });
-              }
-              return resolve(window.Clerk);
-            } catch (err) {
-              console.warn("Clerk load notice:", err);
-              return resolve(window.Clerk);
-            }
-          }
+        const check = () => {
+          if (clerk.user) return resolve(clerk.user);
+          if (clerk.session && clerk.session.user) return resolve(clerk.session.user);
           if (Date.now() - startTime > timeoutMs) return resolve(null);
           setTimeout(check, 80);
         };
@@ -3901,27 +4238,33 @@ function toggleHeaderProfileMenu(event) {
 
     async function syncUserFromClerk(u) {
       if (!u) return false;
-      const email = (u.primaryEmailAddress && u.primaryEmailAddress.emailAddress) ||
-                    (u.emailAddresses && u.emailAddresses[0] && u.emailAddresses[0].emailAddress) ||
-                    '';
+      
+      let email = '';
+      if (u.primaryEmailAddress && u.primaryEmailAddress.emailAddress) {
+        email = u.primaryEmailAddress.emailAddress;
+      } else if (u.emailAddresses && u.emailAddresses.length > 0 && u.emailAddresses[0].emailAddress) {
+        email = u.emailAddresses[0].emailAddress;
+      } else if (typeof u.primaryEmailAddress === 'string') {
+        email = u.primaryEmailAddress;
+      }
 
-      let name = u.fullName;
-      if (!name || name.trim() === '' || name.startsWith('user_') || name.startsWith('User ')) {
+      let name = '';
+      if (u.fullName && u.fullName.trim() && !u.fullName.startsWith('user_')) {
+        name = u.fullName.trim();
+      } else {
         const parts = [u.firstName, u.lastName].filter(Boolean);
-        if (parts.length > 0) name = parts.join(' ');
+        if (parts.length > 0) name = parts.join(' ').trim();
       }
-      if (!name || name.trim() === '' || name.startsWith('user_') || name.startsWith('User ')) {
-        if (email) {
-          let prefix = email.split('@')[0].replace(/[._]/g, ' ');
-          name = prefix.replace(/\b\w/g, function(l) { return l.toUpperCase(); });
-        } else {
-          name = 'Candidate';
-        }
+      
+      if (!name && email) {
+        let prefix = email.split('@')[0].replace(/[._]/g, ' ');
+        name = prefix.replace(/\b\w/g, function(l) { return l.toUpperCase(); });
       }
+      if (!name) name = 'Candidate';
 
-      const avatarUrl = u.imageUrl || '';
+      const avatarUrl = u.imageUrl || u.profileImageUrl || '';
 
-      // Update authUser
+      // Update in-memory authUser and persist
       authUser = {
         name: name,
         email: email,
@@ -3932,71 +4275,82 @@ function toggleHeaderProfileMenu(event) {
       };
       localStorage.setItem('zaveran_auth_user', JSON.stringify(authUser));
 
-      // User-scoped storage keys
-      const userProfKey = 'zaveran_profile_' + encodeURIComponent(u.id);
-      const userDosKey = 'zaveran_dossier_' + encodeURIComponent(u.id);
-      const scopedInterviewsKey = 'zaveran_interviews_' + encodeURIComponent(u.id);
-
-      // Attempt to load from API first
-      const token = u.id;
-      let remoteLoaded = false;
+      // Ensure candidate is recorded in zaveran_users database
       try {
-        const pRes = await fetch('/api/user/profile', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const pData = await pRes.json();
-        if (pData && pData.success && pData.profile) {
-          candidateProfile = pData.profile;
-          if (!candidateProfile.name) candidateProfile.name = name;
-          if (email) candidateProfile.email = email;
-          if (avatarUrl) candidateProfile.avatarUrl = avatarUrl;
-          localStorage.setItem(userProfKey, JSON.stringify(candidateProfile));
-          remoteLoaded = true;
-        }
-      } catch (e) {}
-
-      if (!remoteLoaded) {
-        let isolatedProf = JSON.parse(localStorage.getItem(userProfKey));
-        if (!isolatedProf) {
-          isolatedProf = {
+        let usersDb = JSON.parse(localStorage.getItem('zaveran_users') || '[]');
+        let userIdx = usersDb.findIndex(item => item.email && item.email.toLowerCase() === email.toLowerCase());
+        if (userIdx === -1) {
+          usersDb.push({
+            id: u.id,
             name: name,
             email: email,
-            role: "",
-            location: "",
-            phone: "",
             avatarUrl: avatarUrl,
-            resumeFileName: "",
-            resumeMeta: "",
-            isUploaded: false
-          };
+            authProvider: 'clerk',
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString()
+          });
         } else {
-          isolatedProf.name = name;
-          if (email) isolatedProf.email = email;
-          if (avatarUrl) isolatedProf.avatarUrl = avatarUrl;
+          usersDb[userIdx].id = u.id;
+          usersDb[userIdx].name = name;
+          usersDb[userIdx].lastLogin = new Date().toISOString();
+          if (avatarUrl) usersDb[userIdx].avatarUrl = avatarUrl;
         }
-        candidateProfile = isolatedProf;
-        localStorage.setItem(userProfKey, JSON.stringify(candidateProfile));
-      }
+        localStorage.setItem('zaveran_users', JSON.stringify(usersDb));
+      } catch (e) {}
 
+      // Update candidateProfile in memory and storage
+      const userProfKey = getUserProfileKey();
+      let isolatedProf = {};
       try {
-        const dRes = await fetch('/api/user/dossier', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const dData = await dRes.json();
-        if (dData && dData.success && Array.isArray(dData.dossier)) {
-          candidateDossier = dData.dossier;
-          localStorage.setItem(userDosKey, JSON.stringify(candidateDossier));
-        } else {
-          candidateDossier = JSON.parse(localStorage.getItem(userDosKey)) || [];
-        }
-      } catch (e) {
-        candidateDossier = JSON.parse(localStorage.getItem(userDosKey)) || [];
-      }
+        isolatedProf = JSON.parse(localStorage.getItem(userProfKey)) || {};
+      } catch(e) {}
 
-      // Re-render UI elements immediately
+      candidateProfile = {
+        ...isolatedProf,
+        name: name,
+        email: email,
+        avatarUrl: avatarUrl || (isolatedProf && isolatedProf.avatarUrl) || ''
+      };
+      localStorage.setItem(userProfKey, JSON.stringify(candidateProfile));
+
+      // Attempt remote SQLite sync in background
+      try {
+        fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            name: name,
+            avatar_url: avatarUrl,
+            auth_provider: 'clerk',
+            clerk_user_id: u.id
+          })
+        }).then(r => r.json()).then(sData => {
+          if (sData && sData.success && sData.user) {
+            candidateProfile.role = candidateProfile.role || sData.user.role || 'AI Engineer';
+            candidateProfile.location = candidateProfile.location || sData.user.location || '';
+            candidateProfile.phone = candidateProfile.phone || sData.user.phone || '';
+            localStorage.setItem(userProfKey, JSON.stringify(candidateProfile));
+            renderCandidateHeader();
+          }
+        }).catch(() => {});
+      } catch (e) {}
+
+      // Update DOM immediately
+      const pName = document.getElementById('profileNameDisplay');
+      if (pName) pName.innerText = name;
+      const pEmail = document.getElementById('profileEmailDisplay');
+      if (pEmail) pEmail.innerText = email || '';
+      const sName = document.getElementById('sidebarCandidateName');
+      if (sName) sName.innerText = name;
+      const hName = document.getElementById('headerCandidateName');
+      if (hName) hName.innerText = name;
+
       renderCandidateHeader();
       renderDynamicSections();
-      await renderScheduledInterviewsInHistory();
+      if (typeof renderScheduledInterviewsInHistory === 'function') {
+        renderScheduledInterviewsInHistory();
+      }
       return true;
     }
 
@@ -4010,16 +4364,9 @@ function toggleHeaderProfileMenu(event) {
         console.warn("Clerk sign-out:", err);
       }
       
-      // Complete client-side state & cache cleansing
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.startsWith('zaveran_') || key.startsWith('clerk_') || key.includes('profile') || key.includes('dossier') || key.includes('interview'))) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach(k => localStorage.removeItem(k));
+      // Complete client-side active session cleansing
       localStorage.removeItem('zaveran_auth_user');
+      localStorage.removeItem('zaveran_active_tab');
       localStorage.removeItem('clerk_token');
       sessionStorage.clear();
       
@@ -4029,53 +4376,75 @@ function toggleHeaderProfileMenu(event) {
 
       window.location.replace('candidate-login.html');
     }
+    window.logoutCandidate = logoutCandidate;
 
     // Auto-render & restore active tab on page load/refresh
-    document.addEventListener('DOMContentLoaded', async () => {
-      // 1. Check if auth user exists in localStorage
-      let storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user') || 'null');
-      
-      // If returning from Google OAuth / Clerk redirect without existing localStorage auth
-      if (!storedAuth || !storedAuth.id) {
-        try {
-          const clerk = await getClerkInstance(3500);
-          if (clerk && clerk.user) {
-            await syncUserFromClerk(clerk.user);
-            storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user') || 'null');
-          }
-        } catch (e) {
-          console.warn("Clerk initial OAuth check:", e);
+    let portalInitialized = false;
+
+    async function initCandidatePortal() {
+      if (portalInitialized) return;
+      portalInitialized = true;
+
+      // 1. Recover active auth user from localStorage
+      let storedAuth = null;
+      try {
+        storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user')) || null;
+      } catch(e) {}
+
+      if (storedAuth && storedAuth.id) {
+        authUser = storedAuth;
+        renderCandidateHeader();
+        renderDynamicSections();
+        if (typeof renderScheduledInterviewsInHistory === 'function') {
+          renderScheduledInterviewsInHistory();
         }
+      }
+
+      // If returning from Google OAuth / Clerk redirect or missing auth
+      const isClerkAuthReturn = window.location.search.includes('__clerk') || 
+                                window.location.hash.includes('__clerk') || 
+                                !storedAuth || !storedAuth.id;
+
+      try {
+        const clerkUser = await waitForClerkUser(isClerkAuthReturn ? 5000 : 1500);
+        if (clerkUser) {
+          await syncUserFromClerk(clerkUser);
+          storedAuth = JSON.parse(localStorage.getItem('zaveran_auth_user') || 'null');
+        }
+      } catch (e) {
+        console.warn("Clerk initial OAuth check:", e);
       }
 
       if (storedAuth && storedAuth.id) {
         authUser = storedAuth;
         renderCandidateHeader();
         renderDynamicSections();
-        await renderScheduledInterviewsInHistory();
+        if (typeof renderScheduledInterviewsInHistory === 'function') {
+          await renderScheduledInterviewsInHistory();
+        }
       } else {
+        // If not logged in, redirect to login
         window.location.replace('candidate-login.html');
         return;
       }
 
-      const hash = (window.location.hash || '').replace('#', '');
-      const savedTab = hash || localStorage.getItem('zaveran_active_tab') || 'profile';
+      const savedTab = getInitialActiveTab();
       switchTab(savedTab);
 
       // Start meeting alert checker
-      checkScheduledMeetingsAlert();
-      setInterval(checkScheduledMeetingsAlert, 5000);
+      if (typeof checkScheduledMeetingsAlert === 'function') {
+        checkScheduledMeetingsAlert();
+        setInterval(checkScheduledMeetingsAlert, 5000);
+      }
 
       // 2. Initialize Clerk SDK in background and synchronize live user credentials
       try {
-        const clerk = await getClerkInstance();
+        const clerk = await getClerkInstance(3000);
         if (clerk) {
           if (typeof clerk.addListener === 'function') {
             clerk.addListener(({ user }) => {
-              if (user && (!storedAuth || storedAuth.authProvider === 'clerk')) {
+              if (user) {
                 syncUserFromClerk(user);
-              } else if (!user && storedAuth && storedAuth.authProvider === 'clerk') {
-                window.location.replace('candidate-login.html');
               }
             });
           }
@@ -4084,12 +4453,48 @@ function toggleHeaderProfileMenu(event) {
           }
         }
       } catch (err) {
-        console.warn("Clerk background sync notice:", err);
+        console.warn("Clerk background listener notice:", err);
       }
-    });
 
-    const initHash = (window.location.hash || '').replace('#', '');
-    const initialTab = initHash || localStorage.getItem('zaveran_active_tab') || 'profile';
-    switchTab(initialTab);
+      // 3. Automatic Real-Time Synchronization for Completed Interviews & Reports
+      window.addEventListener('focus', () => {
+        if (typeof renderScheduledInterviewsInHistory === 'function') {
+          renderScheduledInterviewsInHistory();
+        }
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && typeof renderScheduledInterviewsInHistory === 'function') {
+          renderScheduledInterviewsInHistory();
+        }
+      });
+
+      window.addEventListener('storage', (e) => {
+        if (e.key && (e.key.startsWith('zaveran_interviews') || e.key.startsWith('zaveran_report') || e.key === 'zaveran_last_completed_interview')) {
+          if (typeof renderScheduledInterviewsInHistory === 'function') {
+            renderScheduledInterviewsInHistory();
+          }
+        }
+      });
+
+      window.addEventListener('zaveran_interview_completed', () => {
+        if (typeof renderScheduledInterviewsInHistory === 'function') {
+          renderScheduledInterviewsInHistory();
+        }
+      });
+
+      // Periodic auto-sync to ensure background evaluation reports update seamlessly
+      setInterval(() => {
+        if (typeof renderScheduledInterviewsInHistory === 'function' && !document.hidden) {
+          renderScheduledInterviewsInHistory();
+        }
+      }, 10000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCandidatePortal);
+    } else {
+      initCandidatePortal();
+    }
 </script>
 </body></html>

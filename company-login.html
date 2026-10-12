@@ -199,20 +199,46 @@
     const emailInput = document.getElementById('email');
     const CLERK_PK = "pk_test_ZW5hYmxpbmctbGFicmFkb3ItOTYwMC5jbGVyay5hY2NvdW50cy5kZXYk";
 
-    function enterEnterpriseWorkspace(companyEmail) {
+    function enterEnterpriseWorkspace(companyEmail, password) {
+      const email = (companyEmail || "").trim();
+      const pwd = (password || "").trim();
+
+      if (!email || !pwd) {
+        statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-700 border border-rose-200 block';
+        statusMsg.innerText = 'Please provide both corporate email and password.';
+        return;
+      }
+
+      let companiesDb = JSON.parse(localStorage.getItem('zaveran_companies')) || [];
+      let foundComp = companiesDb.find(c => c.email && c.email.toLowerCase() === email.toLowerCase());
+
+      if (!foundComp) {
+        statusMsg.className = 'p-3 rounded-xl text-xs font-semibold text-center bg-rose-50 text-rose-800 border border-rose-200 block';
+        statusMsg.innerHTML = '<div class="flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-base text-rose-600">person_off</span><span>Enterprise organization not found. Please <a href="company-signup.html" class="underline font-bold text-slate-900 ml-1">Create an account</a> first.</span></div>';
+        return;
+      }
+
+      if (foundComp.password && foundComp.password !== pwd) {
+        statusMsg.className = 'p-3 rounded-xl text-xs font-semibold text-center bg-rose-50 text-rose-800 border border-rose-200 block';
+        statusMsg.innerHTML = '<div class="flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-base text-rose-600">lock_reset</span><span>Incorrect enterprise password. Please verify and try again.</span></div>';
+        return;
+      }
+
       statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-900 border border-emerald-200 block';
       statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span> Organization Verified! Entering Enterprise Workspace...</span>';
       
-      const domain = companyEmail && companyEmail.includes('@') ? companyEmail.split('@')[1] : 'enterprise.co';
+      const domain = foundComp.domain || (email.includes('@') ? email.split('@')[1] : 'enterprise.co');
       localStorage.setItem('zaveran_company_auth', JSON.stringify({
-        email: companyEmail || 'lead@enterprise.com',
+        email: email,
         domain: domain,
+        companyName: foundComp.companyName || 'Enterprise Workspace',
+        userName: foundComp.userName || 'Admin',
         role: 'Enterprise Administrator'
       }));
 
       setTimeout(() => {
         window.location.href = 'enterprise-workspace.html';
-      }, 800);
+      }, 700);
     }
 
 
@@ -251,24 +277,25 @@
             throw new Error("Clerk authentication service is currently loading. Please check your internet connection and try again.");
           }
 
+          const redirectUrl = new URL('enterprise-workspace.html', window.location.href).href;
           if (clerk.authenticateWithRedirect) {
             await clerk.authenticateWithRedirect({
               strategy: 'oauth_google',
-              redirectUrl: window.location.origin + '/enterprise-workspace.html',
-              redirectUrlComplete: window.location.origin + '/enterprise-workspace.html'
+              redirectUrl: redirectUrl,
+              redirectUrlComplete: redirectUrl
             });
             return;
           } else if (clerk.openSignIn) {
             clerk.openSignIn({
-              afterSignInUrl: window.location.origin + '/enterprise-workspace.html',
-              afterSignUpUrl: window.location.origin + '/enterprise-workspace.html'
+              afterSignInUrl: redirectUrl,
+              afterSignUpUrl: redirectUrl
             });
             return;
           } else if (clerk.client && clerk.client.signIn) {
             await clerk.client.signIn.authenticateWithRedirect({
               strategy: 'oauth_google',
-              redirectUrl: window.location.origin + '/enterprise-workspace.html',
-              redirectUrlComplete: window.location.origin + '/enterprise-workspace.html'
+              redirectUrl: redirectUrl,
+              redirectUrlComplete: redirectUrl
             });
             return;
           }
@@ -283,12 +310,19 @@
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const email = emailInput.value.trim();
+      const pwd = document.getElementById('password')?.value.trim();
+
+      if (!email || !pwd) {
+        statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-700 border border-rose-200 block';
+        statusMsg.innerText = 'Please enter both corporate email and password.';
+        return;
+      }
 
       statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-slate-100 text-slate-800 border border-slate-200 block';
       statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Authenticating enterprise access...</span>';
       setTimeout(() => {
-        enterEnterpriseWorkspace(email);
-      }, 900);
+        enterEnterpriseWorkspace(email, pwd);
+      }, 600);
     });
 
   </script>

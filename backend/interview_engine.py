@@ -11,6 +11,7 @@ from backend.clerk_auth import ClerkAuth
 from backend.providers.email_provider import EmailService
 from backend.question_generator import question_generator
 from backend.question_bank import question_bank
+from backend.services.bank_rag_engine import bank_rag_service
 
 logger = logging.getLogger("ZavranAI.InterviewEngine")
 
@@ -459,15 +460,33 @@ class InterviewEngine:
 
         target_role = session.target_role or jd_profile.get("job_title") or jd_profile.get("role") or "Full Stack AI Engineer"
         duration_mins = max(15, session.max_duration_seconds // 60)
+        req_count = 20
 
-        questions = await question_generator.generate_interview_plan(
-            role_name=target_role,
-            job_description=jd_text,
-            seniority=jd_profile.get("seniority", "Senior"),
-            required_skills=candidate_profile.get("skills", []) + jd_profile.get("required_skills", []),
-            duration_minutes=duration_mins,
-            candidate_name=session.candidate_name
-        )
+        # Prioritize Bank RAG Multi-Agent Pipeline (PyMuPDF + T5 + Groq)
+        questions = []
+        try:
+            rag_result = await bank_rag_service.calibrate_candidate(
+                resume_text=resume_text,
+                target_role=target_role,
+                jd_text=jd_text,
+                seniority=jd_profile.get("seniority", "Senior"),
+                question_count=req_count
+            )
+            if rag_result and rag_result.get("questions"):
+                questions = rag_result["questions"]
+                logger.info(f"Generated {len(questions)} questions using Bank RAG Engine (retrieval: {rag_result.get('retrieval_latency_ms')}ms)")
+        except Exception as e:
+            logger.warning(f"Bank RAG calibration note: {e}")
+
+        if not questions:
+            questions = await question_generator.generate_interview_plan(
+                role_name=target_role,
+                job_description=jd_text,
+                seniority=jd_profile.get("seniority", "Senior"),
+                required_skills=candidate_profile.get("skills", []) + jd_profile.get("required_skills", []),
+                duration_minutes=duration_mins,
+                candidate_name=session.candidate_name
+            )
 
         if questions:
             # Ensure natural variation for opening question

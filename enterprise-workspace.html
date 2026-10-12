@@ -4941,9 +4941,22 @@ Room Link: https://zavran.ai/live/ai-l5-synth-902?auth=ephemeral_k39f</textarea>
 
   <!-- CORE INTERACTIVITY SCRIPTS -->
   <script>
+    const validCompanyTabs = ['dashboard', 'hire', 'candidates', 'interviews', 'hiring-decisions', 'settings', 'company-profile'];
+
+    function getInitialCompanyTab() {
+      const hash = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+      if (validCompanyTabs.includes(hash)) return hash;
+      const saved = (localStorage.getItem('zaveran_company_active_tab') || '').trim().toLowerCase();
+      if (validCompanyTabs.includes(saved)) return saved;
+      return 'dashboard';
+    }
+
     // Tab Navigation Logic
     function switchNav(tabKey, evt) {
       if (evt) evt.preventDefault();
+      if (!validCompanyTabs.includes(tabKey)) {
+        tabKey = getInitialCompanyTab();
+      }
       
       const views = document.querySelectorAll('.tab-view');
       views.forEach(v => v.classList.remove('active'));
@@ -4962,9 +4975,29 @@ Room Link: https://zavran.ai/live/ai-l5-synth-902?auth=ephemeral_k39f</textarea>
         }
       });
 
-      window.location.hash = tabKey;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        localStorage.setItem('zaveran_company_active_tab', tabKey);
+        if (window.location.hash !== '#' + tabKey) {
+          history.replaceState(null, null, '#' + tabKey);
+        }
+      } catch (e) {}
     }
+
+    // Immediately restore tab on load
+    (function initImmediateCompanyTab() {
+      switchNav(getInitialCompanyTab());
+    })();
+
+    // Listen to hash and history navigation
+    window.addEventListener('hashchange', () => {
+      const h = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+      if (validCompanyTabs.includes(h)) switchNav(h);
+    });
+
+    window.addEventListener('popstate', () => {
+      const h = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+      if (validCompanyTabs.includes(h)) switchNav(h);
+    });
 
     // Global Toast Handler
     function showToast(msg) {
@@ -5041,10 +5074,7 @@ Room Link: https://zavran.ai/live/ai-l5-synth-902?auth=ephemeral_k39f</textarea>
     // Auto-bind Buttons to Modals and Navigation
     document.addEventListener('DOMContentLoaded', () => {
       // Sync initial hash
-      const hash = window.location.hash.replace('#', '') || 'dashboard';
-      if (['dashboard', 'hire', 'candidates', 'interviews', 'hiring-decisions', 'settings', 'company-profile'].includes(hash)) {
-        switchNav(hash);
-      }
+      switchNav(getInitialCompanyTab());
 
       // Bind all "View Profile" / "View Dossier" buttons to open Screen 5
       document.querySelectorAll('button, a').forEach(el => {

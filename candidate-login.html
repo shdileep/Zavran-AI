@@ -198,44 +198,71 @@
     const googleBtn = document.getElementById('google-btn');
     const CLERK_PK = "pk_test_ZW5hYmxpbmctbGFicmFkb3ItOTYwMC5jbGVyay5hY2NvdW50cy5kZXYk";
 
-    async function enterCandidatePortal(nameOrEmail, optionalEmail) {
-      let email = "";
-      let name = "";
+    async function enterCandidatePortal(emailInputVal, passwordInputVal) {
+      let email = (emailInputVal || "").trim().toLowerCase();
+      let password = (passwordInputVal || "").trim();
 
-      if (optionalEmail) {
-        name = nameOrEmail ? nameOrEmail.trim() : "";
-        email = optionalEmail.trim();
-      } else {
-        email = nameOrEmail ? nameOrEmail.trim() : "";
-      }
-
-      if (!email) {
-        const inputEl = document.getElementById('email');
-        email = inputEl ? inputEl.value.trim() : "";
-      }
-      if (!email) {
-        email = "candidate@gmail.com";
-      }
-
-      // Check registered users to verify candidate has completed registration
-      let usersDb = JSON.parse(localStorage.getItem('zaveran_users')) || [];
-      let foundUser = usersDb.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
-
-      // If user has not completed registration, block access and mandate registration
-      if (!foundUser) {
+      if (!email || !password) {
         statusMsg.className = 'p-3 rounded-xl text-xs font-semibold text-center bg-rose-50 text-rose-800 border border-rose-200 block';
-        statusMsg.innerHTML = '<div class="flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-base text-rose-600">person_off</span><span>Account not found. Please <a href="candidate-signup.html" class="underline font-bold text-slate-900 ml-1">Create an account</a> first.</span></div>';
+        statusMsg.innerHTML = '<div class="flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-base text-rose-600">error</span><span>Please enter both email and password.</span></div>';
         return;
       }
 
-      // Candidate is valid and registered
-      name = foundUser.name || name;
+      let backendUser = null;
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          backendUser = data.user;
+        } else if (res.status === 401) {
+          const data = await res.json().catch(() => ({}));
+          statusMsg.className = 'p-3 rounded-xl text-xs font-semibold text-center bg-rose-50 text-rose-800 border border-rose-200 block';
+          statusMsg.innerHTML = `<div class="flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-base text-rose-600">lock_reset</span><span>${data.detail || 'Incorrect password. Please try again.'}</span></div>`;
+          return;
+        }
+      } catch (e) {
+        console.warn('Backend login notice, checking local cache:', e);
+      }
+
+      let usersDb = JSON.parse(localStorage.getItem('zaveran_users')) || [];
+      let foundUser = backendUser || usersDb.find(u => u.email && u.email.toLowerCase() === email);
+
+      // If user is completely new, auto-register in SQLite database and local state
+      if (!foundUser) {
+        try {
+          const regRes = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password: password, auth_provider: 'local' })
+          });
+          if (regRes.ok) {
+            const regData = await regRes.json();
+            foundUser = regData.user;
+          }
+        } catch (err) {}
+      }
+
+      const userId = (foundUser && foundUser.id) || ('usr_' + btoa(email).replace(/=/g, ''));
+      let name = (foundUser && foundUser.name) || "";
       if (!name || name === "Candidate" || name.startsWith("usr_") || name.startsWith("user_") || name.startsWith("User ")) {
         let prefix = email.split('@')[0].replace(/[._]/g, ' ');
         name = prefix.replace(/\b\w/g, function(l) { return l.toUpperCase(); });
       }
 
-      foundUser.lastLogin = new Date().toISOString();
+      // Update local database with deduplication
+      usersDb = usersDb.filter(u => (u.email || '').toLowerCase() !== email);
+      usersDb.push({
+        id: userId,
+        name: name,
+        email: email,
+        password: password,
+        authProvider: (foundUser && foundUser.auth_provider) || 'local',
+        lastLogin: new Date().toISOString()
+      });
       localStorage.setItem('zaveran_users', JSON.stringify(usersDb));
 
       // Clear any conflicting session tokens from previous accounts
@@ -243,14 +270,13 @@
         const clerk = await getClerkInstance(1000);
         if (clerk && clerk.user && clerk.signOut) {
           const clerkEmail = (clerk.user.primaryEmailAddress && clerk.user.primaryEmailAddress.emailAddress) || '';
-          if (clerkEmail.toLowerCase() !== email.toLowerCase()) {
+          if (clerkEmail.toLowerCase() !== email) {
             await clerk.signOut();
           }
         }
       } catch (e) {}
 
-      // Persist active session auth user strictly bound to this account
-      const userId = foundUser.id || ('usr_' + btoa(email.toLowerCase()).replace(/=/g, ''));
+      // Persist active session auth user
       const authUser = {
         id: userId,
         name: name,
@@ -262,26 +288,28 @@
       localStorage.removeItem('clerk_token');
       sessionStorage.clear();
 
-      // Load isolated candidate profile for this specific user
+      // Load isolated candidate profile
       const userProfileKey = 'zaveran_profile_' + encodeURIComponent(userId);
       let userProfile = JSON.parse(localStorage.getItem(userProfileKey)) || {
         name: name,
         email: email,
-        role: "",
-        location: "",
-        phone: "",
-        avatarUrl: "",
+        role: (foundUser && foundUser.role) || "AI Engineer",
+        location: (foundUser && foundUser.location) || "",
+        phone: (foundUser && foundUser.phone) || "",
+        avatarUrl: (foundUser && foundUser.avatar_url) || "",
         resumeFileName: "",
         resumeMeta: "",
         isUploaded: false
       };
+      userProfile.name = name;
+      userProfile.email = email;
       localStorage.setItem(userProfileKey, JSON.stringify(userProfile));
 
       statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-900 border border-emerald-200 block';
       statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span> Welcome back! Entering Candidate Portal...</span>';
       setTimeout(() => {
         window.location.href = 'candidate-portal.html#profile';
-      }, 700);
+      }, 600);
     }
 
 
@@ -315,52 +343,51 @@
         statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Redirecting directly to Google...</span>';
 
         try {
+          sessionStorage.setItem('zaveran_oauth_flow', 'login');
           const clerk = await getClerkInstance();
           if (!clerk) {
             throw new Error("Clerk authentication service is currently loading. Please check your internet connection and try again.");
           }
 
-          const redirectUrl = window.location.origin + '/candidate-portal.html';
-          const redirectUrlComplete = window.location.origin + '/candidate-portal.html#profile';
+          // Construct clean relative URLs without hash fragments (hash fragments trigger 400 Bad Request in Clerk API)
+          const redirectUrl = new URL('candidate-portal.html', window.location.href).href.split('#')[0];
 
-          // 1. Direct SignIn OAuth redirect to Google (no popup/modal)
-          if (clerk.client && clerk.client.signIn && typeof clerk.client.signIn.authenticateWithRedirect === 'function') {
-            try {
-              await clerk.client.signIn.authenticateWithRedirect({
-                strategy: 'oauth_google',
-                redirectUrl: redirectUrl,
-                redirectUrlComplete: redirectUrlComplete
-              });
-              return;
-            } catch (signInErr) {
-              console.warn("Direct signIn OAuth redirect error, trying signUp OAuth redirect:", signInErr);
-              if (clerk.client && clerk.client.signUp && typeof clerk.client.signUp.authenticateWithRedirect === 'function') {
-                await clerk.client.signUp.authenticateWithRedirect({
-                  strategy: 'oauth_google',
-                  redirectUrl: redirectUrl,
-                  redirectUrlComplete: redirectUrlComplete
-                });
-                return;
-              }
-            }
-          }
-
-          // 2. Direct SignUp OAuth redirect fallback
-          if (clerk.client && clerk.client.signUp && typeof clerk.client.signUp.authenticateWithRedirect === 'function') {
-            await clerk.client.signUp.authenticateWithRedirect({
-              strategy: 'oauth_google',
-              redirectUrl: redirectUrl,
-              redirectUrlComplete: redirectUrlComplete
-            });
-            return;
-          }
-
-          // 3. Top-level direct authenticateWithRedirect fallback
+          // 1. Top-level authenticateWithRedirect (primary recommended standard in Clerk JS)
           if (typeof clerk.authenticateWithRedirect === 'function') {
             await clerk.authenticateWithRedirect({
               strategy: 'oauth_google',
               redirectUrl: redirectUrl,
-              redirectUrlComplete: redirectUrlComplete
+              redirectUrlComplete: redirectUrl
+            });
+            return;
+          }
+
+          // 2. Client SignIn OAuth redirect
+          if (clerk.client && clerk.client.signIn && typeof clerk.client.signIn.authenticateWithRedirect === 'function') {
+            await clerk.client.signIn.authenticateWithRedirect({
+              strategy: 'oauth_google',
+              redirectUrl: redirectUrl,
+              redirectUrlComplete: redirectUrl
+            });
+            return;
+          }
+
+          // 3. Client SignUp OAuth redirect fallback
+          if (clerk.client && clerk.client.signUp && typeof clerk.client.signUp.authenticateWithRedirect === 'function') {
+            await clerk.client.signUp.authenticateWithRedirect({
+              strategy: 'oauth_google',
+              redirectUrl: redirectUrl,
+              redirectUrlComplete: redirectUrl
+            });
+            return;
+          }
+
+          // 4. Modal / Component fallback
+          if (clerk.openSignIn) {
+            clerk.openSignIn({
+              strategy: 'oauth_google',
+              afterSignInUrl: redirectUrl,
+              afterSignUpUrl: redirectUrl
             });
             return;
           }
@@ -387,10 +414,77 @@
         statusMsg.className = 'p-2.5 rounded-xl text-xs font-medium text-center bg-slate-100 text-slate-800 border border-slate-200 block';
         statusMsg.innerHTML = '<span class="inline-flex items-center gap-2"><span class="material-symbols-outlined text-sm animate-spin">refresh</span> Authenticating credentials...</span>';
         setTimeout(() => {
-          enterCandidatePortal(emailVal);
-        }, 800);
+          enterCandidatePortal(emailVal, pwdVal);
+        }, 600);
       });
     }
+
+    // Auto-detect returning Clerk OAuth redirect or active session
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const hasClerkParams = window.location.search.includes('__clerk') || window.location.hash.includes('__clerk');
+        if (hasClerkParams) {
+          const clerk = await getClerkInstance(4000);
+          if (clerk && clerk.user) {
+            const u = clerk.user;
+            const email = (u.primaryEmailAddress && u.primaryEmailAddress.emailAddress) ||
+                          (u.emailAddresses && u.emailAddresses[0] && u.emailAddresses[0].emailAddress) || '';
+            
+            let usersDb = JSON.parse(localStorage.getItem('zaveran_users') || '[]');
+            let existingUser = usersDb.find(item => item.email && item.email.toLowerCase() === email.toLowerCase());
+
+            let name = (existingUser && existingUser.name) || u.fullName;
+            if (!name || name.trim() === '' || name.startsWith('user_') || name.startsWith('User ')) {
+              const parts = [u.firstName, u.lastName].filter(Boolean);
+              if (parts.length > 0) name = parts.join(' ');
+            }
+            if (!name || name.trim() === '' || name.startsWith('user_') || name.startsWith('User ')) {
+              if (email) {
+                let prefix = email.split('@')[0].replace(/[._]/g, ' ');
+                name = prefix.replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+              } else {
+                name = 'Candidate';
+              }
+            }
+
+            const avatarUrl = u.imageUrl || (existingUser && existingUser.avatarUrl) || '';
+
+            if (!existingUser) {
+              existingUser = {
+                id: u.id,
+                name: name,
+                email: email,
+                avatarUrl: avatarUrl,
+                authProvider: 'clerk',
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString()
+              };
+              usersDb.push(existingUser);
+            } else {
+              existingUser.id = u.id;
+              existingUser.name = name;
+              existingUser.lastLogin = new Date().toISOString();
+              if (avatarUrl) existingUser.avatarUrl = avatarUrl;
+            }
+            localStorage.setItem('zaveran_users', JSON.stringify(usersDb));
+
+            const authUser = {
+              id: u.id,
+              name: name,
+              email: email,
+              avatarUrl: avatarUrl,
+              token: u.id,
+              authProvider: 'clerk'
+            };
+            localStorage.setItem('zaveran_auth_user', JSON.stringify(authUser));
+
+            window.location.replace('candidate-portal.html#profile');
+          }
+        }
+      } catch (e) {
+        console.warn("Auto-login check notice:", e);
+      }
+    });
   </script>
 </body>
 </html>

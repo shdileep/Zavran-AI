@@ -16,12 +16,17 @@
   @layer base {
     html {
       scroll-behavior: smooth;
-      scroll-snap-type: y proximity;
       scroll-padding-top: 5rem;
+    }
+    @media (min-width: 1024px) and (min-height: 750px) {
+      html {
+        scroll-snap-type: y proximity;
+      }
     }
     body {
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
     input:focus::placeholder, textarea:focus::placeholder {
       color: transparent !important;
@@ -35,15 +40,24 @@
     }
   }
 
-  
   .snap-section {
-    scroll-snap-align: start;
-    min-height: calc(100vh - 5rem);
+    position: relative;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
-    box-sizing: border-box;
+    min-height: auto;
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  @media (min-width: 1024px) and (min-height: 750px) {
+    .snap-section {
+      scroll-snap-align: start;
+      min-height: calc(100vh - 5rem);
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
   }
 
   footer {
@@ -299,41 +313,36 @@
 </div>
 
 <!-- Right Hero Column: Ultra-Clean Silicon Valley Visual (Image 2 style with mock.png) -->
-<div class="lg:col-span-6 relative flex items-center justify-center pt-6 lg:pt-0">
-  <div class="relative w-full max-w-[480px] flex items-center justify-center">
+<div class="lg:col-span-6 relative flex items-center justify-center pt-6 lg:pt-0 w-full">
+  <div class="relative w-full max-w-[480px] flex flex-col items-center justify-center">
     
-    <!-- Warm Background Sun Halo (Matching Image 2 Backdrop) -->
-    <div class="absolute w-72 h-72 sm:w-80 sm:h-80 md:w-92 md:h-92 rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 -top-2 left-4 sm:left-8 -z-10 opacity-90"></div>
+    <!-- Warm Background Sun Halo -->
+    <div class="absolute w-64 h-64 sm:w-80 sm:h-80 md:w-92 md:h-92 rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 -top-2 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-8 -z-10 opacity-90 pointer-events-none"></div>
 
     <!-- Floating Top-Left Question Thought Bubble -->
-    <div class="absolute -top-6 left-2 sm:-top-8 sm:left-4 z-20 animate-float-slow">
-      <div class="relative bg-slate-900 text-white rounded-2xl px-3.5 py-2 shadow-lg flex items-center gap-2 border border-slate-700">
-        <span class="font-display-xl text-base font-bold text-amber-400 leading-none">?</span>
-        <span class="font-label-mono text-xs font-semibold text-slate-100" id="hero-bubble-text">System Design</span>
+    <div class="absolute -top-4 left-2 sm:-top-8 sm:left-4 z-20 animate-float-slow">
+      <div class="relative bg-slate-900 text-white rounded-2xl px-3 py-1.5 sm:px-3.5 sm:py-2 shadow-lg flex items-center gap-2 border border-slate-700">
+        <span class="font-display-xl text-sm sm:text-base font-bold text-amber-400 leading-none">?</span>
+        <span class="font-label-mono text-[11px] sm:text-xs font-semibold text-slate-100" id="hero-bubble-text">System Design</span>
         <!-- Speech bubble arrow -->
         <div class="absolute -bottom-1.5 left-4 w-3 h-3 bg-slate-900 rotate-45 border-r border-b border-slate-700"></div>
       </div>
     </div>
 
     <!-- Floating Top-Right AI Badge -->
-    <div class="absolute -top-4 right-2 sm:-top-6 sm:right-4 z-20 animate-float-medium">
-      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg flex items-center justify-center border-2 border-white">
+    <div class="absolute -top-3 right-2 sm:-top-6 sm:right-4 z-20 animate-float-medium">
+      <div class="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg flex items-center justify-center border-2 border-white">
         <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">smart_toy</span>
       </div>
     </div>
 
     <!-- Central Hero Character Image (mock.png) -->
-    <div class="relative z-10 w-full max-w-[380px] sm:max-w-[420px]">
+    <div class="relative z-10 w-full max-w-[300px] sm:max-w-[420px] flex justify-center">
       <img alt="Interactive Candidate Mockup" class="w-full h-auto object-contain drop-shadow-xl" src="mock.png">
     </div>
 
-    <!-- Floating Sparkle Element -->
-    <div class="absolute top-1/2 -right-2 z-20 text-amber-500 select-none animate-float-slow">
-      <span class="text-2xl font-bold"></span>
-    </div>
-
     <!-- Floating Bottom-Right Rating / Evaluation Card (Clean, Zero Emojis) -->
-    <div class="absolute -bottom-4 right-0 sm:-bottom-6 sm:-right-2 z-20 w-[280px] sm:w-[310px] animate-float-card">
+    <div class="relative sm:absolute sm:-bottom-6 sm:-right-2 -mt-6 sm:mt-0 z-20 w-full sm:w-[310px] max-w-[320px] animate-float-card">
       <div class="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-slate-200/90 flex flex-col gap-3">
         
         <!-- Header row -->
@@ -972,11 +981,11 @@
   <span class="material-symbols-outlined text-sm leading-none">corporate_fare</span>
 </a>
 </div>
-<div class="flex items-center gap-space-lg pt-space-sm text-outline font-label-mono text-label-mono text-xs">
+<div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 pt-space-sm text-outline font-label-mono text-label-mono text-[11px] sm:text-xs">
   <span>NO CREDIT CARD REQUIRED</span>
-  <span class="text-slate-300">|</span>
+  <span class="text-slate-300 hidden sm:inline">|</span>
   <span>3 FREE NEURAL SESSIONS</span>
-  <span class="text-slate-300">|</span>
+  <span class="text-slate-300 hidden sm:inline">|</span>
   <span>INSTANT DETAILED RUBRIC DIFF</span>
 </div>
 </div>

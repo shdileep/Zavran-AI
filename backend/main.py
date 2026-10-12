@@ -23,6 +23,8 @@ from backend.role_catalog import (
 from backend.question_bank import question_bank
 from backend.api.interview_prepare import prepare_router
 from backend.api.zaroon_voice import zaroon_voice_router
+from backend.api.rag_bank import rag_router
+from backend.api.auth_router import auth_router
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO)
@@ -36,6 +38,8 @@ app = FastAPI(
 
 app.include_router(prepare_router)
 app.include_router(zaroon_voice_router)
+app.include_router(rag_router)
+app.include_router(auth_router)
 
 # Enable CORS for frontend integration
 app.add_middleware(
