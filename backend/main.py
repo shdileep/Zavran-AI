@@ -774,17 +774,17 @@ async def get_session(interview_id: str, authorization: Optional[str] = Header(N
         
     verify_session_access(session, authorization)
 
-    # Server-side schedule entry rule: Candidate cannot enter before 2 minutes prior to scheduled start time
+    # Server-side schedule entry rule: Candidate cannot enter before 5 minutes prior to scheduled start time
     now_ts = time.time()
     db_rec = get_interview_by_room_code(interview_id)
     if db_rec and db_rec.get("scheduled_epoch"):
         scheduled_epoch = float(db_rec["scheduled_epoch"])
-        earliest_permitted_entry = scheduled_epoch - 120.0  # Exactly 2 minutes prior
+        earliest_permitted_entry = scheduled_epoch - 300.0  # Exactly 5 minutes prior
         if now_ts < earliest_permitted_entry and session.status == "scheduled":
             seconds_remaining = int(earliest_permitted_entry - now_ts)
             raise HTTPException(
                 status_code=403,
-                detail=f"Interview room entry is locked. Candidates may enter only starting 2 minutes prior to scheduled time. Permitted in {seconds_remaining} seconds."
+                detail=f"Interview room entry is locked. Candidates may enter only starting 5 minutes prior to scheduled time. Permitted in {seconds_remaining} seconds."
             )
 
     return {"success": True, "session": session.get_candidate_safe_state()}
@@ -797,16 +797,17 @@ async def start_interview(interview_id: str, authorization: Optional[str] = Head
     session = interview_engine.sessions[interview_id]
     verify_session_access(session, authorization)
 
-    # Enforce entry restriction on start as well
+    # Enforce entry restriction on start as well (5 minutes before scheduled start)
     now_ts = time.time()
     db_rec = get_interview_by_room_code(interview_id)
     if db_rec and db_rec.get("scheduled_epoch"):
         scheduled_epoch = float(db_rec["scheduled_epoch"])
-        earliest_permitted_entry = scheduled_epoch - 120.0
+        earliest_permitted_entry = scheduled_epoch - 300.0
         if now_ts < earliest_permitted_entry and session.status == "scheduled":
+            seconds_remaining = int(earliest_permitted_entry - now_ts)
             raise HTTPException(
                 status_code=403,
-                detail="Interview cannot begin before the scheduled entry window."
+                detail=f"Interview meeting room cannot begin before the 5-minute scheduled entry window. Permitted in {seconds_remaining} seconds."
             )
 
     safe_state = interview_engine.start_session(session)

@@ -2375,7 +2375,19 @@ Requirements:
       document.getElementById('confirmDateTime').innerText = `${scheduleData.date} • ${scheduleData.timeSlot}`;
       
       const randomCode = 'ZAV-' + Math.floor(10000 + Math.random() * 90000);
-      document.getElementById('confirmRoomCode').innerText = randomCode;
+      let calcEpoch = null;
+      try {
+        const timePart = (scheduleData.timeSlot || '').split('–')[0].split('-')[0].trim();
+        let datePart = scheduleData.date;
+        if (datePart && datePart.toLowerCase() === 'today') {
+          const d = new Date();
+          datePart = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+        const parsedDt = new Date(`${datePart} ${timePart}`);
+        if (!isNaN(parsedDt.getTime())) {
+          calcEpoch = parsedDt.getTime() / 1000;
+        }
+      } catch (e) {}
 
       const newBooking = {
         id: randomCode,
@@ -2387,6 +2399,7 @@ Requirements:
         interviewer_name: scheduleData.interviewer,
         date: scheduleData.date,
         time: scheduleData.timeSlot,
+        scheduled_epoch: calcEpoch,
         status: 'scheduled',
         score: null,
         createdAt: new Date().toISOString()
@@ -2407,6 +2420,7 @@ Requirements:
             interviewer: scheduleData.interviewer,
             date: scheduleData.date,
             time: scheduleData.timeSlot,
+            scheduled_epoch: calcEpoch,
             candidate_name: candidateName,
             email: candidateEmail
           })
@@ -2751,9 +2765,9 @@ Requirements:
                     Resume
                   </button>
                 ` : isScheduled ? `
-                  <button class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer flex items-center gap-1" onclick="launchInterviewRoom('${code}', '${escapeHtml(booking.role || 'Full Stack AI Engineer').replace(/'/g, "\\'")}', '${escapeHtml(booking.interviewer || 'Zaroon').replace(/'/g, "\\'")}', '${escapeHtml(booking.company || booking.org || 'Zavran AI Partner').replace(/'/g, "\\'")}')">
-                    <span class="material-symbols-outlined text-[14px]">videocam</span>
-                    Join Room
+                  <button class="px-3 py-1.5 rounded-lg ${readyToJoin ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer flex items-center gap-1" onclick="launchInterviewRoom('${code}', '${escapeHtml(booking.role || 'Full Stack AI Engineer').replace(/'/g, "\\'")}', '${escapeHtml(booking.interviewer || 'Zaroon').replace(/'/g, "\\'")}', '${escapeHtml(booking.company || booking.org || 'Zavran AI Partner').replace(/'/g, "\\'")}', '${escapeHtml(booking.date || '')}', '${escapeHtml(booking.time || '')}', ${booking.scheduled_epoch || 'null'})" title="${readyToJoin ? 'Join live assessment room' : 'Enter pre-screening room to prepare audio, video & AI vision guard'}">
+                    <span class="material-symbols-outlined text-[14px]">${readyToJoin ? 'videocam' : 'tune'}</span>
+                    ${readyToJoin ? 'Join Room' : 'Pre-Screening Prep'}
                   </button>
                   <button class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-slate-500 font-medium text-xs transition-colors cursor-pointer" onclick="cancelScheduledInterview('${code}')" title="Cancel this scheduled interview">
                     Cancel
@@ -2822,12 +2836,17 @@ Requirements:
       if (s === 'in_progress') return true;
       if (s === 'completed' || s === 'cancelled' || s === 'unsuccessful') return false;
       try {
-        const timePart = booking.time.split('–')[0].trim();
-        const startDateTime = new Date(`${booking.date} ${timePart}`);
+        const timePart = booking.time.split('–')[0].split('-')[0].trim();
+        let datePart = booking.date;
+        if (datePart && datePart.toLowerCase() === 'today') {
+          const d = new Date();
+          datePart = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+        const startDateTime = new Date(`${datePart} ${timePart}`);
         if (!isNaN(startDateTime.getTime())) {
           const diffMinutes = (startDateTime.getTime() - (now || new Date()).getTime()) / (1000 * 60);
-          // Standard schedule window: within 10 minutes before start, or up to 60 minutes after
-          if (diffMinutes <= 10 && diffMinutes >= -60) return true;
+          // Standard schedule window: strictly within 5 minutes before start, or up to 60 minutes after
+          if (diffMinutes <= 5 && diffMinutes >= -60) return true;
         }
       } catch (e) {}
       return false;
@@ -2935,9 +2954,12 @@ Requirements:
       closeMeetingReadyAlert();
     }
 
-    function launchInterviewRoom(roomCode, role, interviewer, org) {
+    function launchInterviewRoom(roomCode, role, interviewer, org, date, time, epoch) {
       const code = roomCode || 'ZAV-' + Math.floor(10000 + Math.random() * 90000);
-      const url = `interview-room.html?room=${encodeURIComponent(code)}&role=${encodeURIComponent(role || 'Full Stack AI Engineer')}&interviewer=${encodeURIComponent(interviewer || 'Zaroon')}&org=${encodeURIComponent(org || 'Zavran AI Partner')}`;
+      let url = `interview-room.html?room=${encodeURIComponent(code)}&role=${encodeURIComponent(role || 'Full Stack AI Engineer')}&interviewer=${encodeURIComponent(interviewer || 'Zaroon')}&org=${encodeURIComponent(org || 'Zavran AI Partner')}`;
+      if (date) url += `&date=${encodeURIComponent(date)}`;
+      if (time) url += `&time=${encodeURIComponent(time)}`;
+      if (epoch) url += `&epoch=${encodeURIComponent(epoch)}`;
       window.location.href = url;
     }
 

@@ -142,11 +142,11 @@ def test_03_session_cookie_and_logout_invalidation():
 
 
 # ---------------------------------------------------------------------------
-# Test 4: Early interview entry: Rejected before 2 minutes prior to scheduled start
+# Test 4: Early interview entry: Rejected before 5 minutes prior to scheduled start
 # ---------------------------------------------------------------------------
 def test_04_early_interview_entry_blocked():
     now = int(time.time())
-    future_time = now + 1800  # Scheduled 30 minutes from now (> 2 minutes away)
+    future_time = now + 1800  # Scheduled 30 minutes from now (> 5 minutes away)
     user_id = "user_early_entry_04"
 
     save_interview(
@@ -163,7 +163,7 @@ def test_04_early_interview_entry_blocked():
         headers={"Authorization": f"Bearer {user_id}"},
     )
     assert resp.status_code == 403
-    assert "2 minutes" in resp.json()["detail"].lower()
+    assert "5 minutes" in resp.json()["detail"].lower()
 
 
 # ---------------------------------------------------------------------------

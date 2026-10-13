@@ -398,7 +398,36 @@ def save_interview(interview: Optional[Dict[str, Any]] = None, **kwargs) -> Dict
     status = interview.get("status") or "Scheduled"
     score = interview.get("score")
     now = datetime.now(timezone.utc).isoformat()
-    scheduled_epoch = interview.get("scheduled_epoch") or interview.get("scheduledAt") or time.time()
+    scheduled_epoch = interview.get("scheduled_epoch") or interview.get("scheduledAt")
+    if not scheduled_epoch:
+        try:
+            time_part = str(time_val).split("–")[0].split("-")[0].strip()
+            d_str = str(date_val).strip()
+            if d_str.lower() == "today":
+                d_str = datetime.now().strftime("%Y-%m-%d")
+            
+            parsed_dt = None
+            for fmt in [
+                "%Y-%m-%d %I:%M %p",
+                "%B %d, %Y %I:%M %p",
+                "%b %d, %Y %I:%M %p",
+                "%d %B %Y %I:%M %p",
+                "%Y/%m/%d %I:%M %p",
+                "%Y-%m-%d %H:%M",
+                "%Y/%m/%d %H:%M"
+            ]:
+                try:
+                    parsed_dt = datetime.strptime(f"{d_str} {time_part}", fmt)
+                    break
+                except Exception:
+                    pass
+            if parsed_dt:
+                scheduled_epoch = parsed_dt.timestamp()
+            else:
+                scheduled_epoch = time.time()
+        except Exception:
+            scheduled_epoch = time.time()
+
     completed_epoch = interview.get("completed_epoch")
     report_available_epoch = interview.get("report_available_epoch")
     
