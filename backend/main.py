@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import logging
 from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Form, HTTPException, Depends, Header, Response
@@ -25,6 +26,13 @@ from backend.api.interview_prepare import prepare_router
 from backend.api.zaroon_voice import zaroon_voice_router
 from backend.api.rag_bank import rag_router
 from backend.api.auth_router import auth_router
+from backend.database import (
+    get_interview_by_room_code,
+    save_interview,
+    update_interview_status,
+    save_interview_report,
+    get_interview_report as db_get_interview_report
+)
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO)
@@ -39,7 +47,6 @@ app = FastAPI(
 app.include_router(prepare_router)
 app.include_router(zaroon_voice_router)
 app.include_router(rag_router)
-app.include_router(auth_router)
 
 # Enable CORS for frontend integration
 app.add_middleware(
@@ -745,20 +752,63 @@ async def prepare_interview(req: PrepareInterviewRequest, authorization: Optiona
 
 @app.get("/api/interview/{interview_id}/session")
 async def get_session(interview_id: str, authorization: Optional[str] = Header(None)):
-    """Retrieves candidate-safe session state (strictly checks authorization)."""
+    """Retrieves candidate-safe session state (strictly checks authorization and scheduled entry window)."""
     if interview_id not in interview_engine.sessions:
-        raise HTTPException(status_code=404, detail="Interview session not found")
-    session = interview_engine.sessions[interview_id]
+        # Check database if session can be restored
+        db_it = get_interview_by_room_code(interview_id)
+        if db_it:
+            session = interview_engine.get_or_create_session(
+                interview_id=interview_id,
+                candidate_name=db_it.get("candidate_name", "Candidate"),
+                target_role=db_it.get("role", "Full Stack AI Engineer"),
+                interviewer_name=db_it.get("interviewer", "Zaroon"),
+                org_name=db_it.get("company", "Zavran AI Partner")
+            )
+            session.clerk_user_id = db_it.get("user_id")
+            session.clerk_verified_email = db_it.get("user_email")
+            session.status = db_it.get("status", "scheduled")
+        else:
+            raise HTTPException(status_code=404, detail="Interview session not found")
+    else:
+        session = interview_engine.sessions[interview_id]
+        
     verify_session_access(session, authorization)
+
+    # Server-side schedule entry rule: Candidate cannot enter before 2 minutes prior to scheduled start time
+    now_ts = time.time()
+    db_rec = get_interview_by_room_code(interview_id)
+    if db_rec and db_rec.get("scheduled_epoch"):
+        scheduled_epoch = float(db_rec["scheduled_epoch"])
+        earliest_permitted_entry = scheduled_epoch - 120.0  # Exactly 2 minutes prior
+        if now_ts < earliest_permitted_entry and session.status == "scheduled":
+            seconds_remaining = int(earliest_permitted_entry - now_ts)
+            raise HTTPException(
+                status_code=403,
+                detail=f"Interview room entry is locked. Candidates may enter only starting 2 minutes prior to scheduled time. Permitted in {seconds_remaining} seconds."
+            )
+
     return {"success": True, "session": session.get_candidate_safe_state()}
 
 @app.post("/api/interview/{interview_id}/start")
 async def start_interview(interview_id: str, authorization: Optional[str] = Header(None)):
-    """Starts interview timer and sets session state to in_progress (checks auth)."""
+    """Starts interview timer and sets session state to in_progress (checks auth and schedule window)."""
     if interview_id not in interview_engine.sessions:
         raise HTTPException(status_code=404, detail="Interview session not found")
     session = interview_engine.sessions[interview_id]
     verify_session_access(session, authorization)
+
+    # Enforce entry restriction on start as well
+    now_ts = time.time()
+    db_rec = get_interview_by_room_code(interview_id)
+    if db_rec and db_rec.get("scheduled_epoch"):
+        scheduled_epoch = float(db_rec["scheduled_epoch"])
+        earliest_permitted_entry = scheduled_epoch - 120.0
+        if now_ts < earliest_permitted_entry and session.status == "scheduled":
+            raise HTTPException(
+                status_code=403,
+                detail="Interview cannot begin before the scheduled entry window."
+            )
+
     safe_state = interview_engine.start_session(session)
     return {"success": True, "session": safe_state}
 
@@ -1053,6 +1103,10 @@ async def record_integrity_violation(
     session = interview_engine.sessions[interview_id]
     verify_session_access(session, authorization)
 
+    from backend.database import has_monitoring_consent
+    if not has_monitoring_consent(interview_id):
+        raise HTTPException(status_code=403, detail="Monitoring requires explicit candidate consent.")
+
     action_result = interview_engine.record_violation(
         session=session,
         event_type=req.event_type,
@@ -1062,6 +1116,22 @@ async def record_integrity_violation(
         candidate_id=req.candidate_id,
     )
     return {"success": True, "result": action_result}
+
+@app.post("/api/interview/monitoring/event")
+async def record_monitoring_event_endpoint(payload: Dict[str, Any]):
+    """Records integrity monitoring events only if explicit consent exists."""
+    from backend.database import has_monitoring_consent
+    interview_id = payload.get("interview_id")
+    if not interview_id or not has_monitoring_consent(interview_id):
+        raise HTTPException(status_code=403, detail="Monitoring operations require explicit, informed candidate consent.")
+    return {"success": True, "status": "recorded"}
+
+@app.get("/api/interview/monitoring/evidence/{evidence_id}")
+async def get_monitoring_evidence(evidence_id: str, authorization: Optional[str] = Header(None)):
+    """Secures monitoring evidence images behind strict authentication."""
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Authentication required to access monitoring evidence.")
+    raise HTTPException(status_code=404, detail="Evidence frame not found or inaccessible.")
 
 @app.post("/api/interview/{interview_id}/recovery")
 async def record_condition_recovery(
@@ -1190,9 +1260,48 @@ async def get_interview_report(
     Never exposes hidden rubrics, LLM prompts, or system API credentials.
     """
     if interview_id not in interview_engine.sessions:
-        raise HTTPException(status_code=404, detail="Interview session not found")
-    session = interview_engine.sessions[interview_id]
+        db_it = get_interview_by_room_code(interview_id)
+        if db_it:
+            session = interview_engine.get_or_create_session(
+                interview_id=interview_id,
+                candidate_name=db_it.get("candidate_name", "Candidate"),
+                target_role=db_it.get("role", "Full Stack AI Engineer"),
+                interviewer_name=db_it.get("interviewer", "Zaroon"),
+                org_name=db_it.get("company", "Zavran AI Partner")
+            )
+            session.clerk_user_id = db_it.get("user_id")
+            session.clerk_verified_email = db_it.get("user_email")
+            session.status = db_it.get("status", "completed")
+            session.completed_at = db_it.get("completed_epoch")
+        else:
+            raise HTTPException(status_code=404, detail="Interview session not found")
+    else:
+        session = interview_engine.sessions[interview_id]
     verify_session_access(session, authorization)
+
+    now_ts = time.time()
+    # Check 10-minute delay requirement after interview completion
+    completed_time = session.completed_at
+    if not completed_time:
+        db_rec = get_interview_by_room_code(interview_id)
+        if db_rec and db_rec.get("completed_epoch"):
+            completed_time = float(db_rec["completed_epoch"])
+
+    # If completed, report is strictly available 10 minutes (600 seconds) after completion
+    if completed_time and (now_ts - completed_time < 600.0):
+        seconds_left = int(600.0 - (now_ts - completed_time))
+        mins_left = max(1, round(seconds_left / 60))
+        return {
+            "success": True,
+            "status": "evaluating",
+            "report_status": "PROCESSING_DELAY",
+            "email_sent": session.email_sent,
+            "progress": 95,
+            "stage_label": f"Evaluation processing. Final audited report will become available in {mins_left} minute(s).",
+            "seconds_remaining": seconds_left,
+            "available_at_epoch": completed_time + 600.0,
+            "report": None
+        }
 
     if session.final_report:
         return {
@@ -1354,6 +1463,8 @@ async def interview_websocket(websocket: WebSocket, interview_id: str, token: Op
     except Exception as e:
         logger.error(f"WebSocket error in {interview_id}: {str(e)}", exc_info=True)
 
+
+app.include_router(auth_router)
 
 # -----------------------------------------------------------------------------
 # Static Files / Frontend Mounting

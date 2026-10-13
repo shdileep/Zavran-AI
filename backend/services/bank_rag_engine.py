@@ -436,18 +436,21 @@ class EmbeddingIndexingAgent:
         self.idf_weights = idf
 
         # 2. Vectorize all chunks into matrix (N x D)
-        matrix = np.zeros((len(chunks), len(self.vocabulary)), dtype=np.float32)
-        for i, c in enumerate(chunks):
-            text = f"{c.get('role', '')} {c.get('role', '')} {c.get('question', '')} {c.get('answer', '')} {' '.join(c.get('keywords', []))}"
-            vec = self.vectorize_text(text)
-            matrix[i] = vec
+        try:
+            matrix = np.zeros((len(chunks), len(self.vocabulary)), dtype=np.float16)
+            for i, c in enumerate(chunks):
+                text = f"{c.get('role', '')} {c.get('role', '')} {c.get('question', '')} {c.get('answer', '')} {' '.join(c.get('keywords', []))}"
+                vec = self.vectorize_text(text)
+                matrix[i] = vec.astype(np.float16)
 
-        # L2-normalize rows for instant dot product cosine similarity
-        norms = np.linalg.norm(matrix, axis=1, keepdims=True)
-        norms[norms == 0] = 1.0
-        self.embeddings_matrix = matrix / norms
-
-        logger.info(f"Built Dense RAG Matrix: shape={self.embeddings_matrix.shape} across {len(chunks)} chunks.")
+            # L2-normalize rows for instant dot product cosine similarity
+            norms = np.linalg.norm(matrix.astype(np.float32), axis=1, keepdims=True)
+            norms[norms == 0] = 1.0
+            self.embeddings_matrix = (matrix.astype(np.float32) / norms).astype(np.float16)
+            logger.info(f"Built Dense RAG Matrix: shape={self.embeddings_matrix.shape} across {len(chunks)} chunks.")
+        except Exception as alloc_err:
+            logger.warning(f"Dense matrix memory allocation note ({alloc_err}), falling back to direct keyword indexing.")
+            self.embeddings_matrix = None
 
     def vectorize_text(self, text: str) -> np.ndarray:
         """Transforms text into normalized dense vector."""
@@ -1094,6 +1097,16 @@ class BankRAGService:
             limit=limit,
             include_hr=include_hr
         )
+
+    def query_similar(
+        self,
+        query: str,
+        role_filter: Optional[str] = None,
+        top_k: int = 5
+    ) -> List[Dict[str, Any]]:
+        """Helper for retrieving similar questions with optional role permission/filter."""
+        res = self.search(query=query, target_role=role_filter, top_k=top_k)
+        return res.get("results", [])
 
     async def calibrate_candidate(
         self,
